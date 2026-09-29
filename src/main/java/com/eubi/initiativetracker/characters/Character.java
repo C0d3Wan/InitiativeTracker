@@ -1,21 +1,34 @@
 package com.eubi.initiativetracker.characters;
+import java.util.*;
 
 public class Character {
-    private int initiativeNum;
     private final String characterName;
-    private String characterType;
-    private String aliveStatus;
+    private float initiativeValue;
+    private float dexValue;
+    private byte characterType;
+    private byte deathStatus;
 
-    public Character(int initiativeNum, String characterName, String characterType) {
-        this.initiativeNum = initiativeNum;
-        this.characterName = characterName;
-        this.characterType = characterType;
-        this.aliveStatus = "Alive";
+    public Character(String Name, int initiative, int dex, byte Type) {
+        this.characterName = Name;
+        this.characterType = Type;
+        this.deathStatus = 1;
+        this.dexValue = (float) dex /100;
+
+        this.initiativeValue = initiative + this.dexValue;
     }
-    public int getInitiativeNum() {
-        return initiativeNum;
+
+    public Dictionary getCharacterData() {
+        Dictionary<String, Object> displayData = new Hashtable<>();
+
+        displayData.put("Name", this.characterName);
+        displayData.put("Initiative", this.initiativeValue);
+        displayData.put("Type", this.characterType);
+        displayData.put("DeathStatus", this.deathStatus);
+
+        return displayData;
     }
-    public String getCharacterName() {
-        return characterName;
+
+    public void editInitiativeNum(float newInitiativeNum) {
+        this.initiativeValue = newInitiativeNum + this.dexValue;
     }
 }
