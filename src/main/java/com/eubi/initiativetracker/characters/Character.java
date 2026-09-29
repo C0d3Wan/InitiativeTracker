@@ -30,5 +30,6 @@ public class Character {
 
     public void editInitiativeNum(float newInitiativeNum) {
         this.initiativeValue = newInitiativeNum + this.dexValue;
+        //testcomment
     }
 }
