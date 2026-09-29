@@ -18,6 +18,7 @@ public class Character {
     }
 
     public Dictionary getCharacterData() {
+        //Returns the stored data as a dictionary
         Dictionary<String, Object> displayData = new Hashtable<>();
 
         displayData.put("Name", this.characterName);
@@ -29,6 +30,7 @@ public class Character {
     }
 
     public void editInitiativeNum(float newInitiativeNum) {
+        //Edits the initiative of the Character
         this.initiativeValue = newInitiativeNum + this.dexValue;
         //testcomment
     }
