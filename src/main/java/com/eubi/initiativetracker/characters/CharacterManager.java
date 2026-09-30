@@ -31,5 +31,13 @@ public class CharacterManager {
         this.characters.clear();
     }
 
-    public Vector<Character> getCharacters() {return this.characters;}
+    public Character getCharacter(int characterIndex) {
+        try {
+            return this.characters.elementAt(characterIndex);
+        }
+        catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+    public Vector<Character> getCharacterVector() {return this.characters;}
 }
