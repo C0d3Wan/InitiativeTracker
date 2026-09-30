@@ -2,11 +2,11 @@ package com.eubi.initiativetracker.characters;
 import java.util.*;
 
 public class Character {
-    private final String characterName; //Name of the Character/Player
-    private float initiativeValue; //Initiative Value is the Player Initiative + the Players Dex/100
-    private float dexValue; // The Characters Dex value (0-30)
-    private String characterType; //The type of character it is 0:Player 1:Enemy 2: Ally
-    private String deathStatus; //The Death Status 0:Dead 1: Alive 2: Down/Dying
+    private final String characterName;
+    private float initiativeValue;
+    private float dexValue;
+    private String characterType;
+    private String deathStatus;
 
     public Character(String Name, int initiative, int dex, String Type, String Status) {
         this.characterName = Name;
@@ -44,6 +44,20 @@ public class Character {
             this.deathStatus = "Down";
         }else{
             this.deathStatus = "Unknown";
+        }
+
+    }
+
+    public void editCharacterType(int newCharacterType) {
+        //edits the Character Type of the character
+        if (newCharacterType == 0) {
+            this.characterType = "Player";
+        }else if (newCharacterType== 1) {
+            this.characterType = "Enemy";
+        }else if (newCharacterType == 2) {
+            this.characterType = "Ally";
+        }else{
+            this.characterType = "Unknown";
         }
 
     }

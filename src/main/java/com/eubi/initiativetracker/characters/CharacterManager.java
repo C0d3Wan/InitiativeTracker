@@ -23,7 +23,9 @@ public class CharacterManager {
             this.characters.elementAt(characterIndex).editInitiativeNum(newVal);
         }else if (change == 1){
             this.characters.elementAt(characterIndex).editDeathStatus(newVal);
-        }else{
+        }else if (change == 2){
+            this.characters.elementAt(characterIndex).editCharacterType(newVal);
+        } else{
             System.err.println("Invalid change");
         }
 
@@ -41,5 +43,15 @@ public class CharacterManager {
             return null;
         }
     }
+
     public Vector<Character> getCharacterVector() {return this.characters;}
+
+    public void debugDisplay(){
+        System.out.println("Character Manager");
+        System.out.println(this.characters);
+        for (Character character : this.characters) {
+            System.out.println(character.getCharacterData());
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------");
+    }
 }
