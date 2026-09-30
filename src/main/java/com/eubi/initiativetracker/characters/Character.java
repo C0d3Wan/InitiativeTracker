@@ -8,10 +8,10 @@ public class Character {
     private byte characterType; //The type of character it is 0:Player 1:Enemy 2: Ally
     private byte deathStatus; //The Death Status 0:Dead 1: Alive 2: Down/Dying
 
-    public Character(String Name, int initiative, int dex, byte Type) {
+    public Character(String Name, int initiative, int dex, byte Type, byte Status) {
         this.characterName = Name;
         this.characterType = Type;
-        this.deathStatus = 1;
+        this.deathStatus = Status;
         this.dexValue = (float) dex /100;
 
         this.initiativeValue = initiative + this.dexValue;
