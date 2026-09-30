@@ -7,8 +7,8 @@ import com.eubi.initiativetracker.swingui.MainMenu;
 import javax.swing.*;
 
 public class Main {
-    static void main() {      
+    static void main() {
+        CharacterManager characterManager = new CharacterManager();
         SwingUtilities.invokeLater(() -> new MainMenu().setVisible(true));
-        System.out.println(character.getCharacterData());
     }
 }
