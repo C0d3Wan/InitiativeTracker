@@ -5,6 +5,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.*;
 import java.awt.*;
 
+import com.eubi.initiativetracker.characters.Character;
+import com.eubi.initiativetracker.characters.CharacterManager;
+
 public class AddCharacter extends JFrame {
     private JPanel addCharacterPane;
     private JTextField characterName;
@@ -14,7 +17,7 @@ public class AddCharacter extends JFrame {
     private JButton addCharacterButton;
     private JComboBox deathStatusCombo;
 
-    public AddCharacter() {
+    public AddCharacter(CharacterManager characterManager) {
         setContentPane(addCharacterPane);
 
         setTitle("Add Character");
@@ -44,16 +47,21 @@ public class AddCharacter extends JFrame {
         });
 
         addCharacterButton.addActionListener(e -> {
-            saveCharacter();
+            saveCharacter(characterManager);
         });
     }
 
-    private void saveCharacter() {
+    private void saveCharacter(CharacterManager characterManager) {
         String name = characterName.getText().trim();
         int initiative =  (int) initiativeSpinner.getValue();
         int dexterity = (int) dexteritySpinner.getValue();
         String type = (String) characterTypeCombo.getSelectedItem();
         String status = (String) deathStatusCombo.getSelectedItem();
+
+        Character newCharacter = new Character(name, initiative, dexterity, type, status);
+
+        characterManager.addCharacter(newCharacter);
+
     }
 
     private void validateName() {

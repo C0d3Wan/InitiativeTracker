@@ -16,6 +16,6 @@ public class Main {
     private static void init(){
         //Initializes UI and Character Manager
         CharacterManager characterManager = new CharacterManager();
-        SwingUtilities.invokeLater(() -> new MainMenu().setVisible(true));
+        SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
     }
 }
