@@ -20,5 +20,7 @@ public class Main {
         characterManager.editCharacter(0,2,2);
         characterManager.editCharacter(1,2,4);
         characterManager.debugDisplay();
+        characterManager.removeCharacter(character);
+        characterManager.debugDisplay();
     }
 }
