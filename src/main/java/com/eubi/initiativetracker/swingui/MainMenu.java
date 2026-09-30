@@ -22,5 +22,13 @@ public class MainMenu extends JFrame{
             AddCharacter addCharacter = new AddCharacter();
             addCharacter.setVisible(true);
         });
+
+        editCharacterButton.addActionListener(e -> {
+
+        });
+
+        removeCharacterButton.addActionListener(e -> {
+
+        });
     }
 }
