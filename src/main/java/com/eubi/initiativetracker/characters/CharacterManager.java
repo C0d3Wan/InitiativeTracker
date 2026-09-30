@@ -16,13 +16,13 @@ public class CharacterManager {
         this.characters.remove(character);
     }
 
-    public void editCharacter(int characterIndex, int change, int Change) {
+    public void editCharacter(int characterIndex, int change, int newVal) {
         //allows changing of character
         //0 for inititive 1 for death status
         if (change == 0){
-            this.characters.elementAt(characterIndex).editInitiativeNum(change);
+            this.characters.elementAt(characterIndex).editInitiativeNum(newVal);
         }else if (change == 1){
-            this.characters.elementAt(characterIndex).editDeathStatus((byte) change);
+            this.characters.elementAt(characterIndex).editDeathStatus((byte) newVal);
         }
 
     }
