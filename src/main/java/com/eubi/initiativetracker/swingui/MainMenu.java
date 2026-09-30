@@ -5,6 +5,8 @@ import javax.swing.*;
 public class MainMenu extends JFrame{
     private JPanel contentPane;
     private JButton addCharacterButton;
-    private JButton nextCharacterButton;
-    private JButton refreshButton;
+    private JButton nextTurnButton;
+    private JButton removeCharacterButton;
+    private JList initiativeList;
+    private JButton editCharacterButton;
 }
