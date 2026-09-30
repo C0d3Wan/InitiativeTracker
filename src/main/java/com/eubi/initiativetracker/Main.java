@@ -8,6 +8,13 @@ import javax.swing.*;
 
 public class Main {
     static void main() {
+       init();
+
+
+    }
+
+    private static void init(){
+        //Initializes UI and Character Manager
         CharacterManager characterManager = new CharacterManager();
         SwingUtilities.invokeLater(() -> new MainMenu().setVisible(true));
     }
