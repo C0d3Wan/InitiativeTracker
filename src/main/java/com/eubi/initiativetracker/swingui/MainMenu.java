@@ -1,6 +1,7 @@
 package com.eubi.initiativetracker.swingui;
 
 import javax.swing.*;
+import com.eubi.initiativetracker.characters.CharacterManager;
 
 public class MainMenu extends JFrame{
     private JPanel mainMenuPane;
@@ -10,7 +11,7 @@ public class MainMenu extends JFrame{
     private JList initiativeList;
     private JButton editCharacterButton;
 
-    public MainMenu() {
+    public MainMenu(CharacterManager characterManager) {
         setContentPane(mainMenuPane);
 
         setTitle("Initiative Tracker");
@@ -19,7 +20,7 @@ public class MainMenu extends JFrame{
         setLocationRelativeTo(null);
 
         addCharacterButton.addActionListener(e -> {
-            AddCharacter addCharacter = new AddCharacter();
+            AddCharacter addCharacter = new AddCharacter(characterManager);
             addCharacter.setVisible(true);
         });
 

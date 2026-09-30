@@ -9,6 +9,6 @@ import javax.swing.*;
 public class Main {
     static void main() {
         CharacterManager characterManager = new CharacterManager();
-        SwingUtilities.invokeLater(() -> new MainMenu().setVisible(true));
+        SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
     }
 }
