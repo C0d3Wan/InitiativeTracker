@@ -4,7 +4,11 @@ import javax.swing.*;
 
 public class AddCharacter extends JFrame {
     private JPanel addCharacterPane;
-    private JButton button1;
+    private JTextField characterName;
+    private JComboBox characterType;
+    private JSpinner initiativeSpinner;
+    private JSpinner dexteritySpinner;
+    private JButton addCharacterButton;
 
     public AddCharacter() {
         setContentPane(addCharacterPane);
@@ -13,5 +17,8 @@ public class AddCharacter extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
+
+        initiativeSpinner.setModel(new SpinnerNumberModel(1, 1, 20, 1));
+        dexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
     }
 }
