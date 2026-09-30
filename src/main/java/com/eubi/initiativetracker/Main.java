@@ -16,5 +16,8 @@ public class Main {
         characterManager.editCharacter(1,0,17);
         System.out.println(characterManager.getCharacters().elementAt(0).getCharacterData());
         System.out.println(characterManager.getCharacters().elementAt(1).getCharacterData());
+        System.out.println(characterManager.getCharacters());
+        characterManager.removeCharacter(characterManager.getCharacters().elementAt(1));
+        System.out.println(characterManager.getCharacters());
     }
 }

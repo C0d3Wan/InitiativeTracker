@@ -31,7 +31,5 @@ public class CharacterManager {
         this.characters.clear();
     }
 
-    public Vector<Character> getCharacters() {
-        return this.characters;
-    }
+    public Vector<Character> getCharacters() {return this.characters;}
 }
