@@ -5,7 +5,7 @@ public class Character {
     private final String characterName; //Name of the Character/Player
     private float initiativeValue; //Initiative Value is the Player Initiative + the Players Dex/100
     private float dexValue; // The Characters Dex value (0-30)
-    private byte characterType; //The type of charcter it is 0:Player 1:Enemy 2: Ally
+    private byte characterType; //The type of character it is 0:Player 1:Enemy 2: Ally
     private byte deathStatus; //The Death Status 0:Dead 1: Alive 2: Down/Dying
 
     public Character(String Name, int initiative, int dex, byte Type) {
@@ -32,7 +32,6 @@ public class Character {
     public void editInitiativeNum(float newInitiativeNum) {
         //Edits the initiative of the Character
         this.initiativeValue = newInitiativeNum + this.dexValue;
-        //testcomment
     }
 
     public void editDeathStatus(byte newDeathStatus) {
