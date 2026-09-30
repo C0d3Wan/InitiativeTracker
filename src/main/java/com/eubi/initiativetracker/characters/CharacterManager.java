@@ -22,7 +22,9 @@ public class CharacterManager {
         if (change == 0){
             this.characters.elementAt(characterIndex).editInitiativeNum(newVal);
         }else if (change == 1){
-            this.characters.elementAt(characterIndex).editDeathStatus((byte) newVal);
+            this.characters.elementAt(characterIndex).editDeathStatus(newVal);
+        }else{
+            System.err.println("Invalid change");
         }
 
     }

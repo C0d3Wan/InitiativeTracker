@@ -5,10 +5,10 @@ public class Character {
     private final String characterName; //Name of the Character/Player
     private float initiativeValue; //Initiative Value is the Player Initiative + the Players Dex/100
     private float dexValue; // The Characters Dex value (0-30)
-    private byte characterType; //The type of character it is 0:Player 1:Enemy 2: Ally
-    private byte deathStatus; //The Death Status 0:Dead 1: Alive 2: Down/Dying
+    private String characterType; //The type of character it is 0:Player 1:Enemy 2: Ally
+    private String deathStatus; //The Death Status 0:Dead 1: Alive 2: Down/Dying
 
-    public Character(String Name, int initiative, int dex, byte Type, byte Status) {
+    public Character(String Name, int initiative, int dex, String Type, String Status) {
         this.characterName = Name;
         this.characterType = Type;
         this.deathStatus = Status;
@@ -34,8 +34,17 @@ public class Character {
         this.initiativeValue = newInitiativeNum + this.dexValue;
     }
 
-    public void editDeathStatus(byte newDeathStatus) {
+    public void editDeathStatus(int newDeathStatus) {
         //edits the death status of the character
-        this.deathStatus = newDeathStatus;
+        if (newDeathStatus == 0) {
+            this.deathStatus = "Dead";
+        }else if (newDeathStatus == 1) {
+            this.deathStatus = "Alive";
+        }else if (newDeathStatus == 2) {
+            this.deathStatus = "Down";
+        }else{
+            this.deathStatus = "Unknown";
+        }
+
     }
 }

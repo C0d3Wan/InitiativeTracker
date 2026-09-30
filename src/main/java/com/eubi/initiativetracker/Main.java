@@ -6,9 +6,9 @@ public class Main {
     static void main() {
         //tests
         CharacterManager characterManager = new CharacterManager();
-        Character character = new Character("Jasoon", 20,0, (byte)1, (byte) 1);
+        Character character = new Character("Jasoon", 20,0, "Player",  "Alive");
         characterManager.addCharacter(character);
-        characterManager.addCharacter(new Character("Kristof", 17,5, (byte)0, (byte) 1));
+        characterManager.addCharacter(new Character("Kristof", 17,5, "Enemy", "Alive"));
         System.out.println(characterManager.getCharacter(0).getCharacterData());
         System.out.println(characterManager.getCharacter(1).getCharacterData());
         characterManager.editCharacter(0,1,0);
