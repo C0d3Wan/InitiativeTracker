@@ -10,8 +10,8 @@ import javax.swing.*;
 public class Main {
     static void main() {
         CharacterManager characterManager = init();
-        characterManager.addCharacter(new Character("Jacen", 10, 12, CharacterType.PLAYER, DeathStatus.ALIVE));
-        characterManager.addCharacter(new Character("Ewan", 13, 2, CharacterType.PLAYER, DeathStatus.DEAD));
+        characterManager.addCharacter(new Character("Jacen", 10, 12, 0, 1));
+        characterManager.addCharacter(new Character("Ewan", 13, 2, "Player", "Dead"));
         characterManager.addCharacter(new Character("Kristof", 13, 11, CharacterType.ENEMY, DeathStatus.DOWN));
         characterManager.addCharacter(new Character("???", 0, 0, CharacterType.UNKNOWN, DeathStatus.UNKNOWN));
         characterManager.debugDisplay();
