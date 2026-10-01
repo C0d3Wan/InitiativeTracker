@@ -3,15 +3,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CharacterManager {
-    private final Vector<Character> characters;
-    private Vector<Character> charactersOrdered;
+    private final List<Character> characters;
+    private List<Character> charactersOrdered;
 
     /**
      * Constructs a new, empty CharacterManager.
      */
     public CharacterManager() {
-        this.characters = new Vector<>();
-        this.charactersOrdered = new Vector<>();
+        this.characters = new ArrayList<>();
+        this.charactersOrdered = new ArrayList<>();
     }
 
     /**
@@ -51,11 +51,11 @@ public class CharacterManager {
      */
     public void editCharacter(int characterIndex, int change, int newVal) {
         if (change == 0){
-            this.characters.elementAt(characterIndex).editInitiativeNum(newVal);
+            this.characters.get(characterIndex).editInitiativeNum(newVal);
         }else if (change == 1){
-            this.characters.elementAt(characterIndex).editDeathStatus(newVal);
+            this.characters.get(characterIndex).editDeathStatus(newVal);
         }else if (change == 2){
-            this.characters.elementAt(characterIndex).editCharacterType(newVal);
+            this.characters.get(characterIndex).editCharacterType(newVal);
         } else{
             System.err.println("Invalid change");
         }
@@ -79,7 +79,7 @@ public class CharacterManager {
     public void sortCharacters() {
         this.charactersOrdered = characters.stream()
                 .sorted(Comparator.comparingDouble(Character::getInitiativeValue).reversed())
-                .collect(Collectors.toCollection(Vector::new));
+                .collect(Collectors.toList());
     }
 
     /**
@@ -90,7 +90,7 @@ public class CharacterManager {
      */
     public Character getCharacter(int characterIndex) {
         try {
-            return this.characters.elementAt(characterIndex);
+            return this.characters.get(characterIndex);
         }
         catch (IndexOutOfBoundsException e) {
             return null;
@@ -102,14 +102,14 @@ public class CharacterManager {
      *
      * @return A {@link Vector} of all added characters in their insertion order.
      */
-    public Vector<Character> getCharacterVector() {return this.characters;}
+    public List<Character> getCharacterVector() {return this.characters;}
 
     /**
      * Retrieves the sorted collection of characters.
      *
      * @return A {@link Vector} of characters ordered by initiative descending.
      */
-    public Vector<Character> getCharactersOrdered() {return this.charactersOrdered;}
+    public List<Character> getCharactersOrdered() {return this.charactersOrdered;}
 
     /**
      * Outputs a formatted representation of both the original and sorted lists to the console.
