@@ -5,8 +5,12 @@ An Initiative Tracker for TTRPGs
 ## Contents:
 * The Project
 * Classes
-* more filler
-  * multi line filler
+  * Logic
+    * Character
+    * CharacterManager
+  * GUI
+    * MainMenu
+    * AddCharacter
 
 
 ## The Project
