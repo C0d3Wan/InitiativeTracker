@@ -24,7 +24,7 @@ public class MainMenu extends JFrame {
         setLocationRelativeTo(null);
 
         addCharacterButton.addActionListener(e -> {
-            AddCharacter addCharacter = new AddCharacter(characterManager);
+            AddCharacterMenu addCharacter = new AddCharacterMenu(characterManager);
             addCharacter.setVisible(true);
         });
 

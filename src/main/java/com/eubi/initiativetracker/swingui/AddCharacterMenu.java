@@ -1,7 +1,6 @@
 package com.eubi.initiativetracker.swingui;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.event.*;
 import java.awt.*;
 
@@ -10,7 +9,7 @@ import com.eubi.initiativetracker.characters.CharacterManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
-public class AddCharacter extends JFrame {
+public class AddCharacterMenu extends JFrame {
     private JPanel addCharacterPane;
     private JTextField characterName;
     private JComboBox characterTypeCombo;
@@ -19,7 +18,7 @@ public class AddCharacter extends JFrame {
     private JButton addCharacterButton;
     private JComboBox deathStatusCombo;
 
-    public AddCharacter(CharacterManager characterManager) {
+    public AddCharacterMenu(CharacterManager characterManager) {
         setContentPane(addCharacterPane);
 
         setTitle("Add Character");
