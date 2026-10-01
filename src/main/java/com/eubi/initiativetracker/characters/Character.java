@@ -39,6 +39,92 @@ public class Character {
     }
 
     /**
+     * A different way of constructing a new Character with the specified starting attributes.
+     *
+     * @param name       The display name of the character.
+     * @param initiative The base initiative roll or score.
+     * @param dex        The dexterity score, used to calculate the fractional tie-breaker.
+     * @param typeID       The initial id of the {@link CharacterType} (alignment) of the character.
+     * @param deathID     The initial id of the  {@link DeathStatus} of the character.
+     */
+    public Character(String name, int initiative, int dex, int typeID, int deathID) {
+        this.characterName = name;
+        switch (typeID) {
+            case 0:
+                this.characterType = CharacterType.PLAYER;
+                break;
+            case 1:
+                this.characterType = CharacterType.ENEMY;
+                break;
+            case 2:
+                this.characterType = CharacterType.ALLY;
+                break;
+            default:
+                this.characterType = CharacterType.UNKNOWN;
+        }
+
+        switch (deathID) {
+            case 0:
+                this.deathStatus = DeathStatus.DEAD;
+                break;
+            case 1:
+                this.deathStatus = DeathStatus.ALIVE;
+                break;
+            case 2:
+                this.deathStatus = DeathStatus.DOWN;
+                break;
+            default:
+                this.deathStatus = DeathStatus.UNKNOWN;
+
+                this.dexValue = (float) dex / 100;
+                this.initiativeValue = initiative + this.dexValue;
+        }
+    }
+
+    /**
+     * A different way of constructing a new Character with the specified starting attributes.
+     *
+     * @param name       The display name of the character.
+     * @param initiative The base initiative roll or score.
+     * @param dex        The dexterity score, used to calculate the fractional tie-breaker.
+     * @param typeID       The initial String of the {@link CharacterType} (alignment) of the character.
+     * @param deathID     The initial String of the  {@link DeathStatus} of the character.
+     */
+    public Character(String name, int initiative, int dex, String typeID, String deathID) {
+        this.characterName = name;
+        switch (typeID) {
+            case "Player":
+                this.characterType = CharacterType.PLAYER;
+                break;
+            case "Enemy":
+                this.characterType = CharacterType.ENEMY;
+                break;
+            case "Ally":
+                this.characterType = CharacterType.ALLY;
+                break;
+            default:
+                this.characterType = CharacterType.UNKNOWN;
+        }
+
+        switch (deathID) {
+            case "Dead":
+                this.deathStatus = DeathStatus.DEAD;
+                break;
+            case "Alive":
+                this.deathStatus = DeathStatus.ALIVE;
+                break;
+            case "Down":
+                this.deathStatus = DeathStatus.DOWN;
+                break;
+            default:
+                this.deathStatus = DeathStatus.UNKNOWN;
+
+                this.dexValue = (float) dex / 100;
+                this.initiativeValue = initiative + this.dexValue;
+        }
+    }
+
+    /**
      * Compiles and retrieves the core state of the character as a key-value data structure.
      *
      * @return A {@link Map} containing the character's Name, Initiative, Type,
