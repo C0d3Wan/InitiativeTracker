@@ -1,11 +1,14 @@
 package com.eubi.initiativetracker.characters;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CharacterManager {
-    private Vector<Character> characters;
+    private final Vector<Character> characters;
+    private Vector<Character> charactersOrdered;
 
     public CharacterManager() {
-        this.characters = new Vector<Character>();
+        this.characters = new Vector<>();
+        this.charactersOrdered = new Vector<>();
     }
 
     public void addCharacter(Character character) {
@@ -18,7 +21,7 @@ public class CharacterManager {
 
     public void editCharacter(int characterIndex, int change, int newVal) {
         //allows changing of character
-        //0 for inititive 1 for death status
+        //0 for initiative 1 for death status
         if (change == 0){
             this.characters.elementAt(characterIndex).editInitiativeNum(newVal);
         }else if (change == 1){
@@ -35,6 +38,12 @@ public class CharacterManager {
         this.characters.clear();
     }
 
+    public void sortCharacters() {
+        this.charactersOrdered = characters.stream()
+                .sorted(Comparator.comparingDouble(Character::getInitiativeValue).reversed())
+                .collect(Collectors.toCollection(Vector::new));
+    }
+
     public Character getCharacter(int characterIndex) {
         try {
             return this.characters.elementAt(characterIndex);
@@ -46,12 +55,26 @@ public class CharacterManager {
 
     public Vector<Character> getCharacterVector() {return this.characters;}
 
+    public Vector<Character> getCharactersOrdered() {return this.charactersOrdered;}
+
+    //debug commands
+
+
     public void debugDisplay(){
         System.out.println("Character Manager");
-        System.out.println(this.characters);
+        Vector<String> temp =new Vector<>();
         for (Character character : this.characters) {
-            System.out.println(character.getCharacterData());
+            temp.add(character.toString());
         }
+        System.out.println("Original List: ");
+        System.out.println(temp);
+        temp =new Vector<>();
+        this.sortCharacters();
+        for ( Character character : this.charactersOrdered) {
+            temp.add(character.toString());
+        }
+        System.out.println("Sorted List: ");
+        System.out.println(temp);
         System.out.println("----------------------------------------------------------------------------------------------------------------------");
     }
 }
