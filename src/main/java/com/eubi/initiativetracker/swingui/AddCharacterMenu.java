@@ -20,6 +20,7 @@ public class AddCharacterMenu extends JFrame {
     private JComboBox deathStatusCombo;
 
     /// Instantiates the add character menu
+    ///
     /// @param characterManager
     public AddCharacterMenu(CharacterManager characterManager) {
         setContentPane(addCharacterPane);
@@ -56,6 +57,7 @@ public class AddCharacterMenu extends JFrame {
     }
 
     /// Saves the new character to the character manager
+    ///
     /// @param characterManager
     private void saveCharacter(CharacterManager characterManager) {
         String name = characterName.getText().trim();
@@ -67,7 +69,9 @@ public class AddCharacterMenu extends JFrame {
         Character newCharacter = new Character(name, initiative, dexterity, type, status);
 
         characterManager.addCharacter(newCharacter);
-
+        characterManager.sortCharacters();
+        characterManager.debugDisplay();
+        this.dispose();
     }
 
     /// Validates if the character has at least a name
@@ -141,4 +145,5 @@ public class AddCharacterMenu extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return addCharacterPane;
     }
+
 }
