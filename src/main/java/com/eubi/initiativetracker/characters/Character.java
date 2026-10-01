@@ -61,4 +61,12 @@ public class Character {
         }
 
     }
+
+    public float getInitiativeValue() {
+       return this.initiativeValue;
+    }
+
+    public String toString(){
+        return "name: "+this.characterName + ". Initiative: " +this.initiativeValue + ". Type: " +  this.characterType + ". DeathStatus: " + this.deathStatus;
+    }
 }
