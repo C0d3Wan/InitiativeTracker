@@ -63,7 +63,6 @@ public class AddCharacter extends JFrame {
         Character newCharacter = new Character(name, initiative, dexterity, type, status);
 
         characterManager.addCharacter(newCharacter);
-        characterManager.debugDisplay();
 
     }
 
