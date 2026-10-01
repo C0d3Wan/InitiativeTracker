@@ -36,25 +36,10 @@ public class CharacterManager {
     }
 
     /**
-     * Modifies a specific attribute of a character based on its index in the original list.
-     * <p>
-     * <b>Warning:</b> This method relies on integer-based attribute selection:
-     * <ul>
-     *   <li>0 = Edit Initiative</li>
-     *   <li>1 = Edit Death Status</li>
-     *   <li>2 = Edit Character Type</li>
-     * </ul>
-     *
-     * @param characterIndex The index of the character within the original, unsorted list.
-     * @param change         An integer mapped to the specific attribute you wish to change.
-     * @param newVal         The new integer value to apply to the selected attribute.
-     *
-     *
      * Updates the initiative score of a specific character.
      *
      * @param characterIndex The index of the character in the unsorted list.
      * @param newInitiative  The new base initiative score.
-
      *
      */
     public void editCharacterInitiative(int characterIndex, float newInitiative) {
