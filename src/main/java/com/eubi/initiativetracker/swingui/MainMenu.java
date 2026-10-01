@@ -18,6 +18,7 @@ public class MainMenu extends JFrame {
 
     /// Instantiates the main menu of the Initiative Tracker
     ///
+    /// Takes the parameters:
     /// @param characterManager
     public MainMenu(CharacterManager characterManager) {
         setContentPane(mainMenuPane);

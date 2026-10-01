@@ -22,9 +22,9 @@
         </constraints>
         <properties>
           <model>
-            <item value="Player"/>
-            <item value="Enemy"/>
-            <item value="Ally"/>
+            <item value="PLAYER"/>
+            <item value="ENEMY"/>
+            <item value="ALLY"/>
           </model>
         </properties>
       </component>
@@ -88,9 +88,9 @@
         </constraints>
         <properties>
           <model>
-            <item value="Alive"/>
-            <item value="Dead"/>
-            <item value="Down"/>
+            <item value="ALIVE"/>
+            <item value="DEAD"/>
+            <item value="DOWN"/>
           </model>
         </properties>
       </component>
