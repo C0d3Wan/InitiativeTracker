@@ -9,6 +9,7 @@ import com.eubi.initiativetracker.characters.CharacterManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
+/// Creates a swing ui menu to add a character to the initiative tracker
 public class AddCharacterMenu extends JFrame {
     private JPanel addCharacterPane;
     private JTextField characterName;
@@ -18,6 +19,8 @@ public class AddCharacterMenu extends JFrame {
     private JButton addCharacterButton;
     private JComboBox deathStatusCombo;
 
+    /// Instantiates the add character menu
+    /// @param characterManager
     public AddCharacterMenu(CharacterManager characterManager) {
         setContentPane(addCharacterPane);
 
@@ -52,6 +55,8 @@ public class AddCharacterMenu extends JFrame {
         });
     }
 
+    /// Saves the new character to the character manager
+    /// @param characterManager
     private void saveCharacter(CharacterManager characterManager) {
         String name = characterName.getText().trim();
         int initiative = (int) initiativeSpinner.getValue();
@@ -65,6 +70,7 @@ public class AddCharacterMenu extends JFrame {
 
     }
 
+    /// Validates if the character has at least a name
     private void validateName() {
         boolean isValid = !characterName.getText().trim().isEmpty();
         addCharacterButton.setEnabled(isValid);
