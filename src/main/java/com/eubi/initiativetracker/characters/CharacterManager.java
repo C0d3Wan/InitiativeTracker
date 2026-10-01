@@ -48,18 +48,37 @@ public class CharacterManager {
      * @param characterIndex The index of the character within the original, unsorted list.
      * @param change         An integer mapped to the specific attribute you wish to change.
      * @param newVal         The new integer value to apply to the selected attribute.
-     */
-    public void editCharacter(int characterIndex, int change, int newVal) {
-        if (change == 0){
-            this.characters.get(characterIndex).editInitiativeNum(newVal);
-        }else if (change == 1){
-            this.characters.get(characterIndex).editDeathStatus(newVal);
-        }else if (change == 2){
-            this.characters.get(characterIndex).editCharacterType(newVal);
-        } else{
-            System.err.println("Invalid change");
-        }
+     *
+     *
+     * Updates the initiative score of a specific character.
+     *
+     * @param characterIndex The index of the character in the unsorted list.
+     * @param newInitiative  The new base initiative score.
 
+     *
+     */
+    public void editCharacterInitiative(int characterIndex, float newInitiative) {
+        this.characters.get(characterIndex).editInitiativeNum(newInitiative);
+    }
+
+    /**
+     * Updates the death status of a specific character.
+     *
+     * @param characterIndex The index of the character in the unsorted list.
+     * @param newStatus      The new {@link DeathStatus} enum value.
+     */
+    public void editCharacterStatus(int characterIndex, DeathStatus newStatus) {
+        this.characters.get(characterIndex).editDeathStatus(newStatus);
+    }
+
+    /**
+     * Updates the specific character.
+     *
+     * @param characterIndex The index of the character in the unsorted list.
+     * @param newType        The new {@link CharacterType} enum value.
+     */
+    public void editCharacterType(int characterIndex, CharacterType newType) {
+        this.characters.get(characterIndex).editCharacterType(newType);
     }
 
     /**
@@ -100,14 +119,14 @@ public class CharacterManager {
     /**
      * Retrieves the entire original, unsorted collection of characters.
      *
-     * @return A {@link Vector} of all added characters in their insertion order.
+     * @return A {@link List} of all added characters in their insertion order.
      */
     public List<Character> getCharacterVector() {return this.characters;}
 
     /**
      * Retrieves the sorted collection of characters.
      *
-     * @return A {@link Vector} of characters ordered by initiative descending.
+     * @return A {@link List} of characters ordered by initiative descending.
      */
     public List<Character> getCharactersOrdered() {return this.charactersOrdered;}
 

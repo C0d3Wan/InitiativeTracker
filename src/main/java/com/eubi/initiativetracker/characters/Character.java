@@ -1,19 +1,21 @@
 package com.eubi.initiativetracker.characters;
+
 import java.util.*;
 
 /**
  * Represents a character entity within an initiative tracking system.
  * <p>
- *     This class store essential data for a characer, including thier name,
- *     combat status, type and calculated initiative. It uses dexterity by
- *     converting it into a tie-break for initiative.</p>
+ * This class stores essential combat data for a character, including their name,
+ * combat status, alignment type, and their calculated initiative. It uniquely
+ * handles dexterity by converting it into a decimal value to act as a tie-breaker
+ * for initiative rolls.
  */
 public class Character {
     private final String characterName;
     private float initiativeValue;
     private float dexValue;
-    private String characterType;
-    private String deathStatus;
+    private CharacterType characterType;
+    private DeathStatus deathStatus;
 
     /**
      * Constructs a new Character with the specified starting attributes.
@@ -25,89 +27,105 @@ public class Character {
      * @param name       The display name of the character.
      * @param initiative The base initiative roll or score.
      * @param dex        The dexterity score, used to calculate the fractional tie-breaker.
-     * @param type       The initial category of the character (e.g., "Player", "Enemy").
-     * @param status     The initial life status of the character (e.g., "Alive", "Dead").
+     * @param type       The initial {@link CharacterType} (alignment) of the character.
+     * @param status     The initial {@link DeathStatus} of the character.
      */
-    public Character(String name, int initiative, int dex, String type, String status) {
+    public Character(String name, int initiative, int dex, CharacterType type, DeathStatus status) {
         this.characterName = name;
         this.characterType = type;
         this.deathStatus = status;
-        this.dexValue = (float) dex /100;
-
+        this.dexValue = (float) dex / 100;
         this.initiativeValue = initiative + this.dexValue;
     }
 
     /**
      * Compiles and retrieves the core state of the character as a key-value data structure.
      *
-     * @return A {@link Dictionary} containing the character's Name, Initiative, Type,
+     * @return A {@link Map} containing the character's Name, Initiative, Type,
      *         and DeathStatus mapped to their respective current values.
      */
-    public Dictionary getCharacterData() {
-        //Returns the stored data as a dictionary
-        Dictionary<String, Object> displayData = new Hashtable<>();
+    public Map<String, Object> getCharacterData() {
+        Map<String, Object> displayData = new HashMap<>();
 
         displayData.put("Name", this.characterName);
         displayData.put("Initiative", this.initiativeValue);
-        displayData.put("Type", this.characterType);
-        displayData.put("DeathStatus", this.deathStatus);
+        // The .name() method safely converts the Enum into a readable String
+        displayData.put("Type", this.characterType.name());
+        displayData.put("DeathStatus", this.deathStatus.name());
 
         return displayData;
     }
 
     /**
-     * Updates the character's initiative score.
+     * Updates the character's base initiative score.
      * <p>
      * The character's previously calculated decimal dexterity value is automatically
-     * reapplied to the new  number to maintain tie-breaker formatting.
+     * reapplied to the new base number to maintain tie-breaker formatting.
      *
-     * @param newInitiativeNum The new initiative score.
+     * @param newInitiativeNum The new base initiative score.
      */
     public void editInitiativeNum(float newInitiativeNum) {
-        //Edits the initiative of the Character
         this.initiativeValue = newInitiativeNum + this.dexValue;
     }
 
     /**
-     * Updates the character's life status based on a specific integer mapping.
+     * Updates the character's life status.
      *
-     * @param newDeathStatus An integer representing the new status:
-     *                       0 = "Dead", 1 = "Alive", 2 = "Down".
-     *                       Any other value defaults to "Unknown".
+     * @param newDeathStatus The new {@link DeathStatus} to apply.
      */
-    public void editDeathStatus(int newDeathStatus) {
-        //edits the death status of the character
-        if (newDeathStatus == 0) {
-            this.deathStatus = "Dead";
-        }else if (newDeathStatus == 1) {
-            this.deathStatus = "Alive";
-        }else if (newDeathStatus == 2) {
-            this.deathStatus = "Down";
-        }else{
-            this.deathStatus = "Unknown";
-        }
-
+    public void editDeathStatus(DeathStatus newDeathStatus) {
+        this.deathStatus = newDeathStatus;
     }
 
     /**
-     * Updates the character's category based on a specific integer mapping.
+     * Allows updating the death status using Int
      *
-     * @param newCharacterType An integer representing the new type:
-     *                         0 = "Player", 1 = "Enemy", 2 = "Ally".
-     *                         Any other value defaults to "Unknown".
+     * @param statusID The new {@link DeathStatus} to apply.
      */
-    public void editCharacterType(int newCharacterType) {
-        //edits the Character Type of the character
-        if (newCharacterType == 0) {
-            this.characterType = "Player";
-        }else if (newCharacterType== 1) {
-            this.characterType = "Enemy";
-        }else if (newCharacterType == 2) {
-            this.characterType = "Ally";
-        }else{
-            this.characterType = "Unknown";
-        }
+    public void editDeathStatus(int statusID) {
+            switch (statusID) {
+                case 0:
+                    this.deathStatus = DeathStatus.DEAD;
+                    break;
+                case 1:
+                    this.deathStatus = DeathStatus.ALIVE;
+                    break;
+                case 2:
+                    this.deathStatus = DeathStatus.DOWN;
+                    break;
+                default:
+                    this.deathStatus = DeathStatus.UNKNOWN;
+            }
+    }
 
+    /**
+     * Updates the character's category.
+     *
+     * @param newCharacterType The new {@link CharacterType} to apply.
+     */
+    public void editCharacterType(CharacterType newCharacterType) {
+        this.characterType = newCharacterType;
+    }
+
+    /**
+     * Allows updating the character's category using Int
+     *
+     * @param statusID The new {@link CharacterType} to apply.
+     */
+    public void editCharacterType(int statusID) {
+        switch (statusID) {
+            case 0:
+                this.characterType = CharacterType.PLAYER;
+                break;
+            case 1:
+                this.characterType = CharacterType.ENEMY;
+                break;
+            case 2:
+                this.characterType = CharacterType.ALLY;
+                break;
+            default:
+                this.characterType = CharacterType.UNKNOWN;
+        }
     }
 
     /**
@@ -116,7 +134,7 @@ public class Character {
      * @return The initiative value, including the fractional dexterity modifier.
      */
     public float getInitiativeValue() {
-       return this.initiativeValue;
+        return this.initiativeValue;
     }
 
     /**
@@ -124,7 +142,11 @@ public class Character {
      *
      * @return A formatted string detailing the character's name, initiative, type, and status.
      */
+    @Override
     public String toString(){
-        return "name: "+this.characterName + ". Initiative: " +this.initiativeValue + ". Type: " +  this.characterType + ". DeathStatus: " + this.deathStatus;
+        return "name: " + this.characterName +
+                ". Initiative: " + this.initiativeValue +
+                ". Type: " + this.characterType +
+                ". DeathStatus: " + this.deathStatus;
     }
 }

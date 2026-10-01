@@ -60,9 +60,10 @@ public class AddCharacter extends JFrame {
         String type = (String) characterTypeCombo.getSelectedItem();
         String status = (String) deathStatusCombo.getSelectedItem();
 
+        /*
         Character newCharacter = new Character(name, initiative, dexterity, type, status);
-
         characterManager.addCharacter(newCharacter);
+        */
 
     }
 
