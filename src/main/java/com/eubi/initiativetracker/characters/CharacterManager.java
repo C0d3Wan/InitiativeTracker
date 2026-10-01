@@ -40,7 +40,7 @@ public class CharacterManager {
 
     public void sortCharacters() {
         this.charactersOrdered = characters.stream()
-                .sorted(Comparator.comparingDouble(Character::getInitiativeValue))
+                .sorted(Comparator.comparingDouble(Character::getInitiativeValue).reversed())
                 .collect(Collectors.toCollection(Vector::new));
     }
 
