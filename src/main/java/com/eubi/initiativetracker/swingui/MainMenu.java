@@ -17,6 +17,7 @@ public class MainMenu extends JFrame {
     private JButton editCharacterButton;
 
     /// Instantiates the main menu of the Initiative Tracker
+    ///
     /// @param characterManager
     public MainMenu(CharacterManager characterManager) {
         setContentPane(mainMenuPane);
@@ -32,7 +33,8 @@ public class MainMenu extends JFrame {
         });
 
         editCharacterButton.addActionListener(e -> {
-
+            EditCharacterMenu editCharacter = new EditCharacterMenu(characterManager);
+            editCharacter.setVisible(true);
         });
 
         removeCharacterButton.addActionListener(e -> {
@@ -112,4 +114,5 @@ public class MainMenu extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return mainMenuPane;
     }
+
 }
