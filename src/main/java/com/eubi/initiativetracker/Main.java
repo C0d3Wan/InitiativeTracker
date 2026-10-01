@@ -8,14 +8,15 @@ import javax.swing.*;
 
 public class Main {
     static void main() {
-       init();
-
+        CharacterManager characterManager = init();
+        characterManager.debugDisplay();
 
     }
 
-    private static void init(){
+    private static CharacterManager init(){
         //Initializes UI and Character Manager
         CharacterManager characterManager = new CharacterManager();
         SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
+        return characterManager;
     }
 }
