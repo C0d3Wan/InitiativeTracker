@@ -49,6 +49,8 @@ public class Character {
      */
     public Character(String name, int initiative, int dex, int typeID, int deathID) {
         this.characterName = name;
+        this.dexValue = (float) dex / 100;
+        this.initiativeValue = initiative + this.dexValue;
         switch (typeID) {
             case 0:
                 this.characterType = CharacterType.PLAYER;
@@ -76,8 +78,7 @@ public class Character {
             default:
                 this.deathStatus = DeathStatus.UNKNOWN;
 
-                this.dexValue = (float) dex / 100;
-                this.initiativeValue = initiative + this.dexValue;
+
         }
     }
 
@@ -92,6 +93,8 @@ public class Character {
      */
     public Character(String name, int initiative, int dex, String typeID, String deathID) {
         this.characterName = name;
+        this.dexValue = (float) dex / 100;
+        this.initiativeValue = initiative + this.dexValue;
         switch (typeID) {
             case "Player":
                 this.characterType = CharacterType.PLAYER;
@@ -119,8 +122,6 @@ public class Character {
             default:
                 this.deathStatus = DeathStatus.UNKNOWN;
 
-                this.dexValue = (float) dex / 100;
-                this.initiativeValue = initiative + this.dexValue;
         }
     }
 
