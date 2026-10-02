@@ -17,6 +17,11 @@ public class Main {
         characterManager.debugDisplay();
     }
 
+    /**
+     * Instantiantes all required Classes and UI
+     *
+     * @return The {@link CharacterManager} to be used throughout the Project
+     */
     private static CharacterManager init(){
         CharacterManager characterManager = new CharacterManager();
         SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
