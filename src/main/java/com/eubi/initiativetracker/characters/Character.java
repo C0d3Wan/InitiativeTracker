@@ -160,7 +160,7 @@ public class Character {
      *
      * @param newDexValue - The new Dex Value
      */
-    public void editDexValue(int newDexValue) {this.dexValue = newDexValue;}
+    public void editDexValue(int newDexValue) {this.dexValue = (float) newDexValue /100;}
 
     /**
      * Updates the character's life status.
