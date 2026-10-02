@@ -7,8 +7,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Dictionary;
-import java.util.Hashtable;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -35,7 +34,7 @@ public class EditCharacterMenu extends JFrame {
     public EditCharacterMenu(CharacterManager characterManager) {
         setContentPane(editCharacterPane);
 
-        Dictionary characterDictionary = updateCharactersCombo(characterManager);
+        Map characterDictionary = updateCharactersCombo(characterManager);
 
         characterNameLabel.setText("Null");
         initiativeLabel.setText("Null");
@@ -67,9 +66,9 @@ public class EditCharacterMenu extends JFrame {
      *
      * @param characterManager
      */
-    private Dictionary updateCharactersCombo(CharacterManager characterManager) {
+    private Map updateCharactersCombo(CharacterManager characterManager) {
         List<Character> characters = characterManager.getCharacterVector();
-        Dictionary<String, Character> characterDictionary = new Hashtable<>();
+        Map<String, Character> characterDictionary = new HashMap<>();
 
         if (characters.isEmpty()) {
             charactersCombo.addItem("No Characters");
@@ -85,11 +84,11 @@ public class EditCharacterMenu extends JFrame {
         return characterDictionary;
     }
 
-    private void updateDetails(Dictionary characterDictionary) {
+    private void updateDetails(Map characterDictionary) {
         String name = charactersCombo.getSelectedItem().toString();
         Character character = (Character) characterDictionary.get(name);
 
-        Dictionary characterData = character.getCharacterData();
+        Map characterData = character.getCharacterData();
         System.out.println(characterData);
 
         characterNameLabel.setText(characterData.get("Name").toString());
