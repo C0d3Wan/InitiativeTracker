@@ -24,7 +24,7 @@ public class AddCharacterMenu extends JFrame {
     /**
      * Constructs a new window to add a new character to the character manager
      *
-     * @param characterManager
+     * @param characterManager Allows use of {@link CharacterManager}
      */
     public AddCharacterMenu(CharacterManager characterManager) {
         setContentPane(addCharacterPane);
@@ -63,7 +63,7 @@ public class AddCharacterMenu extends JFrame {
     /**
      * Saves the new character to the character manager
      *
-     * @param characterManager
+     * @param characterManager Allows use of {@link CharacterManager}
      */
 
     private void saveCharacter(CharacterManager characterManager) {
@@ -80,7 +80,9 @@ public class AddCharacterMenu extends JFrame {
         this.dispose();
     }
 
-    /// Validates if the character has at least a name
+    /**
+     * Validates if the character has at least a name
+     */
     private void validateName() {
         boolean isValid = !characterName.getText().trim().isEmpty();
         addCharacterButton.setEnabled(isValid);
