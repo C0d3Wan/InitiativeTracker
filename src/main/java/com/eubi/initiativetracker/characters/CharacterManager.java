@@ -39,6 +39,15 @@ public class CharacterManager {
     }
 
     /**
+     * basic new turn code
+     */
+    public void newTurn(){
+        this.currentCharacterIndex+=1;
+
+        this.currentCharecter = charactersOrdered.get(currentCharacterIndex);
+    }
+
+    /**
      * Updates the initiative score of a specific character.
      *
      * @param characterIndex The index of the character in the unsorted list.
