@@ -142,7 +142,7 @@ public class CharacterManager {
             }
         }
         System.out.println("\nSorted List (By Initiative Descending):");
-        if (this.characters.isEmpty() && !sort) {
+        if (this.characters.isEmpty() || !sort) {
             System.out.println("  [Empty]");
         } else {
             this.sortCharacters();
