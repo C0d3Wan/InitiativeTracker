@@ -7,7 +7,9 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import java.awt.*;
 
-/// Creates a swing ui based menu for the initiative Tracker
+/**
+ * Class for the tracker's main menu
+ */
 public class MainMenu extends JFrame {
     private JPanel mainMenuPane;
     private JButton addCharacterButton;
@@ -16,10 +18,11 @@ public class MainMenu extends JFrame {
     private JList initiativeList;
     private JButton editCharacterButton;
 
-    /// Instantiates the main menu of the Initiative Tracker
-    ///
-    /// Takes the parameters:
-    /// @param characterManager
+    /**
+     * Constructs a window for the initiative tracker
+     *
+     * @param characterManager
+     */
     public MainMenu(CharacterManager characterManager) {
         setContentPane(mainMenuPane);
 

@@ -7,7 +7,9 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import javax.swing.*;
 import java.awt.*;
 
-/// Creates a menu to edit the current character
+/**
+ * Class for the tracker's edit character menu
+ */
 public class EditCharacterMenu extends JFrame {
     private JPanel editCharacterPane;
     private JLabel characterNameLabel;
@@ -19,9 +21,11 @@ public class EditCharacterMenu extends JFrame {
     private JComboBox comboBox1;
     private JButton testButton;
 
-    /// Instantiates the edit character menu
-    ///
-    /// @param characterManager
+    /**
+     * Constructs a new window to edit the current character
+     *
+     * @param characterManager
+     */
     public EditCharacterMenu(CharacterManager characterManager) {
         setContentPane(editCharacterPane);
 
@@ -41,6 +45,11 @@ public class EditCharacterMenu extends JFrame {
         });
     }
 
+    /**
+     * Saves the newly edited character to the character manager
+     *
+     * @param characterManager
+     */
     private void saveEditedCharacter(CharacterManager characterManager) {
         characterManager.sortCharacters();
         this.dispose();
