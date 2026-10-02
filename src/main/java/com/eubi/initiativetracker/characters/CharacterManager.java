@@ -22,6 +22,7 @@ public class CharacterManager {
      */
     public void addCharacter(Character character) {
         this.characters.add(character);
+        this.sortCharacters();
     }
 
     /**
@@ -34,13 +35,36 @@ public class CharacterManager {
      */
     public void removeCharacter(Character character) {
         this.characters.remove(character);
+        this.sortCharacters(); // Realign the turn order
+
+        // Safety check: if the removed character was currently taking their turn
+        if (this.currentCharacter != null && this.currentCharacter.equals(character)) {
+            this.newTurn();
+        }
     }
 
     /**
-     * basic new turn code
+     * Advances the turn tracker to the next character in ordered list.
+     * Operates cyclically, returning to the top of the list when reaching the end.
      */
     public void newTurn(){
-        //new turn code here
+        if(this.charactersOrdered.isEmpty()){
+            this.currentCharacter = null;
+            return;
+        }
+
+        if (this.currentCharacter == null){
+            this.currentCharacter = this.charactersOrdered.get(0);
+            return;
+        }
+
+        int currentIndex = this.charactersOrdered.indexOf(this.currentCharacter);
+
+        if (currentIndex == -1){
+            this.currentCharacter = this.charactersOrdered.get(0);
+        }else  {
+            int nextIndex = (currentIndex + 1) % this.charactersOrdered.size();
+        }
     }
 
     /**
@@ -81,6 +105,7 @@ public class CharacterManager {
     public void clearCharacters() {
         this.characters.clear();
         this.charactersOrdered.clear();
+        this.currentCharacter = null;
     }
 
     /**
@@ -94,7 +119,6 @@ public class CharacterManager {
                 .sorted(Comparator.comparingDouble(Character::getInitiativeValue).reversed())
                 .collect(Collectors.toList());
 
-        this.currentCharacter = charactersOrdered.get(0);
     }
 
     /**
@@ -110,6 +134,15 @@ public class CharacterManager {
         catch (IndexOutOfBoundsException e) {
             return null;
         }
+    }
+
+    /**
+     * Retrieves the character whose turn it currently is.
+     *
+     * @return The active {@link Character}.
+     */
+    public Character getCurrentCharacter() {
+        return this.currentCharacter;
     }
 
     /**
@@ -132,6 +165,11 @@ public class CharacterManager {
      */
     public void debugDisplay(boolean sort) {
         System.out.println("\n=== Character Manager Debug Output ===");
+        if (this.currentCharacter != null) {
+            System.out.println("Current Turn: " + this.currentCharacter.toString());
+        }else{
+            System.out.println("Current Turn: " + "N/A");
+        }
 
         System.out.println("\nOriginal List (" + this.characters.size() + " characters):");
         if (this.characters.isEmpty()) {
