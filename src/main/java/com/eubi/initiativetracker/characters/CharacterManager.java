@@ -84,6 +84,7 @@ public class CharacterManager {
      */
     public void clearCharacters() {
         this.characters.clear();
+        this.charactersOrdered.clear();
     }
 
     /**
