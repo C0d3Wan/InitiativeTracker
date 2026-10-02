@@ -144,15 +144,19 @@ public class CharacterManager {
                 System.out.printf("  [%d] %s%n", i, this.characters.get(i).toString());
             }
         }
-
-        this.sortCharacters(); // Refresh the sorted list automatically for accuracy
-
         System.out.println("\nSorted List (By Initiative Descending):");
-        if (this.charactersOrdered.isEmpty()) {
+        if (this.characters.size() <= 0) {
             System.out.println("  [Empty]");
         } else {
-            for (int i = 0; i < this.charactersOrdered.size(); i++) {
-                System.out.printf("  [%d] %s%n", i, this.charactersOrdered.get(i).toString());
+            this.sortCharacters(); // Refresh the sorted list automatically for accuracy
+
+
+            if (this.charactersOrdered.isEmpty()) {
+                System.out.println("  [Empty]");
+            } else {
+                for (int i = 0; i < this.charactersOrdered.size(); i++) {
+                    System.out.printf("  [%d] %s%n", i, this.charactersOrdered.get(i).toString());
+                }
             }
         }
         System.out.println("----------------------------------------------------------------------------------------------------------------------");
