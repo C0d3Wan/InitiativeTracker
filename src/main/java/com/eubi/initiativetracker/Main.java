@@ -8,7 +8,7 @@ import com.eubi.initiativetracker.swingui.MainMenu;
 import javax.swing.*;
 
 public class Main {
-    static void main() {
+    public static void main(String[] args) {
         CharacterManager characterManager = init();
         characterManager.debugDisplay();
     }
