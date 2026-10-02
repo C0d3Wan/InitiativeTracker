@@ -130,7 +130,7 @@ public class CharacterManager {
      * Outputs a formatted representation of both the original and sorted lists to the console.
      * Used primarily to verify the underlying state of the manager during development.
      */
-    public void debugDisplay() {
+    public void debugDisplay(boolean sort) {
         System.out.println("\n=== Character Manager Debug Output ===");
 
         System.out.println("\nOriginal List (" + this.characters.size() + " characters):");
@@ -142,10 +142,10 @@ public class CharacterManager {
             }
         }
         System.out.println("\nSorted List (By Initiative Descending):");
-        if (this.characters.isEmpty()) {
+        if (this.characters.isEmpty() && !sort) {
             System.out.println("  [Empty]");
         } else {
-            this.sortCharacters(); // Refresh the sorted list automatically for accuracy
+            this.sortCharacters();
 
 
             if (this.charactersOrdered.isEmpty()) {
