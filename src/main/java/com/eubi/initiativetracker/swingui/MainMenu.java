@@ -42,7 +42,8 @@ public class MainMenu extends JFrame {
         });
 
         removeCharacterButton.addActionListener(e -> {
-
+            RemoveCharacterMenu removeCharacter = new RemoveCharacterMenu(characterManager);
+            removeCharacter.setVisible(true);
         });
     }
 
