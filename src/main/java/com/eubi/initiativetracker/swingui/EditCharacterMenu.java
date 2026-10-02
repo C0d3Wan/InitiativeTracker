@@ -90,15 +90,18 @@ public class EditCharacterMenu extends JFrame {
         String name = charactersCombo.getSelectedItem().toString();
         Character character = (Character) characterDictionary.get(name);
 
-        Map<String, Object> characterData = character.getCharacterData();
-        System.out.println(characterData);
+        if (character != null) {
+            Map<String, Object> characterData = character.getCharacterData();
 
-        characterNameLabel.setText(characterData.get("Name").toString());
-        initiativeLabel.setText(characterData.get("Initiative").toString());
-        dexterityLabel.setText(characterData.get("Dexterity").toString());
-        deathStatusLabel.setText(characterData.get("DeathStatus").toString());
+            System.out.println(characterData);
 
-        pack();
+            characterNameLabel.setText(characterData.get("Name").toString());
+            initiativeLabel.setText(characterData.get("Initiative").toString());
+            dexterityLabel.setText(characterData.get("Dexterity").toString());
+            deathStatusLabel.setText(characterData.get("DeathStatus").toString());
+
+            pack();
+        }
     }
 
     {
