@@ -26,6 +26,9 @@ public class EditCharacterMenu extends JFrame {
     private JComboBox charactersCombo;
     private JButton saveEditButton;
 
+    private CharacterManager characterManager;
+    private Map<String, Character> characterMap;
+
     /**
      * Constructs a new window to edit the current character
      *
@@ -34,7 +37,9 @@ public class EditCharacterMenu extends JFrame {
     public EditCharacterMenu(CharacterManager characterManager) {
         setContentPane(editCharacterPane);
 
-        Map characterDictionary = updateCharactersCombo(characterManager);
+        this.characterManager = characterManager;
+
+        updateCharactersCombo();
 
         characterNameLabel.setText("Null");
         initiativeLabel.setText("Null");
@@ -49,29 +54,23 @@ public class EditCharacterMenu extends JFrame {
         newDexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
 
         charactersCombo.addActionListener(e -> {
-            updateDetails(characterDictionary);
+            updateDetails();
         });
     }
 
     /**
      * Saves the newly edited character to the character manager
-     *
-     * @param characterManager Allows use of {@link CharacterManager}
      */
-    private void saveEditedCharacter(CharacterManager characterManager) {
-        characterManager.sortCharacters();
+    private void saveEditedCharacter() {
+        this.characterManager.sortCharacters();
         this.dispose();
     }
 
     /**
      * Updates the selection box from the list of available characters
-     *
-     * @param characterManager Allows use of {@link CharacterManager}
      */
-    private Map updateCharactersCombo(CharacterManager characterManager) {
-        List<Character> characters = characterManager.getCharacterVector();
-        Map<String, Character> characterDictionary = new HashMap<>();
-
+    private void updateCharactersCombo() {
+        List<Character> characters = this.characterManager.getCharacterVector();
         if (characters.isEmpty()) {
             charactersCombo.addItem("No Characters");
             saveEditButton.setEnabled(false);
@@ -79,27 +78,22 @@ public class EditCharacterMenu extends JFrame {
             saveEditButton.setEnabled(true);
             for (Character character : characters) {
                 String name = character.getCharacterData().get("Name").toString();
-                characterDictionary.put(name, character);
+                this.characterMap.put(name, character);
                 charactersCombo.addItem((String) name);
             }
         }
-        return characterDictionary;
+        pack();
     }
 
-    private void updateDetails(Map characterDictionary) {
+    private void updateDetails() {
         String name = charactersCombo.getSelectedItem().toString();
-        Character character = (Character) characterDictionary.get(name);
-
+        Character character = (Character) this.characterMap.get(name);
         if (character != null) {
             Map<String, Object> characterData = character.getCharacterData();
-
-            System.out.println(characterData);
-
             characterNameLabel.setText(characterData.get("Name").toString());
             initiativeLabel.setText(characterData.get("Initiative").toString());
             dexterityLabel.setText(characterData.get("Dexterity").toString());
             deathStatusLabel.setText(characterData.get("DeathStatus").toString());
-
             pack();
         }
     }
@@ -120,57 +114,54 @@ public class EditCharacterMenu extends JFrame {
      */
     private void $$$setupUI$$$() {
         editCharacterPane = new JPanel();
-        editCharacterPane.setLayout(new GridLayoutManager(8, 3, new Insets(5, 5, 5, 5), -1, -1));
+        editCharacterPane.setLayout(new GridLayoutManager(7, 3, new Insets(5, 5, 5, 5), -1, -1));
         final JLabel label1 = new JLabel();
-        label1.setText("Character Editor");
-        editCharacterPane.add(label1, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        label1.setText("Name");
+        editCharacterPane.add(label1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label2 = new JLabel();
-        label2.setText("Name");
+        label2.setText("Initiative");
         editCharacterPane.add(label2, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label3 = new JLabel();
-        label3.setText("Initiative");
+        label3.setText("Dexterity");
         editCharacterPane.add(label3, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label4 = new JLabel();
-        label4.setText("Dexterity");
+        label4.setText("Death Status");
         editCharacterPane.add(label4, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label5 = new JLabel();
-        label5.setText("Death Status");
-        editCharacterPane.add(label5, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JSeparator separator1 = new JSeparator();
-        editCharacterPane.add(separator1, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editCharacterPane.add(separator1, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         characterNameLabel = new JLabel();
         characterNameLabel.setText("Label");
-        editCharacterPane.add(characterNameLabel, new GridConstraints(3, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editCharacterPane.add(characterNameLabel, new GridConstraints(2, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         newInititative = new JSpinner();
-        editCharacterPane.add(newInititative, new GridConstraints(4, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editCharacterPane.add(newInititative, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         initiativeLabel = new JLabel();
         initiativeLabel.setText("Label");
-        editCharacterPane.add(initiativeLabel, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editCharacterPane.add(initiativeLabel, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         dexterityLabel = new JLabel();
         dexterityLabel.setText("Label");
-        editCharacterPane.add(dexterityLabel, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editCharacterPane.add(dexterityLabel, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deathStatusLabel = new JLabel();
         deathStatusLabel.setText("Label");
-        editCharacterPane.add(deathStatusLabel, new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editCharacterPane.add(deathStatusLabel, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         newDexteritySpinner = new JSpinner();
-        editCharacterPane.add(newDexteritySpinner, new GridConstraints(5, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editCharacterPane.add(newDexteritySpinner, new GridConstraints(4, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         comboBox1 = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
         defaultComboBoxModel1.addElement("Alive");
         defaultComboBoxModel1.addElement("Dead");
         defaultComboBoxModel1.addElement("Downed");
         comboBox1.setModel(defaultComboBoxModel1);
-        editCharacterPane.add(comboBox1, new GridConstraints(6, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editCharacterPane.add(comboBox1, new GridConstraints(5, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         charactersCombo = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
         charactersCombo.setModel(defaultComboBoxModel2);
-        editCharacterPane.add(charactersCombo, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label6 = new JLabel();
-        label6.setText("Character to Edit");
-        editCharacterPane.add(label6, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editCharacterPane.add(charactersCombo, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label5 = new JLabel();
+        label5.setText("Character to Edit");
+        editCharacterPane.add(label5, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         saveEditButton = new JButton();
         saveEditButton.setText("Save Edit");
-        editCharacterPane.add(saveEditButton, new GridConstraints(7, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editCharacterPane.add(saveEditButton, new GridConstraints(6, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

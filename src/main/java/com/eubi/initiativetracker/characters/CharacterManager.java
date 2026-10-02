@@ -37,7 +37,6 @@ public class CharacterManager {
         this.characters.remove(character);
         this.sortCharacters(); // Realign the turn order
 
-        // Safety check: if the removed character was currently taking their turn
         if (this.currentCharacter != null && this.currentCharacter.equals(character)) {
             this.newTurn();
         }
