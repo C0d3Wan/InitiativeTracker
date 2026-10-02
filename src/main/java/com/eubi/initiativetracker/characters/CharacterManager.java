@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 public class CharacterManager {
     private final List<Character> characters;
     private List<Character> charactersOrdered;
-    private Character currentCharecter;
+    private Character currentCharacter;
     private int currentCharacterIndex;
 
     /**
@@ -44,7 +44,7 @@ public class CharacterManager {
     public void newTurn(){
         this.currentCharacterIndex+=1;
 
-        this.currentCharecter = charactersOrdered.get(currentCharacterIndex);
+        this.currentCharacter = charactersOrdered.get(currentCharacterIndex);
     }
 
     /**
@@ -97,7 +97,7 @@ public class CharacterManager {
                 .sorted(Comparator.comparingDouble(Character::getInitiativeValue).reversed())
                 .collect(Collectors.toList());
 
-        this.currentCharecter = charactersOrdered.get(currentCharacterIndex);
+        this.currentCharacter = charactersOrdered.get(currentCharacterIndex);
     }
 
     /**
@@ -145,7 +145,7 @@ public class CharacterManager {
             }
         }
         System.out.println("\nSorted List (By Initiative Descending):");
-        if (this.characters.size() <= 0) {
+        if (this.characters.isEmpty()) {
             System.out.println("  [Empty]");
         } else {
             this.sortCharacters(); // Refresh the sorted list automatically for accuracy
