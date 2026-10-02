@@ -10,7 +10,7 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
         CharacterManager characterManager = init();
-        characterManager.debugDisplay();
+        characterManager.debugDisplay(false);
     }
 
     /**
