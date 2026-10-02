@@ -1,7 +1,6 @@
 package com.eubi.initiativetracker.swingui;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.event.*;
 import java.awt.*;
 
@@ -10,7 +9,10 @@ import com.eubi.initiativetracker.characters.CharacterManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
-public class AddCharacter extends JFrame {
+/**
+ * Class for the tracker's add character menu
+ */
+public class AddCharacterMenu extends JFrame {
     private JPanel addCharacterPane;
     private JTextField characterName;
     private JComboBox characterTypeCombo;
@@ -19,7 +21,12 @@ public class AddCharacter extends JFrame {
     private JButton addCharacterButton;
     private JComboBox deathStatusCombo;
 
-    public AddCharacter(CharacterManager characterManager) {
+    /**
+     * Constructs a new window to add a new character to the character manager
+     *
+     * @param characterManager
+     */
+    public AddCharacterMenu(CharacterManager characterManager) {
         setContentPane(addCharacterPane);
 
         setTitle("Add Character");
@@ -53,6 +60,12 @@ public class AddCharacter extends JFrame {
         });
     }
 
+    /**
+     * Saves the new character to the character manager
+     *
+     * @param characterManager
+     */
+
     private void saveCharacter(CharacterManager characterManager) {
         String name = characterName.getText().trim();
         int initiative = (int) initiativeSpinner.getValue();
@@ -61,10 +74,13 @@ public class AddCharacter extends JFrame {
         String status = (String) deathStatusCombo.getSelectedItem();
 
         Character newCharacter = new Character(name, initiative, dexterity, type, status);
+
         characterManager.addCharacter(newCharacter);
-        characterManager.debugDisplay();
+        characterManager.sortCharacters();
+        this.dispose();
     }
 
+    /// Validates if the character has at least a name
     private void validateName() {
         boolean isValid = !characterName.getText().trim().isEmpty();
         addCharacterButton.setEnabled(isValid);
@@ -121,7 +137,7 @@ public class AddCharacter extends JFrame {
         final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
         defaultComboBoxModel2.addElement("Alive");
         defaultComboBoxModel2.addElement("Dead");
-        defaultComboBoxModel2.addElement("Down");
+        defaultComboBoxModel2.addElement("Downed");
         deathStatusCombo.setModel(defaultComboBoxModel2);
         addCharacterPane.add(deathStatusCombo, new GridConstraints(4, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label5 = new JLabel();
@@ -135,4 +151,5 @@ public class AddCharacter extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return addCharacterPane;
     }
+
 }

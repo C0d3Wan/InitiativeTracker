@@ -7,6 +7,9 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import java.awt.*;
 
+/**
+ * Class for the tracker's main menu
+ */
 public class MainMenu extends JFrame {
     private JPanel mainMenuPane;
     private JButton addCharacterButton;
@@ -15,6 +18,11 @@ public class MainMenu extends JFrame {
     private JList initiativeList;
     private JButton editCharacterButton;
 
+    /**
+     * Constructs a window for the initiative tracker
+     *
+     * @param characterManager
+     */
     public MainMenu(CharacterManager characterManager) {
         setContentPane(mainMenuPane);
 
@@ -24,12 +32,13 @@ public class MainMenu extends JFrame {
         setLocationRelativeTo(null);
 
         addCharacterButton.addActionListener(e -> {
-            AddCharacter addCharacter = new AddCharacter(characterManager);
+            AddCharacterMenu addCharacter = new AddCharacterMenu(characterManager);
             addCharacter.setVisible(true);
         });
 
         editCharacterButton.addActionListener(e -> {
-
+            EditCharacterMenu editCharacter = new EditCharacterMenu(characterManager);
+            editCharacter.setVisible(true);
         });
 
         removeCharacterButton.addActionListener(e -> {
@@ -109,4 +118,5 @@ public class MainMenu extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return mainMenuPane;
     }
+
 }
