@@ -27,9 +27,6 @@ public class CharacterManager {
 
     /**
      * Removes a character from the unsorted tracker list.
-     * <p>
-     * Note: This does not automatically update the sorted list. A subsequent call
-     * to {@link #sortCharacters()} is required to reflect this removal in the ordered list.
      *
      * @param character The exact {@link Character} instance to remove.
      */
@@ -63,6 +60,7 @@ public class CharacterManager {
             this.currentCharacter = this.charactersOrdered.get(0);
         }else  {
             int nextIndex = (currentIndex + 1) % this.charactersOrdered.size();
+            this.currentCharacter = this.charactersOrdered.get(nextIndex);
         }
     }
 
@@ -180,19 +178,18 @@ public class CharacterManager {
         }
         System.out.println("\nSorted List (By Initiative Descending):");
         if (this.characters.isEmpty() || !sort) {
-            System.out.println("  [Empty]");
+            System.out.println(" ");
         } else {
             this.sortCharacters();
-
-
-            if (this.charactersOrdered.isEmpty()) {
-                System.out.println("  [Empty]");
-            } else {
-                for (int i = 0; i < this.charactersOrdered.size(); i++) {
-                    System.out.printf("  [%d] %s%n", i, this.charactersOrdered.get(i).toString());
-                }
+        }
+        if (this.charactersOrdered.isEmpty()) {
+            System.out.println("  [Empty]");
+        } else {
+            for (int i = 0; i < this.charactersOrdered.size(); i++) {
+                System.out.printf("  [%d] %s%n", i, this.charactersOrdered.get(i).toString());
             }
         }
+
         System.out.println("----------------------------------------------------------------------------------------------------------------------");
     }
 }
