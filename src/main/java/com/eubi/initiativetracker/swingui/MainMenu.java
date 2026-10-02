@@ -21,7 +21,7 @@ public class MainMenu extends JFrame {
     /**
      * Constructs a window for the initiative tracker
      *
-     * @param characterManager
+     * @param characterManager Allows use of {@link CharacterManager}
      */
     public MainMenu(CharacterManager characterManager) {
         setContentPane(mainMenuPane);

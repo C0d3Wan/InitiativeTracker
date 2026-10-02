@@ -29,7 +29,7 @@ public class EditCharacterMenu extends JFrame {
     /**
      * Constructs a new window to edit the current character
      *
-     * @param characterManager
+     * @param characterManager Allows use of {@link CharacterManager}
      */
     public EditCharacterMenu(CharacterManager characterManager) {
         setContentPane(editCharacterPane);
@@ -54,7 +54,7 @@ public class EditCharacterMenu extends JFrame {
     /**
      * Saves the newly edited character to the character manager
      *
-     * @param characterManager
+     * @param characterManager Allows use of {@link CharacterManager}
      */
     private void saveEditedCharacter(CharacterManager characterManager) {
         characterManager.sortCharacters();
@@ -64,7 +64,7 @@ public class EditCharacterMenu extends JFrame {
     /**
      * Updates the selection box from the list of available characters
      *
-     * @param characterManager
+     * @param characterManager Allows use of {@link CharacterManager}
      */
     private Map updateCharactersCombo(CharacterManager characterManager) {
         List<Character> characters = characterManager.getCharacterVector();
@@ -88,7 +88,7 @@ public class EditCharacterMenu extends JFrame {
         String name = charactersCombo.getSelectedItem().toString();
         Character character = (Character) characterDictionary.get(name);
 
-        Map characterData = character.getCharacterData();
+        Map<String, Object> characterData = character.getCharacterData();
         System.out.println(characterData);
 
         characterNameLabel.setText(characterData.get("Name").toString());
