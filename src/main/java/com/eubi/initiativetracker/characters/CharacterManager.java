@@ -6,7 +6,6 @@ public class CharacterManager {
     private final List<Character> characters;
     private List<Character> charactersOrdered;
     private Character currentCharacter;
-    private int currentCharacterIndex;
 
     /**
      * Constructs a new, empty CharacterManager.
@@ -14,7 +13,6 @@ public class CharacterManager {
     public CharacterManager() {
         this.characters = new ArrayList<>();
         this.charactersOrdered = new ArrayList<>();
-        this.currentCharacterIndex = 0;
     }
 
     /**
@@ -42,9 +40,7 @@ public class CharacterManager {
      * basic new turn code
      */
     public void newTurn(){
-        this.currentCharacterIndex+=1;
-
-        this.currentCharacter = charactersOrdered.get(currentCharacterIndex);
+        //new turn code here
     }
 
     /**
@@ -98,7 +94,7 @@ public class CharacterManager {
                 .sorted(Comparator.comparingDouble(Character::getInitiativeValue).reversed())
                 .collect(Collectors.toList());
 
-        this.currentCharacter = charactersOrdered.get(currentCharacterIndex);
+        this.currentCharacter = charactersOrdered.get(0);
     }
 
     /**
