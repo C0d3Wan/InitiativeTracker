@@ -20,5 +20,6 @@ jobs:
       - name: Upload JAR Artifact
         uses: actions/upload-artifact@v7
         with:
-          name: bot-jar
-          path: target/*-jar-with-dependencies.jar
+          name: initiativeTracker-jar
+          path: target/*.jar
+          if-no-files-found: error
