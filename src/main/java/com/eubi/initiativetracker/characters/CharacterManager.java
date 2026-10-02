@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 public class CharacterManager {
     private final List<Character> characters;
     private List<Character> charactersOrdered;
+    private Character currentCharecter;
+    private int currentCharacterIndex;
 
     /**
      * Constructs a new, empty CharacterManager.
@@ -12,6 +14,7 @@ public class CharacterManager {
     public CharacterManager() {
         this.characters = new ArrayList<>();
         this.charactersOrdered = new ArrayList<>();
+        this.currentCharacterIndex = 0;
     }
 
     /**
@@ -84,6 +87,8 @@ public class CharacterManager {
         this.charactersOrdered = characters.stream()
                 .sorted(Comparator.comparingDouble(Character::getInitiativeValue).reversed())
                 .collect(Collectors.toList());
+
+        this.currentCharecter = charactersOrdered.get(currentCharacterIndex);
     }
 
     /**
