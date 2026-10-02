@@ -122,9 +122,9 @@
         </constraints>
         <properties>
           <model>
-            <item value="ALIVE"/>
-            <item value="DEAD"/>
-            <item value="DOWNED"/>
+            <item value="Alive"/>
+            <item value="Dead"/>
+            <item value="Downed"/>
           </model>
         </properties>
       </component>
