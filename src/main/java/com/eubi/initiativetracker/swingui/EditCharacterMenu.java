@@ -7,7 +7,6 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
@@ -26,6 +25,7 @@ public class EditCharacterMenu extends JFrame {
     private JComboBox comboBox1;
     private JButton testButton;
     private JComboBox charactersCombo;
+    private JButton saveEditButton;
 
     /**
      * Constructs a new window to edit the current character
@@ -35,21 +35,20 @@ public class EditCharacterMenu extends JFrame {
     public EditCharacterMenu(CharacterManager characterManager) {
         setContentPane(editCharacterPane);
 
-        updateCharactersCombo(characterManager);
+        Dictionary characterDictionary = updateCharactersCombo(characterManager);
 
-        characterNameLabel.setText("Hello");
-        initiativeLabel.setText("Initiative");
-        dexterityLabel.setText("Dexterity");
-        deathStatusLabel.setText("Death Status");
+        characterNameLabel.setText("Null");
+        initiativeLabel.setText("Null");
+        dexterityLabel.setText("Null");
+        deathStatusLabel.setText("Null");
 
         setTitle("Edit Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
 
-        testButton.addActionListener(e -> {
-            characterNameLabel.setText("Goodbye");
-            pack();
+        charactersCombo.addActionListener(e -> {
+            updateDetails(characterDictionary);
         });
     }
 
@@ -63,19 +62,42 @@ public class EditCharacterMenu extends JFrame {
         this.dispose();
     }
 
-    private void updateCharactersCombo(CharacterManager characterManager) {
+    /**
+     * Updates the selection box from the list of available characters
+     *
+     * @param characterManager
+     */
+    private Dictionary updateCharactersCombo(CharacterManager characterManager) {
         List<Character> characters = characterManager.getCharacterVector();
-        Dictionary<String, Object> characterDictionary = new Hashtable<>();
+        Dictionary<String, Character> characterDictionary = new Hashtable<>();
 
         if (characters.isEmpty()) {
             charactersCombo.addItem("No Characters");
+            saveEditButton.setEnabled(false);
         } else {
+            saveEditButton.setEnabled(true);
             for (Character character : characters) {
                 String name = character.getCharacterData().get("Name").toString();
                 characterDictionary.put(name, character);
                 charactersCombo.addItem((String) name);
             }
         }
+        return characterDictionary;
+    }
+
+    private void updateDetails(Dictionary characterDictionary) {
+        String name = charactersCombo.getSelectedItem().toString();
+        Character character = (Character) characterDictionary.get(name);
+
+        Dictionary characterData = character.getCharacterData();
+        System.out.println(characterData);
+
+        characterNameLabel.setText(characterData.get("Name").toString());
+        initiativeLabel.setText(characterData.get("Initiative").toString());
+        //dexterityLabel.setText(characterData.get("Dexterity").toString());
+        deathStatusLabel.setText(characterData.get("DeathStatus").toString());
+
+        pack();
     }
 
     {
@@ -151,6 +173,9 @@ public class EditCharacterMenu extends JFrame {
         final JLabel label6 = new JLabel();
         label6.setText("Character to Edit");
         editCharacterPane.add(label6, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        saveEditButton = new JButton();
+        saveEditButton.setText("Save Edit");
+        editCharacterPane.add(saveEditButton, new GridConstraints(10, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
