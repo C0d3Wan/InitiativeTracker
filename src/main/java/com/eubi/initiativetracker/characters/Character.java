@@ -135,8 +135,8 @@ public class Character {
         Map<String, Object> displayData = new HashMap<>();
 
         displayData.put("Name", this.characterName);
-        displayData.put("Initiative", this.initiativeValue);
-        // The .name() method safely converts the Enum into a readable String
+        displayData.put("Initiative", (this.initiativeValue-(this.dexValue/100)));
+        displayData.put("Dexterity",this.dexValue);
         displayData.put("Type", this.characterType.name());
         displayData.put("DeathStatus", this.deathStatus.name());
 

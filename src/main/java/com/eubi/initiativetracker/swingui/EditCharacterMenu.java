@@ -93,7 +93,7 @@ public class EditCharacterMenu extends JFrame {
 
         characterNameLabel.setText(characterData.get("Name").toString());
         initiativeLabel.setText(characterData.get("Initiative").toString());
-        //dexterityLabel.setText(characterData.get("Dexterity").toString());
+        dexterityLabel.setText(characterData.get("Dexterity").toString());
         deathStatusLabel.setText(characterData.get("DeathStatus").toString());
 
         pack();
