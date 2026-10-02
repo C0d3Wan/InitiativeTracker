@@ -87,8 +87,8 @@ public class EditCharacterMenu extends JFrame {
 
     private void updateDetails() {
         String name = charactersCombo.getSelectedItem().toString();
-        Character character = (Character) this.characterMap.get(name);
-        if (character != null) {
+        if (this.characterMap != null) {
+            Character character = (Character) this.characterMap.get(name);
             Map<String, Object> characterData = character.getCharacterData();
             characterNameLabel.setText(characterData.get("Name").toString());
             initiativeLabel.setText(characterData.get("Initiative").toString());
