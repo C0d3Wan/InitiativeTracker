@@ -1,8 +1,5 @@
 package com.eubi.initiativetracker;
-import com.eubi.initiativetracker.characters.Character;
 import com.eubi.initiativetracker.characters.CharacterManager;
-import com.eubi.initiativetracker.characters.CharacterType;
-import com.eubi.initiativetracker.characters.DeathStatus;
 import com.eubi.initiativetracker.swingui.MainMenu;
 
 import javax.swing.*;
