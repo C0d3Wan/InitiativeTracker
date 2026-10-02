@@ -156,6 +156,13 @@ public class Character {
     }
 
     /**
+     * Updates the character's dexterity stat
+     *
+     * @param newDexValue - The new Dex Value
+     */
+    public void editDexValue(int newDexValue) {this.dexValue = newDexValue;}
+
+    /**
      * Updates the character's life status.
      *
      * @param newDeathStatus The new {@link DeathStatus} to apply.
