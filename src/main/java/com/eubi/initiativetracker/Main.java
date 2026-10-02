@@ -14,7 +14,7 @@ public class Main {
     }
 
     /**
-     * Instantiantes all required Classes and UI
+     * Instantiates all required Classes and UI
      *
      * @return The {@link CharacterManager} to be used throughout the Project
      */
