@@ -18,6 +18,8 @@ public class MainMenu extends JFrame {
     private JList initiativeList;
     private JButton editCharacterButton;
 
+    private CharacterManager characterManager;
+
     /**
      * Constructs a window for the initiative tracker
      *
@@ -25,6 +27,8 @@ public class MainMenu extends JFrame {
      */
     public MainMenu(CharacterManager characterManager) {
         setContentPane(mainMenuPane);
+
+        this.characterManager = characterManager;
 
         setTitle("Initiative Tracker");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

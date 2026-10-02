@@ -26,6 +26,9 @@ public class EditCharacterMenu extends JFrame {
     private JComboBox charactersCombo;
     private JButton saveEditButton;
 
+    private CharacterManager characterManager;
+    private Map<String, Character> characterMap;
+
     /**
      * Constructs a new window to edit the current character
      *
@@ -34,7 +37,9 @@ public class EditCharacterMenu extends JFrame {
     public EditCharacterMenu(CharacterManager characterManager) {
         setContentPane(editCharacterPane);
 
-        Map characterDictionary = updateCharactersCombo(characterManager);
+        this.characterManager = characterManager;
+
+        updateCharactersCombo();
 
         characterNameLabel.setText("Null");
         initiativeLabel.setText("Null");
@@ -49,29 +54,23 @@ public class EditCharacterMenu extends JFrame {
         newDexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
 
         charactersCombo.addActionListener(e -> {
-            updateDetails(characterDictionary);
+            updateDetails();
         });
     }
 
     /**
      * Saves the newly edited character to the character manager
-     *
-     * @param characterManager Allows use of {@link CharacterManager}
      */
-    private void saveEditedCharacter(CharacterManager characterManager) {
-        characterManager.sortCharacters();
+    private void saveEditedCharacter() {
+        this.characterManager.sortCharacters();
         this.dispose();
     }
 
     /**
      * Updates the selection box from the list of available characters
-     *
-     * @param characterManager Allows use of {@link CharacterManager}
      */
-    private Map updateCharactersCombo(CharacterManager characterManager) {
-        List<Character> characters = characterManager.getCharacterVector();
-        Map<String, Character> characterDictionary = new HashMap<>();
-
+    private void updateCharactersCombo() {
+        List<Character> characters = this.characterManager.getCharacterVector();
         if (characters.isEmpty()) {
             charactersCombo.addItem("No Characters");
             saveEditButton.setEnabled(false);
@@ -79,27 +78,22 @@ public class EditCharacterMenu extends JFrame {
             saveEditButton.setEnabled(true);
             for (Character character : characters) {
                 String name = character.getCharacterData().get("Name").toString();
-                characterDictionary.put(name, character);
+                this.characterMap.put(name, character);
                 charactersCombo.addItem((String) name);
             }
         }
-        return characterDictionary;
+        pack();
     }
 
-    private void updateDetails(Map characterDictionary) {
+    private void updateDetails() {
         String name = charactersCombo.getSelectedItem().toString();
-        Character character = (Character) characterDictionary.get(name);
-
+        Character character = (Character) this.characterMap.get(name);
         if (character != null) {
             Map<String, Object> characterData = character.getCharacterData();
-
-            System.out.println(characterData);
-
             characterNameLabel.setText(characterData.get("Name").toString());
             initiativeLabel.setText(characterData.get("Initiative").toString());
             dexterityLabel.setText(characterData.get("Dexterity").toString());
             deathStatusLabel.setText(characterData.get("DeathStatus").toString());
-
             pack();
         }
     }

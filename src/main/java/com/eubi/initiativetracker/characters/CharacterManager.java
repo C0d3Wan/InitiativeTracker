@@ -96,8 +96,6 @@ public class CharacterManager {
         this.charactersOrdered = characters.stream()
                 .sorted(Comparator.comparingDouble(Character::getInitiativeValue).reversed())
                 .collect(Collectors.toList());
-
-        this.currentCharacter = charactersOrdered.get(currentCharacterIndex);
     }
 
     /**

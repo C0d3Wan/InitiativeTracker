@@ -1,5 +1,6 @@
 package com.eubi.initiativetracker.swingui;
 
+import com.eubi.initiativetracker.characters.Character;
 import com.eubi.initiativetracker.characters.CharacterManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -7,19 +8,62 @@ import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RemoveCharacterMenu extends JFrame {
     private JPanel removeCharacterPane;
-    private JComboBox comboBox1;
+    private JComboBox characterSelectionCombo;
     private JButton removeCharacterButton;
+
+    private Map<String, Character> characterMap =  new HashMap<>();
+    private CharacterManager characterManager;
 
     public RemoveCharacterMenu(CharacterManager characterManager) {
         setContentPane(removeCharacterPane);
+        this.characterManager = characterManager;
+        updateSelectionCombo();
 
         setTitle("Remove Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
+
+        removeCharacterButton.addActionListener(e -> {
+            removeCharacter();
+        });
+    }
+
+    private void updateSelectionCombo() {
+        List<Character> characters = this.characterManager.getCharacterVector();
+        characterSelectionCombo.removeAllItems();
+        if (characters.isEmpty()) {
+            characterSelectionCombo.addItem("No Characters");
+            removeCharacterButton.setEnabled(false);
+        } else {
+            removeCharacterButton.setEnabled(true);
+            for (Character character : characters) {
+                String name = character.getCharacterData().get("Name").toString();
+                this.characterMap.put(name, character);
+                characterSelectionCombo.addItem(name);
+            }
+            characterSelectionCombo.addItem("All Characters");
+        }
+        pack();
+    }
+
+    private void removeCharacter() {
+        String name = characterSelectionCombo.getSelectedItem().toString();
+        if (name.equals("All Characters")) {
+            this.characterManager.clearCharacters();
+            this.dispose();
+        } else {
+            Character character = this.characterMap.get(name);
+            this.characterManager.removeCharacter(character);
+            this.characterManager.sortCharacters();
+            updateSelectionCombo();
+        }
     }
 
     {
@@ -38,12 +82,19 @@ public class RemoveCharacterMenu extends JFrame {
      */
     private void $$$setupUI$$$() {
         removeCharacterPane = new JPanel();
-        removeCharacterPane.setLayout(new GridLayoutManager(2, 1, new Insets(5, 5, 5, 5), -1, -1));
+        removeCharacterPane.setLayout(new GridLayoutManager(3, 2, new Insets(5, 5, 5, 5), -1, -1));
+        characterSelectionCombo = new JComboBox();
+        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
+        characterSelectionCombo.setModel(defaultComboBoxModel1);
+        removeCharacterPane.add(characterSelectionCombo, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
-        label1.setText("Remove Character");
-        removeCharacterPane.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        removeCharacterPane.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        label1.setText("Select Character");
+        removeCharacterPane.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        removeCharacterButton = new JButton();
+        removeCharacterButton.setText("Remove Character");
+        removeCharacterPane.add(removeCharacterButton, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JSeparator separator1 = new JSeparator();
+        removeCharacterPane.add(separator1, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -52,4 +103,5 @@ public class RemoveCharacterMenu extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return removeCharacterPane;
     }
+
 }
