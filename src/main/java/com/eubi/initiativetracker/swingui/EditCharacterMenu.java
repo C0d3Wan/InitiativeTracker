@@ -84,14 +84,13 @@ public class EditCharacterMenu extends JFrame {
             characterNameLabel.setText(tempCharacter.getCharacterData().get("Name").toString());
             initiativeLabel.setText(tempCharacter.getCharacterData().get("Initiative").toString());
             dexterityLabel.setText(tempCharacter.getCharacterData().get("Dexterity").toString());
-            deathStatusLabel.setText(tempCharacter.getCharacterData().get("Death Status").toString());
+            deathStatusLabel.setText(tempCharacter.getCharacterData().get("DeathStatus").toString());
         }
         pack();
     }
 
     private void updateDetails() {
         String name = charactersCombo.getSelectedItem().toString();
-        System.out.println(this.characterMap);
         if (!this.characterMap.isEmpty()) {
             Character character = (Character) this.characterMap.get(name);
             Map<String, Object> characterData = character.getCharacterData();
