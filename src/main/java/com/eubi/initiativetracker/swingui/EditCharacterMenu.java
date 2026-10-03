@@ -27,7 +27,7 @@ public class EditCharacterMenu extends JFrame {
     private JButton saveEditButton;
 
     private CharacterManager characterManager;
-    private Map<String, Character> characterMap;
+    private Map<String, Character> characterMap = new HashMap<>();
 
     /**
      * Constructs a new window to edit the current character
@@ -40,11 +40,6 @@ public class EditCharacterMenu extends JFrame {
         this.characterManager = characterManager;
 
         updateCharactersCombo();
-
-        characterNameLabel.setText("Null");
-        initiativeLabel.setText("Null");
-        dexterityLabel.setText("Null");
-        deathStatusLabel.setText("Null");
 
         setTitle("Edit Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -73,6 +68,10 @@ public class EditCharacterMenu extends JFrame {
         List<Character> characters = this.characterManager.getCharacterVector();
         if (characters.isEmpty()) {
             charactersCombo.addItem("No Characters");
+            characterNameLabel.setText("Null");
+            initiativeLabel.setText("Null");
+            dexterityLabel.setText("Null");
+            deathStatusLabel.setText("Null");
             saveEditButton.setEnabled(false);
         } else {
             saveEditButton.setEnabled(true);
@@ -81,13 +80,19 @@ public class EditCharacterMenu extends JFrame {
                 this.characterMap.put(name, character);
                 charactersCombo.addItem((String) name);
             }
+            Character tempCharacter = this.characterMap.entrySet().iterator().next().getValue();
+            characterNameLabel.setText(tempCharacter.getCharacterData().get("Name").toString());
+            initiativeLabel.setText(tempCharacter.getCharacterData().get("Initiative").toString());
+            dexterityLabel.setText(tempCharacter.getCharacterData().get("Dexterity").toString());
+            deathStatusLabel.setText(tempCharacter.getCharacterData().get("Death Status").toString());
         }
         pack();
     }
 
     private void updateDetails() {
         String name = charactersCombo.getSelectedItem().toString();
-        if (this.characterMap != null) {
+        System.out.println(this.characterMap);
+        if (!this.characterMap.isEmpty()) {
             Character character = (Character) this.characterMap.get(name);
             Map<String, Object> characterData = character.getCharacterData();
             characterNameLabel.setText(characterData.get("Name").toString());
