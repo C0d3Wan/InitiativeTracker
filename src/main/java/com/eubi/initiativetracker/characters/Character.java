@@ -96,13 +96,13 @@ public class Character {
         this.dexValue = (float) dex / 100;
         this.initiativeValue = initiative + this.dexValue;
         switch (typeID) {
-            case "Player":
+            case "PLAYER":
                 this.characterType = CharacterType.PLAYER;
                 break;
-            case "Enemy":
+            case "ENEMY":
                 this.characterType = CharacterType.ENEMY;
                 break;
-            case "Ally":
+            case "ALLY":
                 this.characterType = CharacterType.ALLY;
                 break;
             default:
@@ -110,13 +110,13 @@ public class Character {
         }
 
         switch (deathID) {
-            case "Dead":
+            case "DEAD":
                 this.deathStatus = DeathStatus.DEAD;
                 break;
-            case "Alive":
+            case "ALIVE":
                 this.deathStatus = DeathStatus.ALIVE;
                 break;
-            case "Down":
+            case "DOWN":
                 this.deathStatus = DeathStatus.DOWN;
                 break;
             default:
@@ -135,8 +135,8 @@ public class Character {
         Map<String, Object> displayData = new HashMap<>();
 
         displayData.put("Name", this.characterName);
-        displayData.put("Initiative", (this.initiativeValue-(this.dexValue/100)));
-        displayData.put("Dexterity",this.dexValue);
+        displayData.put("Initiative", (int)(this.initiativeValue-this.dexValue));
+        displayData.put("Dexterity",(int)(this.dexValue*100));
         displayData.put("Type", this.characterType.name());
         displayData.put("DeathStatus", this.deathStatus.name());
 
@@ -190,6 +190,27 @@ public class Character {
                 default:
                     this.deathStatus = DeathStatus.UNKNOWN;
             }
+    }
+
+    /**
+     * Allows updating the death status using String
+     *
+     * @param statusID The new {@link DeathStatus} to apply.
+     */
+    public void editDeathStatus(String statusID) {
+        switch (statusID) {
+            case "DEAD":
+                this.deathStatus = DeathStatus.DEAD;
+                break;
+            case "ALIVE":
+                this.deathStatus = DeathStatus.ALIVE;
+                break;
+            case "DOWN":
+                this.deathStatus = DeathStatus.DOWN;
+                break;
+            default:
+                this.deathStatus = DeathStatus.UNKNOWN;
+        }
     }
 
     /**

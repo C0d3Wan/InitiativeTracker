@@ -108,9 +108,9 @@ public class AddCharacterMenu extends JFrame {
         addCharacterPane.add(characterName, new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         characterTypeCombo = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
-        defaultComboBoxModel1.addElement("Player");
-        defaultComboBoxModel1.addElement("Enemy");
-        defaultComboBoxModel1.addElement("Ally");
+        defaultComboBoxModel1.addElement("PLAYER");
+        defaultComboBoxModel1.addElement("ENEMY");
+        defaultComboBoxModel1.addElement("ALLY");
         characterTypeCombo.setModel(defaultComboBoxModel1);
         addCharacterPane.add(characterTypeCombo, new GridConstraints(3, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
@@ -136,9 +136,9 @@ public class AddCharacterMenu extends JFrame {
         addCharacterPane.add(addCharacterButton, new GridConstraints(5, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deathStatusCombo = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
-        defaultComboBoxModel2.addElement("Alive");
-        defaultComboBoxModel2.addElement("Dead");
-        defaultComboBoxModel2.addElement("Downed");
+        defaultComboBoxModel2.addElement("ALIVE");
+        defaultComboBoxModel2.addElement("DEAD");
+        defaultComboBoxModel2.addElement("DOWN");
         deathStatusCombo.setModel(defaultComboBoxModel2);
         addCharacterPane.add(deathStatusCombo, new GridConstraints(4, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label5 = new JLabel();

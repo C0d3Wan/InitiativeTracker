@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.eubi.initiativetracker.swingui.EditCharacterMenu">
-  <grid id="27dc6" binding="editCharacterPane" layout-manager="GridLayoutManager" row-count="7" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="editCharacterPane" layout-manager="GridLayoutManager" row-count="8" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="5" left="5" bottom="5" right="5"/>
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
@@ -51,10 +51,11 @@
           <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <enabled value="true"/>
           <text value="Label"/>
         </properties>
       </component>
-      <component id="41d93" class="javax.swing.JSpinner" binding="newInititative">
+      <component id="41d93" class="javax.swing.JSpinner" binding="newInitiativeSpinner">
         <constraints>
           <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -90,15 +91,15 @@
         </constraints>
         <properties/>
       </component>
-      <component id="2fe77" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+      <component id="2fe77" class="javax.swing.JComboBox" binding="newDeathStatusCombo">
         <constraints>
           <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <model>
-            <item value="Alive"/>
-            <item value="Dead"/>
-            <item value="Downed"/>
+            <item value="ALIVE"/>
+            <item value="DEAD"/>
+            <item value="DOWN"/>
           </model>
         </properties>
       </component>
@@ -124,6 +125,15 @@
         </constraints>
         <properties>
           <text value="Save Edit"/>
+        </properties>
+      </component>
+      <component id="c9dbe" class="javax.swing.JLabel" binding="savedCharacterLabel">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Character Saved!!"/>
+          <visible value="true"/>
         </properties>
       </component>
     </children>

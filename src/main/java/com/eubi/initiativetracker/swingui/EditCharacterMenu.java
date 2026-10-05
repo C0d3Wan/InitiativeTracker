@@ -16,18 +16,19 @@ import java.util.List;
 public class EditCharacterMenu extends JFrame {
     private JPanel editCharacterPane;
     private JLabel characterNameLabel;
-    private JSpinner newInititative;
+    private JSpinner newInitiativeSpinner;
     private JLabel initiativeLabel;
     private JLabel dexterityLabel;
     private JLabel deathStatusLabel;
     private JSpinner newDexteritySpinner;
-    private JComboBox comboBox1;
-    private JButton testButton;
+    private JComboBox newDeathStatusCombo;
     private JComboBox charactersCombo;
     private JButton saveEditButton;
+    private JLabel savedCharacterLabel;
 
     private CharacterManager characterManager;
     private Map<String, Character> characterMap = new HashMap<>();
+    private Character currentCharacter;
 
     /**
      * Constructs a new window to edit the current character
@@ -46,10 +47,12 @@ public class EditCharacterMenu extends JFrame {
         pack();
         setLocationRelativeTo(null);
 
-        newDexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
-
         charactersCombo.addActionListener(e -> {
             updateDetails();
+        });
+
+        saveEditButton.addActionListener(e -> {
+            saveEditedCharacter();
         });
     }
 
@@ -57,8 +60,28 @@ public class EditCharacterMenu extends JFrame {
      * Saves the newly edited character to the character manager
      */
     private void saveEditedCharacter() {
-        this.characterManager.sortCharacters();
-        this.dispose();
+        Map<String, Object> currentCharacterData = currentCharacter.getCharacterData();
+        int newDexterity = (int) newDexteritySpinner.getValue();
+        int newInitiative = (int) newInitiativeSpinner.getValue();
+        String newDeathStatus = (String) newDeathStatusCombo.getSelectedItem();
+
+        if (newDexterity != (int) currentCharacterData.get("Dexterity")) {
+            currentCharacter.editDexValue(newDexterity);
+        }
+
+        if (newInitiative != (int) currentCharacterData.get("Initiative")) {
+            currentCharacter.editInitiativeNum(newInitiative);
+        }
+
+        if (!newDeathStatus.equals((String) currentCharacterData.get("DeathStatus"))) {
+            currentCharacter.editDeathStatus(newDeathStatus);
+        }
+
+        savedCharacterLabel.setVisible(true);
+        pack();
+
+        //this.characterManager.sortCharacters();
+        //this.dispose();
     }
 
     /**
@@ -66,6 +89,10 @@ public class EditCharacterMenu extends JFrame {
      */
     private void updateCharactersCombo() {
         List<Character> characters = this.characterManager.getCharacterVector();
+
+        newDexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
+        savedCharacterLabel.setVisible(false);
+
         if (characters.isEmpty()) {
             charactersCombo.addItem("No Characters");
             characterNameLabel.setText("Null");
@@ -80,24 +107,35 @@ public class EditCharacterMenu extends JFrame {
                 this.characterMap.put(name, character);
                 charactersCombo.addItem((String) name);
             }
-            Character tempCharacter = this.characterMap.entrySet().iterator().next().getValue();
-            characterNameLabel.setText(tempCharacter.getCharacterData().get("Name").toString());
-            initiativeLabel.setText(tempCharacter.getCharacterData().get("Initiative").toString());
-            dexterityLabel.setText(tempCharacter.getCharacterData().get("Dexterity").toString());
-            deathStatusLabel.setText(tempCharacter.getCharacterData().get("DeathStatus").toString());
+            this.currentCharacter = this.characterMap.entrySet().iterator().next().getValue();
+            Map<String, Object> tempCharacterData = currentCharacter.getCharacterData();
+            characterNameLabel.setText(tempCharacterData.get("Name").toString());
+            initiativeLabel.setText(tempCharacterData.get("Initiative").toString());
+            dexterityLabel.setText(tempCharacterData.get("Dexterity").toString());
+            deathStatusLabel.setText(tempCharacterData.get("DeathStatus").toString());
+
+            newInitiativeSpinner.setValue(tempCharacterData.get("Initiative"));
+            newDexteritySpinner.setValue(tempCharacterData.get("Dexterity"));
+            newDeathStatusCombo.setSelectedItem(tempCharacterData.get("DeathStatus"));
         }
         pack();
     }
 
     private void updateDetails() {
+        savedCharacterLabel.setVisible(false);
+
         String name = charactersCombo.getSelectedItem().toString();
         if (!this.characterMap.isEmpty()) {
-            Character character = (Character) this.characterMap.get(name);
-            Map<String, Object> characterData = character.getCharacterData();
+            this.currentCharacter = (Character) this.characterMap.get(name);
+            Map<String, Object> characterData = this.currentCharacter.getCharacterData();
             characterNameLabel.setText(characterData.get("Name").toString());
             initiativeLabel.setText(characterData.get("Initiative").toString());
             dexterityLabel.setText(characterData.get("Dexterity").toString());
             deathStatusLabel.setText(characterData.get("DeathStatus").toString());
+
+            newInitiativeSpinner.setValue(characterData.get("Initiative"));
+            newDexteritySpinner.setValue(characterData.get("Dexterity"));
+            newDeathStatusCombo.setSelectedItem(characterData.get("DeathStatus"));
             pack();
         }
     }
@@ -118,7 +156,7 @@ public class EditCharacterMenu extends JFrame {
      */
     private void $$$setupUI$$$() {
         editCharacterPane = new JPanel();
-        editCharacterPane.setLayout(new GridLayoutManager(7, 3, new Insets(5, 5, 5, 5), -1, -1));
+        editCharacterPane.setLayout(new GridLayoutManager(8, 3, new Insets(5, 5, 5, 5), -1, -1));
         final JLabel label1 = new JLabel();
         label1.setText("Name");
         editCharacterPane.add(label1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -134,10 +172,11 @@ public class EditCharacterMenu extends JFrame {
         final JSeparator separator1 = new JSeparator();
         editCharacterPane.add(separator1, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         characterNameLabel = new JLabel();
+        characterNameLabel.setEnabled(true);
         characterNameLabel.setText("Label");
         editCharacterPane.add(characterNameLabel, new GridConstraints(2, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        newInititative = new JSpinner();
-        editCharacterPane.add(newInititative, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        newInitiativeSpinner = new JSpinner();
+        editCharacterPane.add(newInitiativeSpinner, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         initiativeLabel = new JLabel();
         initiativeLabel.setText("Label");
         editCharacterPane.add(initiativeLabel, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -149,13 +188,13 @@ public class EditCharacterMenu extends JFrame {
         editCharacterPane.add(deathStatusLabel, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         newDexteritySpinner = new JSpinner();
         editCharacterPane.add(newDexteritySpinner, new GridConstraints(4, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        comboBox1 = new JComboBox();
+        newDeathStatusCombo = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
-        defaultComboBoxModel1.addElement("Alive");
-        defaultComboBoxModel1.addElement("Dead");
-        defaultComboBoxModel1.addElement("Downed");
-        comboBox1.setModel(defaultComboBoxModel1);
-        editCharacterPane.add(comboBox1, new GridConstraints(5, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        defaultComboBoxModel1.addElement("ALIVE");
+        defaultComboBoxModel1.addElement("DEAD");
+        defaultComboBoxModel1.addElement("DOWN");
+        newDeathStatusCombo.setModel(defaultComboBoxModel1);
+        editCharacterPane.add(newDeathStatusCombo, new GridConstraints(5, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         charactersCombo = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
         charactersCombo.setModel(defaultComboBoxModel2);
@@ -166,6 +205,10 @@ public class EditCharacterMenu extends JFrame {
         saveEditButton = new JButton();
         saveEditButton.setText("Save Edit");
         editCharacterPane.add(saveEditButton, new GridConstraints(6, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        savedCharacterLabel = new JLabel();
+        savedCharacterLabel.setText("Character Saved!!");
+        savedCharacterLabel.setVisible(true);
+        editCharacterPane.add(savedCharacterLabel, new GridConstraints(7, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
