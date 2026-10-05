@@ -21,7 +21,7 @@ public class AddCharacterMenu extends JFrame {
     private JButton addCharacterButton;
     private JComboBox deathStatusCombo;
 
-    private CharacterManager characterManager;
+    private final CharacterManager cManager;
 
     /**
      * Constructs a new window to add a new character to the character manager
@@ -31,7 +31,7 @@ public class AddCharacterMenu extends JFrame {
     public AddCharacterMenu(CharacterManager characterManager) {
         setContentPane(addCharacterPane);
 
-        this.characterManager = characterManager;
+        this.cManager = characterManager;
 
         setTitle("Add Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -74,8 +74,8 @@ public class AddCharacterMenu extends JFrame {
         String type = (String) characterTypeCombo.getSelectedItem();
         String status = (String) deathStatusCombo.getSelectedItem();
         Character newCharacter = new Character(name, initiative, dexterity, type, status);
-        this.characterManager.addCharacter(newCharacter);
-        this.characterManager.sortCharacters();
+        this.cManager.addCharacter(newCharacter);
+        this.cManager.sortCharacters();
         this.dispose();
     }
 

@@ -4,7 +4,6 @@ import com.eubi.initiativetracker.characters.Character;
 import com.eubi.initiativetracker.characters.CharacterManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,11 +18,11 @@ public class RemoveCharacterMenu extends JFrame {
     private JLabel removedCharacterLabel;
 
     private Map<String, Character> characterMap = new HashMap<>();
-    private CharacterManager characterManager;
+    private CharacterManager cManager;
 
     public RemoveCharacterMenu(CharacterManager characterManager) {
         setContentPane(removeCharacterPane);
-        this.characterManager = characterManager;
+        this.cManager = characterManager;
         updateSelectionCombo();
 
         removedCharacterLabel.setVisible(false);
@@ -39,7 +38,7 @@ public class RemoveCharacterMenu extends JFrame {
     }
 
     private void updateSelectionCombo() {
-        List<Character> characters = this.characterManager.getCharacterVector();
+        List<Character> characters = this.cManager.getCharacterVector();
         characterSelectionCombo.removeAllItems();
         if (characters.isEmpty()) {
             characterSelectionCombo.addItem("No Characters");
@@ -59,11 +58,11 @@ public class RemoveCharacterMenu extends JFrame {
     private void removeCharacter() {
         String name = characterSelectionCombo.getSelectedItem().toString();
         if (name.equals("All Characters")) {
-            this.characterManager.clearCharacters();
+            this.cManager.clearCharacters();
         } else {
             Character character = this.characterMap.get(name);
-            this.characterManager.removeCharacter(character);
-            this.characterManager.sortCharacters();
+            this.cManager.removeCharacter(character);
+            this.cManager.sortCharacters();
 
         }
         updateSelectionCombo();

@@ -26,7 +26,7 @@ public class EditCharacterMenu extends JFrame {
     private JButton saveEditButton;
     private JLabel savedCharacterLabel;
 
-    private CharacterManager characterManager;
+    private final CharacterManager cManager;
     private Map<String, Character> characterMap = new HashMap<>();
     private Character currentCharacter;
 
@@ -38,7 +38,7 @@ public class EditCharacterMenu extends JFrame {
     public EditCharacterMenu(CharacterManager characterManager) {
         setContentPane(editCharacterPane);
 
-        this.characterManager = characterManager;
+        this.cManager = characterManager;
 
         updateCharactersCombo();
 
@@ -88,7 +88,7 @@ public class EditCharacterMenu extends JFrame {
      * Updates the selection box from the list of available characters
      */
     private void updateCharactersCombo() {
-        List<Character> characters = this.characterManager.getCharacterVector();
+        List<Character> characters = this.cManager.getCharacterVector();
 
         newDexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
         savedCharacterLabel.setVisible(false);

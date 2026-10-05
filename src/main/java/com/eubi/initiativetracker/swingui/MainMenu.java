@@ -18,7 +18,7 @@ public class MainMenu extends JFrame {
     private JList initiativeList;
     private JButton editCharacterButton;
 
-    private CharacterManager characterManager;
+    private final CharacterManager cManager;
 
     /**
      * Constructs a window for the initiative tracker
@@ -28,7 +28,7 @@ public class MainMenu extends JFrame {
     public MainMenu(CharacterManager characterManager) {
         setContentPane(mainMenuPane);
 
-        this.characterManager = characterManager;
+        this.cManager = characterManager;
 
         setTitle("Initiative Tracker");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,17 +36,15 @@ public class MainMenu extends JFrame {
         setLocationRelativeTo(null);
 
         addCharacterButton.addActionListener(e -> {
-            AddCharacterMenu addCharacter = new AddCharacterMenu(characterManager);
+            AddCharacterMenu addCharacter = new AddCharacterMenu(cManager);
             addCharacter.setVisible(true);
         });
-
         editCharacterButton.addActionListener(e -> {
-            EditCharacterMenu editCharacter = new EditCharacterMenu(characterManager);
+            EditCharacterMenu editCharacter = new EditCharacterMenu(cManager);
             editCharacter.setVisible(true);
         });
-
         removeCharacterButton.addActionListener(e -> {
-            RemoveCharacterMenu removeCharacter = new RemoveCharacterMenu(characterManager);
+            RemoveCharacterMenu removeCharacter = new RemoveCharacterMenu(cManager);
             removeCharacter.setVisible(true);
         });
     }
