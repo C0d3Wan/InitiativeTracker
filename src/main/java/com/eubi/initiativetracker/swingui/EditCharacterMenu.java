@@ -69,7 +69,6 @@ public class EditCharacterMenu extends JDialog {
         savedCharacterLabel.setVisible(true);
         pack();
 
-        //this.characterManager.sortCharacters();
         //this.dispose();
     }
 
@@ -89,6 +88,11 @@ public class EditCharacterMenu extends JDialog {
             saveEditButton.setEnabled(false);
         } else {
             saveEditButton.setEnabled(true);
+            for (Character character : characterMap.values()) {
+                String name = character.getCharacterData().get("Name").toString();
+                this.characterMap.put(name, character);
+                charactersCombo.addItem((String) name);
+            }
 
             displayCurrentCharacterData();
         }
@@ -118,7 +122,7 @@ public class EditCharacterMenu extends JDialog {
 
     private Character getCurrentCharacter() {
         if (charactersCombo.getSelectedItem() == null) {
-            return characterMap
+            return characterMap.entrySet().iterator().next().getValue();
         }
         String name = charactersCombo.getSelectedItem().toString();
         return (Character) characterMap.get(name);
