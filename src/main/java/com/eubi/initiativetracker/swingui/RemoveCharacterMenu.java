@@ -64,8 +64,9 @@ public class RemoveCharacterMenu extends JFrame {
             Character character = this.characterMap.get(name);
             this.characterManager.removeCharacter(character);
             this.characterManager.sortCharacters();
-            updateSelectionCombo();
+
         }
+        updateSelectionCombo();
         removedCharacterLabel.setVisible(true);
         pack();
     }
