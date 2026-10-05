@@ -1,6 +1,5 @@
 package com.eubi.initiativetracker.swingui;
 
-import com.eubi.initiativetracker.characters.CharacterManager;
 import com.eubi.initiativetracker.characters.Character;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -8,12 +7,11 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 /**
  * Class for the tracker's edit character menu
  */
-public class EditCharacterMenu extends JFrame {
+public class EditCharacterMenu extends JDialog {
     private JPanel editCharacterPane;
     private JLabel characterNameLabel;
     private JSpinner newInitiativeSpinner;
@@ -26,40 +24,34 @@ public class EditCharacterMenu extends JFrame {
     private JButton saveEditButton;
     private JLabel savedCharacterLabel;
 
-    private final CharacterManager cManager;
-    private Map<String, Character> characterMap = new HashMap<>();
-    private Character currentCharacter;
+    private Map<String, Character> characterMap;
 
     /**
      * Constructs a new window to edit the current character
      *
-     * @param characterManager Allows use of {@link CharacterManager}
+     * @param characterMap Allows methods to scan all characters and names
      */
-    public EditCharacterMenu(CharacterManager characterManager) {
+    public EditCharacterMenu(Frame parent, Map<String, Character> characterMap) {
+        super(parent, "Edit Character", true);
+        this.characterMap = characterMap;
+
         setContentPane(editCharacterPane);
-
-        this.cManager = characterManager;
-
-        updateCharactersCombo();
-
         setTitle("Edit Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
 
-        charactersCombo.addActionListener(e -> {
-            updateDetails();
-        });
+        updateCharactersCombo();
 
-        saveEditButton.addActionListener(e -> {
-            saveEditedCharacter();
-        });
+        charactersCombo.addActionListener(e -> updateDetails());
+        saveEditButton.addActionListener(e -> saveEditedCharacter());
     }
 
     /**
      * Saves the newly edited character to the character manager
      */
     private void saveEditedCharacter() {
+        Character currentCharacter = getCurrentCharacter();
         Map<String, Object> currentCharacterData = currentCharacter.getCharacterData();
         int newDexterity = (int) newDexteritySpinner.getValue();
         int newInitiative = (int) newInitiativeSpinner.getValue();
@@ -68,15 +60,12 @@ public class EditCharacterMenu extends JFrame {
         if (newDexterity != (int) currentCharacterData.get("Dexterity")) {
             currentCharacter.editDexValue(newDexterity);
         }
-
         if (newInitiative != (int) currentCharacterData.get("Initiative")) {
             currentCharacter.editInitiativeNum(newInitiative);
         }
-
         if (!newDeathStatus.equals((String) currentCharacterData.get("DeathStatus"))) {
             currentCharacter.editDeathStatus(newDeathStatus);
         }
-
         savedCharacterLabel.setVisible(true);
         pack();
 
@@ -88,12 +77,10 @@ public class EditCharacterMenu extends JFrame {
      * Updates the selection box from the list of available characters
      */
     private void updateCharactersCombo() {
-        List<Character> characters = this.cManager.getCharacterVector();
-
         newDexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
         savedCharacterLabel.setVisible(false);
 
-        if (characters.isEmpty()) {
+        if (characterMap.isEmpty()) {
             charactersCombo.addItem("No Characters");
             characterNameLabel.setText("Null");
             initiativeLabel.setText("Null");
@@ -102,21 +89,8 @@ public class EditCharacterMenu extends JFrame {
             saveEditButton.setEnabled(false);
         } else {
             saveEditButton.setEnabled(true);
-            for (Character character : characters) {
-                String name = character.getCharacterData().get("Name").toString();
-                this.characterMap.put(name, character);
-                charactersCombo.addItem((String) name);
-            }
-            this.currentCharacter = this.characterMap.entrySet().iterator().next().getValue();
-            Map<String, Object> tempCharacterData = currentCharacter.getCharacterData();
-            characterNameLabel.setText(tempCharacterData.get("Name").toString());
-            initiativeLabel.setText(tempCharacterData.get("Initiative").toString());
-            dexterityLabel.setText(tempCharacterData.get("Dexterity").toString());
-            deathStatusLabel.setText(tempCharacterData.get("DeathStatus").toString());
 
-            newInitiativeSpinner.setValue(tempCharacterData.get("Initiative"));
-            newDexteritySpinner.setValue(tempCharacterData.get("Dexterity"));
-            newDeathStatusCombo.setSelectedItem(tempCharacterData.get("DeathStatus"));
+            displayCurrentCharacterData();
         }
         pack();
     }
@@ -124,20 +98,30 @@ public class EditCharacterMenu extends JFrame {
     private void updateDetails() {
         savedCharacterLabel.setVisible(false);
 
-        String name = charactersCombo.getSelectedItem().toString();
         if (!this.characterMap.isEmpty()) {
-            this.currentCharacter = (Character) this.characterMap.get(name);
-            Map<String, Object> characterData = this.currentCharacter.getCharacterData();
-            characterNameLabel.setText(characterData.get("Name").toString());
-            initiativeLabel.setText(characterData.get("Initiative").toString());
-            dexterityLabel.setText(characterData.get("Dexterity").toString());
-            deathStatusLabel.setText(characterData.get("DeathStatus").toString());
-
-            newInitiativeSpinner.setValue(characterData.get("Initiative"));
-            newDexteritySpinner.setValue(characterData.get("Dexterity"));
-            newDeathStatusCombo.setSelectedItem(characterData.get("DeathStatus"));
+            displayCurrentCharacterData();
             pack();
         }
+    }
+
+    private void displayCurrentCharacterData() {
+        Map<String, Object> currentCharacterData = getCurrentCharacter().getCharacterData();
+        characterNameLabel.setText(currentCharacterData.get("Name").toString());
+        initiativeLabel.setText(currentCharacterData.get("Initiative").toString());
+        dexterityLabel.setText(currentCharacterData.get("Dexterity").toString());
+        deathStatusLabel.setText(currentCharacterData.get("DeathStatus").toString());
+
+        newInitiativeSpinner.setValue(currentCharacterData.get("Initiative"));
+        newDexteritySpinner.setValue(currentCharacterData.get("Dexterity"));
+        newDeathStatusCombo.setSelectedItem(currentCharacterData.get("DeathStatus"));
+    }
+
+    private Character getCurrentCharacter() {
+        if (charactersCombo.getSelectedItem() == null) {
+            return characterMap
+        }
+        String name = charactersCombo.getSelectedItem().toString();
+        return (Character) characterMap.get(name);
     }
 
     {

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RemoveCharacterMenu extends JFrame {
+public class RemoveCharacterMenu extends JDialog {
     private JPanel removeCharacterPane;
     private JComboBox characterSelectionCombo;
     private JButton removeCharacterButton;
@@ -20,17 +20,18 @@ public class RemoveCharacterMenu extends JFrame {
     private Map<String, Character> characterMap = new HashMap<>();
     private CharacterManager cManager;
 
-    public RemoveCharacterMenu(CharacterManager characterManager) {
+    public RemoveCharacterMenu(Frame parent, CharacterManager characterManager) {
+        super(parent, "Remove Character", true);
         setContentPane(removeCharacterPane);
         this.cManager = characterManager;
-        updateSelectionCombo();
 
         removedCharacterLabel.setVisible(false);
-
         setTitle("Remove Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
+
+        updateSelectionCombo();
 
         removeCharacterButton.addActionListener(e -> {
             removeCharacter();

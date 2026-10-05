@@ -1,6 +1,8 @@
 package com.eubi.initiativetracker.swingui;
 
 import javax.swing.*;
+
+import com.eubi.initiativetracker.characters.Character;
 import com.eubi.initiativetracker.characters.CharacterManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -15,10 +17,11 @@ public class MainMenu extends JFrame {
     private JButton addCharacterButton;
     private JButton nextTurnButton;
     private JButton removeCharacterButton;
-    private JList initiativeList;
+    private JList<Character> initiativeList;
     private JButton editCharacterButton;
 
     private final CharacterManager cManager;
+    private final UIManager uiManager;
 
     /**
      * Constructs a window for the initiative tracker
@@ -26,27 +29,18 @@ public class MainMenu extends JFrame {
      * @param characterManager Allows use of {@link CharacterManager}
      */
     public MainMenu(CharacterManager characterManager) {
+        cManager = characterManager;
+        uiManager = new UIManager(this, cManager, initiativeList);
+
         setContentPane(mainMenuPane);
-
-        this.cManager = characterManager;
-
         setTitle("Initiative Tracker");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
 
-        addCharacterButton.addActionListener(e -> {
-            AddCharacterMenu addCharacter = new AddCharacterMenu(cManager);
-            addCharacter.setVisible(true);
-        });
-        editCharacterButton.addActionListener(e -> {
-            EditCharacterMenu editCharacter = new EditCharacterMenu(cManager);
-            editCharacter.setVisible(true);
-        });
-        removeCharacterButton.addActionListener(e -> {
-            RemoveCharacterMenu removeCharacter = new RemoveCharacterMenu(cManager);
-            removeCharacter.setVisible(true);
-        });
+        addCharacterButton.addActionListener(e -> uiManager.openAddCharacterMenu());
+        editCharacterButton.addActionListener(e -> uiManager.openEditCharacterMenu());
+        removeCharacterButton.addActionListener(e -> uiManager.openRemoveCharacterMenu());
     }
 
     {

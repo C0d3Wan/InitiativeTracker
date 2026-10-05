@@ -12,7 +12,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 /**
  * Class for the tracker's add character menu
  */
-public class AddCharacterMenu extends JFrame {
+public class AddCharacterMenu extends JDialog {
     private JPanel addCharacterPane;
     private JTextField characterName;
     private JComboBox characterTypeCombo;
@@ -21,18 +21,18 @@ public class AddCharacterMenu extends JFrame {
     private JButton addCharacterButton;
     private JComboBox deathStatusCombo;
 
-    private final CharacterManager cManager;
+    private boolean confirmed = false;
+    private Character newCharacter;
 
     /**
-     * Constructs a new window to add a new character to the character manager
+     * Constructs a new dialog to add a new character to the character manager
      *
-     * @param characterManager Allows use of {@link CharacterManager}
+     * @param parent Binds a parent to the dialog box
      */
-    public AddCharacterMenu(CharacterManager characterManager) {
+    public AddCharacterMenu(Frame parent) {
+        super(parent, "Add Character", true);
+
         setContentPane(addCharacterPane);
-
-        this.cManager = characterManager;
-
         setTitle("Add Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
@@ -42,17 +42,14 @@ public class AddCharacterMenu extends JFrame {
         addCharacterButton.setEnabled(false);
 
         characterName.getDocument().addDocumentListener(new DocumentListener() {
-
             @Override
             public void insertUpdate(DocumentEvent documentEvent) {
                 validateName();
             }
-
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
                 validateName();
             }
-
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
                 validateName();
@@ -60,23 +57,17 @@ public class AddCharacterMenu extends JFrame {
         });
 
         addCharacterButton.addActionListener(e -> {
-            saveCharacter();
-        });
-    }
+            String name = characterName.getText().trim();
+            int initiative = (int) initiativeSpinner.getValue();
+            int dexterity = (int) dexteritySpinner.getValue();
+            String type = (String) characterTypeCombo.getSelectedItem();
+            String status = (String) deathStatusCombo.getSelectedItem();
 
-    /**
-     * Saves the new character to the character manager
-     */
-    private void saveCharacter() {
-        String name = characterName.getText().trim();
-        int initiative = (int) initiativeSpinner.getValue();
-        int dexterity = (int) dexteritySpinner.getValue();
-        String type = (String) characterTypeCombo.getSelectedItem();
-        String status = (String) deathStatusCombo.getSelectedItem();
-        Character newCharacter = new Character(name, initiative, dexterity, type, status);
-        this.cManager.addCharacter(newCharacter);
-        this.cManager.sortCharacters();
-        this.dispose();
+            newCharacter = new Character(name, initiative, dexterity, type, status);
+
+            confirmed = true;
+            dispose();
+        });
     }
 
     /**
@@ -85,6 +76,14 @@ public class AddCharacterMenu extends JFrame {
     private void validateName() {
         boolean isValid = !characterName.getText().trim().isEmpty();
         addCharacterButton.setEnabled(isValid);
+    }
+
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public Character getNewCharacter() {
+        return newCharacter;
     }
 
     {
