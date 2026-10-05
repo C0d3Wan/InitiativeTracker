@@ -65,37 +65,6 @@ public class CharacterManager {
     }
 
     /**
-     * Updates the initiative score of a specific character.
-     *
-     * @param characterIndex The index of the character in the unsorted list.
-     * @param newInitiative  The new base initiative score.
-     *
-     */
-    public void editCharacterInitiative(int characterIndex, float newInitiative) {
-        this.characters.get(characterIndex).editInitiativeNum(newInitiative);
-    }
-
-    /**
-     * Updates the death status of a specific character.
-     *
-     * @param characterIndex The index of the character in the unsorted list.
-     * @param newStatus      The new {@link DeathStatus} enum value.
-     */
-    public void editCharacterStatus(int characterIndex, DeathStatus newStatus) {
-        this.characters.get(characterIndex).editDeathStatus(newStatus);
-    }
-
-    /**
-     * Updates the specific character.
-     *
-     * @param characterIndex The index of the character in the unsorted list.
-     * @param newType        The new {@link CharacterType} enum value.
-     */
-    public void editCharacterType(int characterIndex, CharacterType newType) {
-        this.characters.get(characterIndex).editCharacterType(newType);
-    }
-
-    /**
      * Completely empties the unsorted character list.
      * Note: The sorted list will remain populated until {@link #sortCharacters()} is called again.
      */
