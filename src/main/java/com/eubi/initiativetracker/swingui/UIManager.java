@@ -12,11 +12,15 @@ public class UIManager {
     private CharacterManager characterManager;
     private JFrame parentFrame;
     private Map<String, Character> characterMap;
+    private DefaultListModel<Character> characterListModel;
 
     public UIManager(JFrame parentFrame, CharacterManager characterManager, JList<Character> initiativeList) {
         this.characterManager = characterManager;
         this.parentFrame = parentFrame;
         characterMap = new HashMap<>();
+
+        CharacterCellRenderer characterRenderer = new CharacterCellRenderer();
+
 
     }
 
@@ -34,7 +38,6 @@ public class UIManager {
     }
 
     public void openEditCharacterMenu() {
-        //List<Character> characters = characterManager.getCharacterVector();
         updateCharacterMap();
 
         EditCharacterMenu editCharacterMenu = new EditCharacterMenu(parentFrame, characterMap);
