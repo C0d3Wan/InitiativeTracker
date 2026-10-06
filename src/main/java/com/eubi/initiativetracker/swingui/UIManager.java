@@ -21,7 +21,8 @@ public class UIManager {
     }
 
     public void openAddCharacterMenu() {
-        AddCharacterMenu addCharacterMenu = new AddCharacterMenu(parentFrame);
+        List<Character> characters = characterManager.getCharacterVector();
+        AddCharacterMenu addCharacterMenu = new AddCharacterMenu(parentFrame, characters);
         addCharacterMenu.setVisible(true);
 
         if (addCharacterMenu.isConfirmed()) {

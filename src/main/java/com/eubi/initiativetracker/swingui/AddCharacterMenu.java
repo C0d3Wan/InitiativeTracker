@@ -2,6 +2,7 @@ package com.eubi.initiativetracker.swingui;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import java.util.List;
 import java.awt.*;
 
 import com.eubi.initiativetracker.characters.Character;
@@ -23,14 +24,16 @@ public class AddCharacterMenu extends JDialog {
 
     private boolean confirmed = false;
     private Character newCharacter;
+    private List<Character> characters;
 
     /**
      * Constructs a new dialog to add a new character to the character manager
      *
      * @param parent Binds a parent to the dialog box
      */
-    public AddCharacterMenu(Frame parent) {
+    public AddCharacterMenu(Frame parent, List<Character> characterList) {
         super(parent, "Add Character", true);
+        characters = characterList;
 
         setContentPane(addCharacterPane);
         setTitle("Add Character");
@@ -74,7 +77,14 @@ public class AddCharacterMenu extends JDialog {
      * Validates if the character has at least a name
      */
     private void validateName() {
-        boolean isValid = !characterName.getText().trim().isEmpty();
+        String name = characterName.getText().trim();
+        boolean isValid = !name.isEmpty();
+        for  (Character character : characters) {
+            if (name.equalsIgnoreCase(character.getCharacterData().get("Name").toString())) {
+                isValid = false;
+            }
+        }
+
         addCharacterButton.setEnabled(isValid);
     }
 
