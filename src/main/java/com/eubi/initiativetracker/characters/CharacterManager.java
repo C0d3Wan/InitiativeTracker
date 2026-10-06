@@ -11,8 +11,8 @@ public class CharacterManager {
      * Constructs a new, empty CharacterManager.
      */
     public CharacterManager() {
-        this.characters = new ArrayList<>();
-        this.charactersOrdered = new ArrayList<>();
+        characters = new ArrayList<>();
+        charactersOrdered = new ArrayList<>();
     }
 
     /**
@@ -21,8 +21,12 @@ public class CharacterManager {
      * @param character The {@link Character} object to be added.
      */
     public void addCharacter(Character character) {
-        this.characters.add(character);
-        this.sortCharacters();
+        characters.add(character);
+        sortCharacters();
+
+        if (characters.size() == 1) {
+            newTurn();
+        }
     }
 
     /**
@@ -31,11 +35,11 @@ public class CharacterManager {
      * @param character The exact {@link Character} instance to remove.
      */
     public void removeCharacter(Character character) {
-        this.characters.remove(character);
-        this.sortCharacters(); // Realign the turn order
+        characters.remove(character);
+        sortCharacters();
 
-        if (this.currentCharacter != null && this.currentCharacter.equals(character)) {
-            this.newTurn();
+        if (currentCharacter != null && currentCharacter.equals(character)) {
+            newTurn();
         }
     }
 
@@ -44,23 +48,23 @@ public class CharacterManager {
      * Operates cyclically, returning to the top of the list when reaching the end.
      */
     public void newTurn(){
-        if(this.charactersOrdered.isEmpty()){
-            this.currentCharacter = null;
+        if(charactersOrdered.isEmpty()){
+            currentCharacter = null;
             return;
         }
 
-        if (this.currentCharacter == null){
-            this.currentCharacter = this.charactersOrdered.get(0);
+        if (currentCharacter == null){
+            currentCharacter = this.charactersOrdered.get(0);
             return;
         }
 
-        int currentIndex = this.charactersOrdered.indexOf(this.currentCharacter);
+        int currentIndex = charactersOrdered.indexOf(currentCharacter);
 
         if (currentIndex == -1){
-            this.currentCharacter = this.charactersOrdered.get(0);
+            currentCharacter = charactersOrdered.get(0);
         }else  {
-            int nextIndex = (currentIndex + 1) % this.charactersOrdered.size();
-            this.currentCharacter = this.charactersOrdered.get(nextIndex);
+            int nextIndex = (currentIndex + 1) % charactersOrdered.size();
+            currentCharacter = charactersOrdered.get(nextIndex);
         }
     }
 
@@ -69,9 +73,9 @@ public class CharacterManager {
      * Note: The sorted list will remain populated until {@link #sortCharacters()} is called again.
      */
     public void clearCharacters() {
-        this.characters.clear();
-        this.charactersOrdered.clear();
-        this.currentCharacter = null;
+        characters.clear();
+        charactersOrdered.clear();
+        currentCharacter = null;
     }
 
     /**
@@ -81,10 +85,9 @@ public class CharacterManager {
      * {@link Character#getInitiativeValue()} from highest to lowest.
      */
     public void sortCharacters() {
-        this.charactersOrdered = characters.stream()
+        charactersOrdered = characters.stream()
                 .sorted(Comparator.comparingDouble(Character::getInitiativeValue).reversed())
                 .collect(Collectors.toList());
-
     }
 
     /**
@@ -95,7 +98,7 @@ public class CharacterManager {
      */
     public Character getCharacter(int characterIndex) {
         try {
-            return this.characters.get(characterIndex);
+            return characters.get(characterIndex);
         }
         catch (IndexOutOfBoundsException e) {
             return null;
@@ -108,7 +111,7 @@ public class CharacterManager {
      * @return The active {@link Character}.
      */
     public Character getCurrentCharacter() {
-        return this.currentCharacter;
+        return currentCharacter;
     }
 
     /**
@@ -116,14 +119,14 @@ public class CharacterManager {
      *
      * @return A {@link List} of all added characters in their insertion order.
      */
-    public List<Character> getCharacterVector() {return this.characters;}
+    public List<Character> getCharacterList() {return characters;}
 
     /**
      * Retrieves the sorted collection of characters.
      *
      * @return A {@link List} of characters ordered by initiative descending.
      */
-    public List<Character> getCharactersOrdered() {return this.charactersOrdered;}
+    public List<Character> getCharactersOrdered() {return charactersOrdered;}
 
     /**
      * Outputs a formatted representation of both the original and sorted lists to the console.
@@ -131,31 +134,31 @@ public class CharacterManager {
      */
     public void debugDisplay(boolean sort) {
         System.out.println("\n=== Character Manager Debug Output ===");
-        if (this.currentCharacter != null) {
-            System.out.println("Current Turn: " + this.currentCharacter.toString());
+        if (currentCharacter != null) {
+            System.out.println("Current Turn: " + currentCharacter.toString());
         }else{
             System.out.println("Current Turn: " + "N/A");
         }
 
-        System.out.println("\nOriginal List (" + this.characters.size() + " characters):");
-        if (this.characters.isEmpty()) {
+        System.out.println("\nOriginal List (" + characters.size() + " characters):");
+        if (characters.isEmpty()) {
             System.out.println("  [Empty]");
         } else {
-            for (int i = 0; i < this.characters.size(); i++) {
-                System.out.printf("  [%d] %s%n", i, this.characters.get(i).toString());
+            for (int i = 0; i < characters.size(); i++) {
+                System.out.printf("  [%d] %s%n", i, characters.get(i).toString());
             }
         }
         System.out.println("\nSorted List (By Initiative Descending):");
-        if (this.characters.isEmpty() || !sort) {
+        if (characters.isEmpty() || !sort) {
             System.out.println(" ");
         } else {
-            this.sortCharacters();
+            sortCharacters();
         }
-        if (this.charactersOrdered.isEmpty()) {
+        if (charactersOrdered.isEmpty()) {
             System.out.println("  [Empty]");
         } else {
-            for (int i = 0; i < this.charactersOrdered.size(); i++) {
-                System.out.printf("  [%d] %s%n", i, this.charactersOrdered.get(i).toString());
+            for (int i = 0; i < charactersOrdered.size(); i++) {
+                System.out.printf("  [%d] %s%n", i, charactersOrdered.get(i).toString());
             }
         }
 

@@ -21,7 +21,7 @@ public class UIManager {
     }
 
     public void openAddCharacterMenu() {
-        List<Character> characters = characterManager.getCharacterVector();
+        List<Character> characters = characterManager.getCharacterList();
         AddCharacterMenu addCharacterMenu = new AddCharacterMenu(parentFrame, characters);
         addCharacterMenu.setVisible(true);
 
@@ -54,7 +54,7 @@ public class UIManager {
 
     private void updateCharacterMap() {
         if  (!characterMap.isEmpty()) {characterMap.clear();}
-        for (Character character : characterManager.getCharacterVector()) {
+        for (Character character : characterManager.getCharacterList()) {
             characterMap.put(character.getCharacterData().get("Name").toString(), character);
         }
     }

@@ -17,6 +17,7 @@ public class Character {
     private CharacterType characterType;
     private DeathStatus deathStatus;
 
+
     /**
      * Constructs a new Character with the specified starting attributes.
      * <p>
@@ -31,11 +32,11 @@ public class Character {
      * @param status     The initial {@link DeathStatus} of the character.
      */
     public Character(String name, int initiative, int dex, CharacterType type, DeathStatus status) {
-        this.characterName = name;
-        this.characterType = type;
-        this.deathStatus = status;
-        this.dexValue = (float) dex / 100;
-        this.initiativeValue = initiative + this.dexValue;
+        characterName = name;
+        characterType = type;
+        deathStatus = status;
+        dexValue = (float) dex / 100;
+        initiativeValue = initiative + this.dexValue;
     }
 
     /**
@@ -48,35 +49,35 @@ public class Character {
      * @param deathID     The initial id of the  {@link DeathStatus} of the character.
      */
     public Character(String name, int initiative, int dex, int typeID, int deathID) {
-        this.characterName = name;
-        this.dexValue = (float) dex / 100;
-        this.initiativeValue = initiative + this.dexValue;
+        characterName = name;
+        dexValue = (float) dex / 100;
+        initiativeValue = initiative + this.dexValue;
         switch (typeID) {
             case 0:
-                this.characterType = CharacterType.PLAYER;
+                characterType = CharacterType.PLAYER;
                 break;
             case 1:
-                this.characterType = CharacterType.ENEMY;
+                characterType = CharacterType.ENEMY;
                 break;
             case 2:
-                this.characterType = CharacterType.ALLY;
+                characterType = CharacterType.ALLY;
                 break;
             default:
-                this.characterType = CharacterType.UNKNOWN;
+                characterType = CharacterType.UNKNOWN;
         }
 
         switch (deathID) {
             case 0:
-                this.deathStatus = DeathStatus.DEAD;
+                deathStatus = DeathStatus.DEAD;
                 break;
             case 1:
-                this.deathStatus = DeathStatus.ALIVE;
+                deathStatus = DeathStatus.ALIVE;
                 break;
             case 2:
-                this.deathStatus = DeathStatus.DOWN;
+                deathStatus = DeathStatus.DOWN;
                 break;
             default:
-                this.deathStatus = DeathStatus.UNKNOWN;
+                deathStatus = DeathStatus.UNKNOWN;
 
 
         }
@@ -92,35 +93,35 @@ public class Character {
      * @param deathID     The initial String of the  {@link DeathStatus} of the character.
      */
     public Character(String name, int initiative, int dex, String typeID, String deathID) {
-        this.characterName = name;
-        this.dexValue = (float) dex / 100;
-        this.initiativeValue = initiative + this.dexValue;
+        characterName = name;
+        dexValue = (float) dex / 100;
+        initiativeValue = initiative + this.dexValue;
         switch (typeID) {
             case "PLAYER":
-                this.characterType = CharacterType.PLAYER;
+                characterType = CharacterType.PLAYER;
                 break;
             case "ENEMY":
-                this.characterType = CharacterType.ENEMY;
+                characterType = CharacterType.ENEMY;
                 break;
             case "ALLY":
-                this.characterType = CharacterType.ALLY;
+                characterType = CharacterType.ALLY;
                 break;
             default:
-                this.characterType = CharacterType.UNKNOWN;
+                characterType = CharacterType.UNKNOWN;
         }
 
         switch (deathID) {
             case "DEAD":
-                this.deathStatus = DeathStatus.DEAD;
+                deathStatus = DeathStatus.DEAD;
                 break;
             case "ALIVE":
-                this.deathStatus = DeathStatus.ALIVE;
+                deathStatus = DeathStatus.ALIVE;
                 break;
             case "DOWN":
-                this.deathStatus = DeathStatus.DOWN;
+                deathStatus = DeathStatus.DOWN;
                 break;
             default:
-                this.deathStatus = DeathStatus.UNKNOWN;
+                deathStatus = DeathStatus.UNKNOWN;
 
         }
     }
@@ -134,11 +135,11 @@ public class Character {
     public Map<String, Object> getCharacterData() {
         Map<String, Object> displayData = new HashMap<>();
 
-        displayData.put("Name", this.characterName);
-        displayData.put("Initiative", (int)(this.initiativeValue-this.dexValue));
-        displayData.put("Dexterity",(int)(this.dexValue*100));
-        displayData.put("Type", this.characterType.name());
-        displayData.put("DeathStatus", this.deathStatus.name());
+        displayData.put("Name", characterName);
+        displayData.put("Initiative", (int)(initiativeValue-dexValue));
+        displayData.put("Dexterity",(int)(dexValue*100));
+        displayData.put("Type", characterType.name());
+        displayData.put("DeathStatus", deathStatus.name());
 
         return displayData;
     }
@@ -152,7 +153,7 @@ public class Character {
      * @param newInitiativeNum The new base initiative score.
      */
     public void editInitiativeNum(float newInitiativeNum) {
-        this.initiativeValue = newInitiativeNum + this.dexValue;
+        initiativeValue = newInitiativeNum + dexValue;
     }
 
     /**
@@ -160,7 +161,7 @@ public class Character {
      *
      * @param newDexValue - The new Dex Value
      */
-    public void editDexValue(int newDexValue) {this.dexValue = (float) newDexValue /100;}
+    public void editDexValue(int newDexValue) {dexValue = (float) newDexValue /100;}
 
     /**
      * Updates the character's life status.
@@ -168,7 +169,7 @@ public class Character {
      * @param newDeathStatus The new {@link DeathStatus} to apply.
      */
     public void editDeathStatus(DeathStatus newDeathStatus) {
-        this.deathStatus = newDeathStatus;
+        deathStatus = newDeathStatus;
     }
 
     /**
@@ -179,16 +180,16 @@ public class Character {
     public void editDeathStatus(int statusID) {
             switch (statusID) {
                 case 0:
-                    this.deathStatus = DeathStatus.DEAD;
+                    deathStatus = DeathStatus.DEAD;
                     break;
                 case 1:
-                    this.deathStatus = DeathStatus.ALIVE;
+                    deathStatus = DeathStatus.ALIVE;
                     break;
                 case 2:
-                    this.deathStatus = DeathStatus.DOWN;
+                    deathStatus = DeathStatus.DOWN;
                     break;
                 default:
-                    this.deathStatus = DeathStatus.UNKNOWN;
+                    deathStatus = DeathStatus.UNKNOWN;
             }
     }
 
@@ -200,16 +201,16 @@ public class Character {
     public void editDeathStatus(String statusID) {
         switch (statusID) {
             case "DEAD":
-                this.deathStatus = DeathStatus.DEAD;
+                deathStatus = DeathStatus.DEAD;
                 break;
             case "ALIVE":
-                this.deathStatus = DeathStatus.ALIVE;
+                deathStatus = DeathStatus.ALIVE;
                 break;
             case "DOWN":
-                this.deathStatus = DeathStatus.DOWN;
+                deathStatus = DeathStatus.DOWN;
                 break;
             default:
-                this.deathStatus = DeathStatus.UNKNOWN;
+                deathStatus = DeathStatus.UNKNOWN;
         }
     }
 
@@ -230,16 +231,16 @@ public class Character {
     public void editCharacterType(int statusID) {
         switch (statusID) {
             case 0:
-                this.characterType = CharacterType.PLAYER;
+                characterType = CharacterType.PLAYER;
                 break;
             case 1:
-                this.characterType = CharacterType.ENEMY;
+                characterType = CharacterType.ENEMY;
                 break;
             case 2:
-                this.characterType = CharacterType.ALLY;
+                characterType = CharacterType.ALLY;
                 break;
             default:
-                this.characterType = CharacterType.UNKNOWN;
+                characterType = CharacterType.UNKNOWN;
         }
     }
 
@@ -249,7 +250,7 @@ public class Character {
      * @return The initiative value, including the fractional dexterity modifier.
      */
     public float getInitiativeValue() {
-        return this.initiativeValue;
+        return initiativeValue;
     }
 
     /**
@@ -259,9 +260,9 @@ public class Character {
      */
     @Override
     public String toString(){
-        return "name: " + this.characterName +
-                ". Initiative: " + this.initiativeValue +
-                ". Type: " + this.characterType +
-                ". DeathStatus: " + this.deathStatus;
+        return "name: " + characterName +
+                ". Initiative: " + initiativeValue +
+                ". Type: " + characterType +
+                ". DeathStatus: " + deathStatus;
     }
 }

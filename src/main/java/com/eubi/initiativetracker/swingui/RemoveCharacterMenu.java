@@ -39,7 +39,7 @@ public class RemoveCharacterMenu extends JDialog {
     }
 
     private void updateSelectionCombo() {
-        List<Character> characters = this.cManager.getCharacterVector();
+        List<Character> characters = this.cManager.getCharacterList();
         characterSelectionCombo.removeAllItems();
         if (characters.isEmpty()) {
             characterSelectionCombo.addItem("No Characters");
