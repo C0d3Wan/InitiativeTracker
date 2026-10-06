@@ -38,6 +38,8 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         if (index == 0) {
             setBackground(Color.green);
         }
+
+        return null;
     }
 
     {
@@ -69,8 +71,8 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         initiativeLabel.setText("Label");
         listPanel.add(initiativeLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         characterTypeLabel = new JLabel();
-        Font characterStatusLabelFont = this.$$$getFont$$$("SansSerif", Font.BOLD, 14, characterTypeLabel.getFont());
-        if (characterStatusLabelFont != null) characterTypeLabel.setFont(characterStatusLabelFont);
+        Font characterTypeLabelFont = this.$$$getFont$$$("SansSerif", Font.BOLD, 14, characterTypeLabel.getFont());
+        if (characterTypeLabelFont != null) characterTypeLabel.setFont(characterTypeLabelFont);
         characterTypeLabel.setText("Label");
         listPanel.add(characterTypeLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deathStatusLabel = new JLabel();

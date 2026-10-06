@@ -19,6 +19,9 @@ public class MainMenu extends JFrame {
     private JButton removeCharacterButton;
     private JList<Character> initiativeList;
     private JButton editCharacterButton;
+    private JButton passButton;
+    private JButton failButton;
+    private JLabel deathSaveLabel;
 
     private final CharacterManager cManager;
     private final UIManager uiManager;
@@ -37,6 +40,10 @@ public class MainMenu extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
+
+        deathSaveLabel.setVisible(false);
+        passButton.setVisible(false);
+        failButton.setVisible(false);
 
         addCharacterButton.addActionListener(e -> uiManager.openAddCharacterMenu());
         editCharacterButton.addActionListener(e -> uiManager.openEditCharacterMenu());
@@ -107,6 +114,15 @@ public class MainMenu extends JFrame {
         editCharacterButton.setHideActionText(false);
         editCharacterButton.setText("Edit Character");
         mainMenuPane.add(editCharacterButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        passButton = new JButton();
+        passButton.setText("Pass");
+        mainMenuPane.add(passButton, new GridConstraints(4, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        failButton = new JButton();
+        failButton.setText("Fail");
+        mainMenuPane.add(failButton, new GridConstraints(4, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        deathSaveLabel = new JLabel();
+        deathSaveLabel.setText("Death Saves:");
+        mainMenuPane.add(deathSaveLabel, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

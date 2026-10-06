@@ -99,6 +99,30 @@
           <text value="Edit Character"/>
         </properties>
       </component>
+      <component id="443d6" class="javax.swing.JButton" binding="passButton" default-binding="true">
+        <constraints>
+          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Pass"/>
+        </properties>
+      </component>
+      <component id="3e777" class="javax.swing.JButton" binding="failButton" default-binding="true">
+        <constraints>
+          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Fail"/>
+        </properties>
+      </component>
+      <component id="4880b" class="javax.swing.JLabel" binding="deathSaveLabel">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Death Saves:"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>
