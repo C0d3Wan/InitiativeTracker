@@ -48,6 +48,7 @@ public class MainMenu extends JFrame {
         addCharacterButton.addActionListener(e -> uiManager.openAddCharacterMenu());
         editCharacterButton.addActionListener(e -> uiManager.openEditCharacterMenu());
         removeCharacterButton.addActionListener(e -> uiManager.openRemoveCharacterMenu());
+        nextTurnButton.addActionListener(e -> uiManager.nextTurn());
     }
 
     {
@@ -77,10 +78,6 @@ public class MainMenu extends JFrame {
         removeCharacterButton.setSelected(false);
         removeCharacterButton.setText("Remove Character");
         mainMenuPane.add(removeCharacterButton, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        initiativeList = new JList();
-        final DefaultListModel defaultListModel1 = new DefaultListModel();
-        initiativeList.setModel(defaultListModel1);
-        mainMenuPane.add(initiativeList, new GridConstraints(5, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         final JSeparator separator1 = new JSeparator();
         mainMenuPane.add(separator1, new GridConstraints(2, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
@@ -123,6 +120,12 @@ public class MainMenu extends JFrame {
         deathSaveLabel = new JLabel();
         deathSaveLabel.setText("Death Saves:");
         mainMenuPane.add(deathSaveLabel, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JScrollPane scrollPane1 = new JScrollPane();
+        mainMenuPane.add(scrollPane1, new GridConstraints(5, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        initiativeList = new JList();
+        final DefaultListModel defaultListModel1 = new DefaultListModel();
+        initiativeList.setModel(defaultListModel1);
+        scrollPane1.setViewportView(initiativeList);
     }
 
     /**

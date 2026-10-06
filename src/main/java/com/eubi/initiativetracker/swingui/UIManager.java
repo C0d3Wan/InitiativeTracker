@@ -18,10 +18,10 @@ public class UIManager {
         this.characterManager = characterManager;
         this.parentFrame = parentFrame;
         characterMap = new HashMap<>();
+        characterListModel = new DefaultListModel<>();
 
-        CharacterCellRenderer characterRenderer = new CharacterCellRenderer();
-
-
+        initiativeList.setModel(characterListModel);
+        initiativeList.setCellRenderer(new CharacterCellRenderer());
     }
 
     public void openAddCharacterMenu() {
@@ -34,6 +34,8 @@ public class UIManager {
             characterManager.addCharacter(newCharacter);
             characterManager.sortCharacters();
             updateCharacterMap();
+
+            updateInitiativeList();
         }
     }
 
@@ -45,6 +47,7 @@ public class UIManager {
 
 
         characterManager.sortCharacters();
+        updateInitiativeList();
     }
 
     public void openRemoveCharacterMenu() {
@@ -52,7 +55,7 @@ public class UIManager {
         RemoveCharacterMenu removeCharacterMenu = new RemoveCharacterMenu(parentFrame, characterManager);
         removeCharacterMenu.setVisible(true);
 
-
+        updateInitiativeList();
     }
 
     private void updateCharacterMap() {
@@ -60,6 +63,18 @@ public class UIManager {
         for (Character character : characterManager.getCharacterList()) {
             characterMap.put(character.getCharacterData().get("Name").toString(), character);
         }
+    }
+
+    private void updateInitiativeList() {
+        characterListModel.clear();
+        for (Character character : characterManager.getCharactersOrdered()) {
+            characterListModel.addElement(character);
+        }
+    }
+
+    public void nextTurn() {
+        characterManager.newTurn();
+        updateInitiativeList();
     }
 
 

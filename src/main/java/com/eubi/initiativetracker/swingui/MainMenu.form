@@ -23,16 +23,6 @@
           <text value="Remove Character"/>
         </properties>
       </component>
-      <component id="2c5f0" class="javax.swing.JList" binding="initiativeList">
-        <constraints>
-          <grid row="5" column="0" row-span="1" col-span="4" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-        </constraints>
-        <properties>
-          <model/>
-        </properties>
-      </component>
       <component id="a9ce1" class="javax.swing.JSeparator">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -123,6 +113,21 @@
           <text value="Death Saves:"/>
         </properties>
       </component>
+      <scrollpane id="ec582">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="4" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="2c5f0" class="javax.swing.JList" binding="initiativeList">
+            <constraints/>
+            <properties>
+              <model/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
     </children>
   </grid>
 </form>
