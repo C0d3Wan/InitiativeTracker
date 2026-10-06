@@ -161,7 +161,13 @@ public class Character {
      *
      * @param newDexValue - The new Dex Value
      */
-    public void editDexValue(int newDexValue) {dexValue = (float) newDexValue /100;}
+    public void editDexValue(int newDexValue) {
+        if (characterType == CharacterType.ENEMY) {
+            dexValue = 0;
+        } else {
+            dexValue = (float) newDexValue / 100;
+        }
+    }
 
     /**
      * Updates the character's life status.
