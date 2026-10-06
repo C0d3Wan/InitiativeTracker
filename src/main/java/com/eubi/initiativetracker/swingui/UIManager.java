@@ -33,7 +33,8 @@ public class UIManager {
     }
 
     public void openEditCharacterMenu() {
-        List<Character> characters = characterManager.getCharacterVector();
+        //List<Character> characters = characterManager.getCharacterVector();
+        updateCharacterMap();
 
         EditCharacterMenu editCharacterMenu = new EditCharacterMenu(parentFrame, characterMap);
         editCharacterMenu.setVisible(true);
@@ -43,6 +44,7 @@ public class UIManager {
     }
 
     public void openRemoveCharacterMenu() {
+        updateCharacterMap();
         RemoveCharacterMenu removeCharacterMenu = new RemoveCharacterMenu(parentFrame, characterManager);
         removeCharacterMenu.setVisible(true);
 
