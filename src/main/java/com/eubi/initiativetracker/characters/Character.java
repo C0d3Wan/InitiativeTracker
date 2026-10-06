@@ -175,15 +175,22 @@ public class Character {
     }
 
     public void deathSave(boolean pass){
+        if (deathStatus != DeathStatus.DOWN){
+            return;
+        }
         if (pass){
             deathSaves.put("Pass", deathSaves.get("Pass")+1);
             if (deathSaves.get("Pass") >=3){
                 deathStatus = DeathStatus.ALIVE;
+                deathSaves.put("Pass", 0);
+                deathSaves.put("Fail", 0);
             }
         }else{
             deathSaves.put("Fail", deathSaves.get("Fail")+1);
             if (deathSaves.get("Fail") >=3){
                 deathStatus = DeathStatus.DEAD;
+                deathSaves.put("Pass", 0);
+                deathSaves.put("Fail", 0);
             }
         }
 
