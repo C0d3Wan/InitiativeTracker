@@ -54,7 +54,7 @@ public class CharacterManager {
         }
 
         if (currentCharacter == null){
-            currentCharacter = this.charactersOrdered.get(0);
+            currentCharacter = charactersOrdered.get(0);
             return;
         }
 

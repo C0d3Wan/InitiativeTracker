@@ -36,7 +36,7 @@ public class Character {
         characterType = type;
         deathStatus = status;
         dexValue = (float) dex / 100;
-        initiativeValue = initiative + this.dexValue;
+        initiativeValue = initiative + dexValue;
     }
 
     /**
@@ -51,7 +51,7 @@ public class Character {
     public Character(String name, int initiative, int dex, int typeID, int deathID) {
         characterName = name;
         dexValue = (float) dex / 100;
-        initiativeValue = initiative + this.dexValue;
+        initiativeValue = initiative + dexValue;
         switch (typeID) {
             case 0:
                 characterType = CharacterType.PLAYER;
@@ -95,7 +95,7 @@ public class Character {
     public Character(String name, int initiative, int dex, String typeID, String deathID) {
         characterName = name;
         dexValue = (float) dex / 100;
-        initiativeValue = initiative + this.dexValue;
+        initiativeValue = initiative + dexValue;
         switch (typeID) {
             case "PLAYER":
                 characterType = CharacterType.PLAYER;
@@ -220,7 +220,7 @@ public class Character {
      * @param newCharacterType The new {@link CharacterType} to apply.
      */
     public void editCharacterType(CharacterType newCharacterType) {
-        this.characterType = newCharacterType;
+        characterType = newCharacterType;
     }
 
     /**
