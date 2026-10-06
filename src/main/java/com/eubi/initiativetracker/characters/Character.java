@@ -14,6 +14,7 @@ public class Character {
     private final String characterName;
     private float initiativeValue;
     private float dexValue;
+    private Map<String, Integer> deathSaves;
     private CharacterType characterType;
     private DeathStatus deathStatus;
 
@@ -35,8 +36,12 @@ public class Character {
         characterName = name;
         characterType = type;
         deathStatus = status;
+        deathSaves = new HashMap<>();
         dexValue = (float) dex / 100;
         initiativeValue = initiative + dexValue;
+
+        deathSaves.put("Pass", 0);
+        deathSaves.put("Fail", 0);
     }
 
     /**
@@ -168,6 +173,22 @@ public class Character {
             dexValue = (float) newDexValue / 100;
         }
     }
+
+    public void deathSave(boolean pass){
+        if (pass){
+            deathSaves.put("Pass", deathSaves.get("Pass")+1);
+            if (deathSaves.get("Pass") >=3){
+                deathStatus = DeathStatus.ALIVE;
+            }
+        }else{
+            deathSaves.put("Fail", deathSaves.get("Fail")+1);
+            if (deathSaves.get("Fail") >=3){
+                deathStatus = DeathStatus.DEAD;
+            }
+        }
+
+    }
+
 
     /**
      * Updates the character's life status.
