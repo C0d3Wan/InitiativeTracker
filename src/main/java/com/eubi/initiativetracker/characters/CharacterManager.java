@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 public class CharacterManager {
     private final List<Character> characters;
     private List<Character> charactersOrdered;
+    private List<Character> initiativeOrdered;
     private Character currentCharacter;
 
     /**
@@ -52,11 +53,14 @@ public class CharacterManager {
             currentCharacter = null;
             return;
         }
-
         if (currentCharacter == null){
             currentCharacter = charactersOrdered.get(0);
+            currentCharacter.editCurrentCharacter(false);
             return;
         }
+        currentCharacter.editCurrentCharacter(false);
+
+
 
         int currentIndex = charactersOrdered.indexOf(currentCharacter);
 
@@ -66,7 +70,11 @@ public class CharacterManager {
             int nextIndex = (currentIndex + 1) % charactersOrdered.size();
             currentCharacter = charactersOrdered.get(nextIndex);
         }
+        currentCharacter.editCurrentCharacter(true);
+
     }
+
+
 
     /**
      * Completely empties the unsorted character list.

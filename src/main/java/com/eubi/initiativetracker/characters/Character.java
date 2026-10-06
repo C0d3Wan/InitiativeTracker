@@ -14,6 +14,7 @@ public class Character {
     private final String characterName;
     private float initiativeValue;
     private float dexValue;
+    private boolean currentCharater;
     private Map<String, Integer> deathSaves;
     private CharacterType characterType;
     private DeathStatus deathStatus;
@@ -36,6 +37,7 @@ public class Character {
         characterName = name;
         characterType = type;
         deathStatus = status;
+        currentCharater = false;
         deathSaves = new HashMap<>();
         dexValue = (float) dex / 100;
         initiativeValue = initiative + dexValue;
@@ -276,6 +278,10 @@ public class Character {
             default:
                 characterType = CharacterType.UNKNOWN;
         }
+    }
+
+    public void editCurrentCharacter(boolean current){
+        currentCharater = current;
     }
 
     /**
