@@ -51,10 +51,12 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         setOpaque(true);
         deathSavePanel.setVisible(false);
+        System.out.println("Test");
         if (index == 0) {
             setBackground(Color.green);
             if (characterData.get("DeathStatus").toString().equals("DOWN")) {
                 deathSavePanel.setVisible(true);
+                updateDeathSaves(character);
             }
         } else if (isSelected) {
 
@@ -220,5 +222,17 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
         Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
         return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
+    }
+
+    private void updateDeathSaves(Character character) {
+        Map<String, Integer> deathSaves = character.getDeathSaves();
+        System.out.println(deathSaves);
+        switch (deathSaves.get("Pass")) {
+            case 1 -> deathPass1.doClick();
+            case 2 -> {
+                deathPass1.doClick();
+                deathPass2.doClick();
+            }
+        }
     }
 }

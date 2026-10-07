@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 public class UIManager {
-    private CharacterManager characterManager;
-    private JFrame parentFrame;
-    private Map<String, Character> characterMap;
-    private DefaultListModel<Character> characterListModel;
-    private JButton passSaveButton;
-    private JButton failSaveButton;
-    private JLabel deathSaveLabel;
+    private final CharacterManager characterManager;
+    private final JFrame parentFrame;
+    private final Map<String, Character> characterMap;
+    private final DefaultListModel<Character> characterListModel;
+    private final JButton passSaveButton;
+    private final JButton failSaveButton;
+    private final JLabel deathSaveLabel;
 
     public UIManager(JFrame parentFrame, CharacterManager characterManager, JList<Character> initiativeList, JButton passSaveButton, JButton failSaveButton, JLabel deathSaveLabel) {
         this.characterManager = characterManager;
@@ -86,6 +86,7 @@ public class UIManager {
     public void passDeathSave(boolean passed) {
         Character currentCharacter = characterListModel.get(0);
         currentCharacter.deathSave(passed);
+        updateInitiativeList();
     }
 
     private void updateDeathSaveButtons() {
@@ -102,5 +103,6 @@ public class UIManager {
         }
 
         parentFrame.revalidate();
+        parentFrame.repaint();
     }
 }
