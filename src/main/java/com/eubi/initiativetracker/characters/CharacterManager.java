@@ -111,6 +111,7 @@ public class CharacterManager {
         characters.clear();
         charactersOrdered.clear();
         currentCharacter = null;
+        initiativeOrdered = getTurnOrder();
     }
 
     /**
