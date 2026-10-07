@@ -67,7 +67,7 @@ public class UIManager {
 
     private void updateInitiativeList() {
         characterListModel.clear();
-        for (Character character : characterManager.getCharactersOrdered()) {
+        for (Character character : characterManager.getInitiativeOrder()) {
             characterListModel.addElement(character);
         }
     }

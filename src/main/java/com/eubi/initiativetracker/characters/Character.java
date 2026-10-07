@@ -12,6 +12,7 @@ import java.util.*;
  */
 public class Character {
     private final String characterName;
+    private float baseInitiative;
     private float initiativeValue;
     private float dexValue;
     private boolean currentCharater;
@@ -40,7 +41,8 @@ public class Character {
         currentCharater = false;
         deathSaves = new HashMap<>();
         dexValue = (float) dex / 100;
-        initiativeValue = initiative + dexValue;
+        baseInitiative = initiative;
+        initiativeValue = baseInitiative + dexValue;
 
         deathSaves.put("Pass", 0);
         deathSaves.put("Fail", 0);
@@ -56,38 +58,7 @@ public class Character {
      * @param deathID     The initial id of the  {@link DeathStatus} of the character.
      */
     public Character(String name, int initiative, int dex, int typeID, int deathID) {
-        characterName = name;
-        dexValue = (float) dex / 100;
-        initiativeValue = initiative + dexValue;
-        switch (typeID) {
-            case 0:
-                characterType = CharacterType.PLAYER;
-                break;
-            case 1:
-                characterType = CharacterType.ENEMY;
-                break;
-            case 2:
-                characterType = CharacterType.ALLY;
-                break;
-            default:
-                characterType = CharacterType.UNKNOWN;
-        }
-
-        switch (deathID) {
-            case 0:
-                deathStatus = DeathStatus.DEAD;
-                break;
-            case 1:
-                deathStatus = DeathStatus.ALIVE;
-                break;
-            case 2:
-                deathStatus = DeathStatus.DOWN;
-                break;
-            default:
-                deathStatus = DeathStatus.UNKNOWN;
-
-
-        }
+        this(name, initiative, dex, typeFromId(typeID), deathFromId(deathID));
     }
 
     /**
@@ -100,38 +71,45 @@ public class Character {
      * @param deathID     The initial String of the  {@link DeathStatus} of the character.
      */
     public Character(String name, int initiative, int dex, String typeID, String deathID) {
-        characterName = name;
-        dexValue = (float) dex / 100;
-        initiativeValue = initiative + dexValue;
-        switch (typeID) {
-            case "PLAYER":
-                characterType = CharacterType.PLAYER;
-                break;
-            case "ENEMY":
-                characterType = CharacterType.ENEMY;
-                break;
-            case "ALLY":
-                characterType = CharacterType.ALLY;
-                break;
-            default:
-                characterType = CharacterType.UNKNOWN;
-        }
+        this(name, initiative, dex, typeFromString(typeID), deathFromString(deathID));
+    }
 
-        switch (deathID) {
-            case "DEAD":
-                deathStatus = DeathStatus.DEAD;
-                break;
-            case "ALIVE":
-                deathStatus = DeathStatus.ALIVE;
-                break;
-            case "DOWN":
-                deathStatus = DeathStatus.DOWN;
-                break;
-            default:
-                deathStatus = DeathStatus.UNKNOWN;
-
+    private static CharacterType typeFromId(int id) {
+        switch (id) {
+            case 0: return CharacterType.PLAYER;
+            case 1: return CharacterType.ENEMY;
+            case 2: return CharacterType.ALLY;
+            default: return CharacterType.UNKNOWN;
         }
     }
+
+    private static DeathStatus deathFromId(int id) {
+        switch (id) {
+            case 0: return DeathStatus.DEAD;
+            case 1: return DeathStatus.ALIVE;
+            case 2: return DeathStatus.DOWN;
+            default: return DeathStatus.UNKNOWN;
+        }
+    }
+
+    private static CharacterType typeFromString(String id) {
+        switch (id) {
+            case "PLAYER": return CharacterType.PLAYER;
+            case "ENEMY": return CharacterType.ENEMY;
+            case "ALLY": return CharacterType.ALLY;
+            default: return CharacterType.UNKNOWN;
+        }
+    }
+
+    private static DeathStatus deathFromString(String id) {
+        switch (id) {
+            case "DEAD": return DeathStatus.DEAD;
+            case "ALIVE": return DeathStatus.ALIVE;
+            case "DOWN": return DeathStatus.DOWN;
+            default: return DeathStatus.UNKNOWN;
+        }
+    }
+
 
     /**
      * Compiles and retrieves the core state of the character as a key-value data structure.
@@ -143,12 +121,17 @@ public class Character {
         Map<String, Object> displayData = new HashMap<>();
 
         displayData.put("Name", characterName);
-        displayData.put("Initiative", (int)(initiativeValue-dexValue));
+        displayData.put("Initiative", (int) baseInitiative);
         displayData.put("Dexterity",(int)(dexValue*100));
         displayData.put("Type", characterType.name());
         displayData.put("DeathStatus", deathStatus.name());
 
         return displayData;
+    }
+
+
+    private void recalculateInitiative() {
+        initiativeValue = baseInitiative + dexValue;
     }
 
     /**
@@ -160,7 +143,8 @@ public class Character {
      * @param newInitiativeNum The new base initiative score.
      */
     public void editInitiativeNum(float newInitiativeNum) {
-        initiativeValue = newInitiativeNum + dexValue;
+        baseInitiative = newInitiativeNum;
+        recalculateInitiative();
     }
 
     /**
@@ -169,11 +153,8 @@ public class Character {
      * @param newDexValue - The new Dex Value
      */
     public void editDexValue(int newDexValue) {
-        if (characterType == CharacterType.ENEMY) {
-            dexValue = 0;
-        } else {
-            dexValue = (float) newDexValue / 100;
-        }
+        dexValue = (characterType == CharacterType.ENEMY) ? 0 : (float) newDexValue / 100;
+        recalculateInitiative();
     }
 
     public void deathSave(boolean pass){
@@ -283,6 +264,8 @@ public class Character {
     public void editCurrentCharacter(boolean current){
         currentCharater = current;
     }
+
+    public boolean isCurrentCharacter() { return currentCharater; }
 
     /**
      * Retrieves the character's current, fully calculated initiative value.

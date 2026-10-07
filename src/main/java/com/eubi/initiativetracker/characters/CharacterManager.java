@@ -14,6 +14,7 @@ public class CharacterManager {
     public CharacterManager() {
         characters = new ArrayList<>();
         charactersOrdered = new ArrayList<>();
+        initiativeOrdered = new ArrayList<>();
     }
 
     /**
@@ -25,9 +26,11 @@ public class CharacterManager {
         characters.add(character);
         sortCharacters();
 
-        if (characters.size() == 1) {
+        if (currentCharacter == null) {
             newTurn();
         }
+        initiativeOrdered = getTurnOrder();
+
     }
 
     /**
@@ -36,42 +39,61 @@ public class CharacterManager {
      * @param character The exact {@link Character} instance to remove.
      */
     public void removeCharacter(Character character) {
+        sortCharacters();
+        boolean wasCurrent = (character == currentCharacter);
+        int index = charactersOrdered.indexOf(character);
+
         characters.remove(character);
+        character.editCurrentCharacter(false);
         sortCharacters();
 
-        if (currentCharacter != null && currentCharacter.equals(character)) {
-            newTurn();
+
+        if (!wasCurrent) {
+            initiativeOrdered = getTurnOrder();
+            return;
         }
+
+        currentCharacter = null;
+        if (!charactersOrdered.isEmpty()) {
+            currentCharacter = charactersOrdered.get(index % charactersOrdered.size());
+            currentCharacter.editCurrentCharacter(true);
+        }
+        initiativeOrdered = getTurnOrder();
+
     }
 
     /**
      * Advances the turn tracker to the next character in ordered list.
      * Operates cyclically, returning to the top of the list when reaching the end.
      */
-    public void newTurn(){
-        if(charactersOrdered.isEmpty()){
+    public void newTurn() {
+        sortCharacters();
+        if (charactersOrdered.isEmpty()) {
             currentCharacter = null;
             return;
         }
-        if (currentCharacter == null){
-            currentCharacter = charactersOrdered.get(0);
+
+        int nextIndex = 0;
+        if (currentCharacter != null) {
             currentCharacter.editCurrentCharacter(false);
-            return;
+            int currentIndex = charactersOrdered.indexOf(currentCharacter);
+            nextIndex = (currentIndex + 1) % charactersOrdered.size();
         }
-        currentCharacter.editCurrentCharacter(false);
 
-
-
-        int currentIndex = charactersOrdered.indexOf(currentCharacter);
-
-        if (currentIndex == -1){
-            currentCharacter = charactersOrdered.get(0);
-        }else  {
-            int nextIndex = (currentIndex + 1) % charactersOrdered.size();
-            currentCharacter = charactersOrdered.get(nextIndex);
-        }
+        currentCharacter = charactersOrdered.get(nextIndex);
         currentCharacter.editCurrentCharacter(true);
 
+        initiativeOrdered = getTurnOrder();
+    }
+
+    public List<Character> getTurnOrder() {
+        sortCharacters();
+        int i = charactersOrdered.indexOf(currentCharacter);
+        if (i <= 0) return new ArrayList<>(charactersOrdered);
+
+        List<Character> rotated = new ArrayList<>(charactersOrdered.subList(i, charactersOrdered.size()));
+        rotated.addAll(charactersOrdered.subList(0, i));
+        return rotated;
     }
 
 
@@ -134,7 +156,7 @@ public class CharacterManager {
      *
      * @return A {@link List} of characters ordered by initiative descending.
      */
-    public List<Character> getCharactersOrdered() {return charactersOrdered;}
+    public List<Character> getInitiativeOrder() {return initiativeOrdered;}
 
     /**
      * Outputs a formatted representation of both the original and sorted lists to the console.
