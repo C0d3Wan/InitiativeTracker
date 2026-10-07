@@ -40,7 +40,7 @@ public class Character {
         deathStatus = status;
         currentCharacter = false;
         deathSaves = new HashMap<>();
-        dexValue = (float) dex / 100;
+        dexValue = (characterType == CharacterType.ENEMY) ? 0 : (float) dex / 100;
         baseInitiative = initiative;
         initiativeValue = baseInitiative + dexValue;
 
