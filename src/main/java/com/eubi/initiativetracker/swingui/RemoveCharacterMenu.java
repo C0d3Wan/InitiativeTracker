@@ -2,16 +2,18 @@ package com.eubi.initiativetracker.swingui;
 
 import com.eubi.initiativetracker.characters.Character;
 import com.eubi.initiativetracker.characters.CharacterManager;
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-public class RemoveCharacterMenu extends JFrame {
+public class RemoveCharacterMenu extends JDialog {
     private JPanel removeCharacterPane;
     private JComboBox characterSelectionCombo;
     private JButton removeCharacterButton;
@@ -20,17 +22,18 @@ public class RemoveCharacterMenu extends JFrame {
     private Map<String, Character> characterMap = new HashMap<>();
     private CharacterManager cManager;
 
-    public RemoveCharacterMenu(CharacterManager characterManager) {
+    public RemoveCharacterMenu(Frame parent, CharacterManager characterManager) {
+        super(parent, "Remove Character", true);
         setContentPane(removeCharacterPane);
         this.cManager = characterManager;
-        updateSelectionCombo();
 
         removedCharacterLabel.setVisible(false);
-
         setTitle("Remove Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
+
+        updateSelectionCombo();
 
         removeCharacterButton.addActionListener(e -> {
             removeCharacter();
@@ -38,7 +41,7 @@ public class RemoveCharacterMenu extends JFrame {
     }
 
     private void updateSelectionCombo() {
-        List<Character> characters = this.cManager.getCharacterVector();
+        List<Character> characters = this.cManager.getCharacterList();
         characterSelectionCombo.removeAllItems();
         if (characters.isEmpty()) {
             characterSelectionCombo.addItem("No Characters");
@@ -86,22 +89,88 @@ public class RemoveCharacterMenu extends JFrame {
      */
     private void $$$setupUI$$$() {
         removeCharacterPane = new JPanel();
-        removeCharacterPane.setLayout(new GridLayoutManager(4, 2, new Insets(5, 5, 5, 5), -1, -1));
+        removeCharacterPane.setLayout(new GridBagLayout());
+        Font removeCharacterPaneFont = this.$$$getFont$$$("SansSerif", -1, -1, removeCharacterPane.getFont());
+        if (removeCharacterPaneFont != null) removeCharacterPane.setFont(removeCharacterPaneFont);
+        removeCharacterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         characterSelectionCombo = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
         characterSelectionCombo.setModel(defaultComboBoxModel1);
-        removeCharacterPane.add(characterSelectionCombo, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        GridBagConstraints gbc;
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        removeCharacterPane.add(characterSelectionCombo, gbc);
         final JLabel label1 = new JLabel();
         label1.setText("Select Character");
-        removeCharacterPane.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        removeCharacterPane.add(label1, gbc);
         removeCharacterButton = new JButton();
         removeCharacterButton.setText("Remove Character");
-        removeCharacterPane.add(removeCharacterButton, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        removeCharacterPane.add(removeCharacterButton, gbc);
         final JSeparator separator1 = new JSeparator();
-        removeCharacterPane.add(separator1, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 3;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        removeCharacterPane.add(separator1, gbc);
         removedCharacterLabel = new JLabel();
         removedCharacterLabel.setText("Character(s) Removed!!!");
-        removeCharacterPane.add(removedCharacterLabel, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 3;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        removeCharacterPane.add(removedCharacterLabel, gbc);
+        final JPanel spacer1 = new JPanel();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        removeCharacterPane.add(spacer1, gbc);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     /**

@@ -1,9 +1,10 @@
 package com.eubi.initiativetracker.swingui;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+
+import com.eubi.initiativetracker.characters.Character;
 import com.eubi.initiativetracker.characters.CharacterManager;
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 
 import java.awt.*;
 
@@ -15,10 +16,14 @@ public class MainMenu extends JFrame {
     private JButton addCharacterButton;
     private JButton nextTurnButton;
     private JButton removeCharacterButton;
-    private JList initiativeList;
+    private JList<Character> initiativeList;
     private JButton editCharacterButton;
+    private JButton passButton;
+    private JButton failButton;
+    private JLabel deathSaveLabel;
 
     private final CharacterManager cManager;
+    private final UIManager uiManager;
 
     /**
      * Constructs a window for the initiative tracker
@@ -26,27 +31,26 @@ public class MainMenu extends JFrame {
      * @param characterManager Allows use of {@link CharacterManager}
      */
     public MainMenu(CharacterManager characterManager) {
+        cManager = characterManager;
+        uiManager = new UIManager(this, cManager, initiativeList, passButton, failButton, deathSaveLabel);
+
         setContentPane(mainMenuPane);
-
-        this.cManager = characterManager;
-
         setTitle("Initiative Tracker");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
 
-        addCharacterButton.addActionListener(e -> {
-            AddCharacterMenu addCharacter = new AddCharacterMenu(cManager);
-            addCharacter.setVisible(true);
-        });
-        editCharacterButton.addActionListener(e -> {
-            EditCharacterMenu editCharacter = new EditCharacterMenu(cManager);
-            editCharacter.setVisible(true);
-        });
-        removeCharacterButton.addActionListener(e -> {
-            RemoveCharacterMenu removeCharacter = new RemoveCharacterMenu(cManager);
-            removeCharacter.setVisible(true);
-        });
+        deathSaveLabel.setVisible(false);
+        passButton.setVisible(false);
+        failButton.setVisible(false);
+
+        addCharacterButton.addActionListener(e -> uiManager.openAddCharacterMenu());
+        editCharacterButton.addActionListener(e -> uiManager.openEditCharacterMenu());
+        removeCharacterButton.addActionListener(e -> uiManager.openRemoveCharacterMenu());
+        nextTurnButton.addActionListener(e -> uiManager.nextTurn());
+
+        passButton.addActionListener(e -> uiManager.passDeathSave(true));
+        failButton.addActionListener(e -> uiManager.passDeathSave(false));
     }
 
     {
@@ -65,7 +69,8 @@ public class MainMenu extends JFrame {
      */
     private void $$$setupUI$$$() {
         mainMenuPane = new JPanel();
-        mainMenuPane.setLayout(new GridLayoutManager(6, 4, new Insets(5, 5, 5, 5), -1, -1));
+        mainMenuPane.setLayout(new GridBagLayout());
+        mainMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         removeCharacterButton = new JButton();
         removeCharacterButton.setBorderPainted(true);
         removeCharacterButton.setContentAreaFilled(true);
@@ -75,28 +80,49 @@ public class MainMenu extends JFrame {
         removeCharacterButton.setHorizontalAlignment(0);
         removeCharacterButton.setSelected(false);
         removeCharacterButton.setText("Remove Character");
-        mainMenuPane.add(removeCharacterButton, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        initiativeList = new JList();
-        final DefaultListModel defaultListModel1 = new DefaultListModel();
-        initiativeList.setModel(defaultListModel1);
-        mainMenuPane.add(initiativeList, new GridConstraints(5, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        GridBagConstraints gbc;
+        gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 1, 2, 0);
+        mainMenuPane.add(removeCharacterButton, gbc);
         final JSeparator separator1 = new JSeparator();
-        mainMenuPane.add(separator1, new GridConstraints(2, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 6;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        mainMenuPane.add(separator1, gbc);
         final JLabel label1 = new JLabel();
         label1.setText("Initiative Order");
-        mainMenuPane.add(label1, new GridConstraints(3, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JSeparator separator2 = new JSeparator();
-        mainMenuPane.add(separator2, new GridConstraints(0, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 6;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        mainMenuPane.add(label1, gbc);
         final JLabel label2 = new JLabel();
         label2.setText("Options");
-        mainMenuPane.add(label2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        mainMenuPane.add(label2, gbc);
         nextTurnButton = new JButton();
         nextTurnButton.setBorderPainted(true);
         nextTurnButton.setFocusPainted(false);
         nextTurnButton.setFocusable(true);
         nextTurnButton.setSelected(false);
         nextTurnButton.setText("Next Turn");
-        mainMenuPane.add(nextTurnButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        mainMenuPane.add(nextTurnButton, gbc);
         addCharacterButton = new JButton();
         addCharacterButton.setBorderPainted(true);
         addCharacterButton.setContentAreaFilled(true);
@@ -104,7 +130,12 @@ public class MainMenu extends JFrame {
         addCharacterButton.setFocusable(false);
         addCharacterButton.setHideActionText(false);
         addCharacterButton.setText("Add Character");
-        mainMenuPane.add(addCharacterButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 0, 2, 1);
+        mainMenuPane.add(addCharacterButton, gbc);
         editCharacterButton = new JButton();
         editCharacterButton.setBorderPainted(true);
         editCharacterButton.setContentAreaFilled(true);
@@ -112,7 +143,52 @@ public class MainMenu extends JFrame {
         editCharacterButton.setFocusable(true);
         editCharacterButton.setHideActionText(false);
         editCharacterButton.setText("Edit Character");
-        mainMenuPane.add(editCharacterButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 1, 2, 1);
+        mainMenuPane.add(editCharacterButton, gbc);
+        passButton = new JButton();
+        passButton.setText("Pass");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 3;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 1, 2, 1);
+        mainMenuPane.add(passButton, gbc);
+        failButton = new JButton();
+        failButton.setText("Fail");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 3;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 1, 2, 0);
+        mainMenuPane.add(failButton, gbc);
+        deathSaveLabel = new JLabel();
+        deathSaveLabel.setText("Death Saves:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(2, 0, 2, 4);
+        mainMenuPane.add(deathSaveLabel, gbc);
+        final JScrollPane scrollPane1 = new JScrollPane();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 6;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(2, 0, 0, 0);
+        mainMenuPane.add(scrollPane1, gbc);
+        initiativeList = new JList();
+        final DefaultListModel defaultListModel1 = new DefaultListModel();
+        initiativeList.setModel(defaultListModel1);
+        scrollPane1.setViewportView(initiativeList);
     }
 
     /**
