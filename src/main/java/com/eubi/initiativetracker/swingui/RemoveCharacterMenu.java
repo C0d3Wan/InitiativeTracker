@@ -35,9 +35,7 @@ public class RemoveCharacterMenu extends JDialog {
 
         updateSelectionCombo();
 
-        removeCharacterButton.addActionListener(e -> {
-            removeCharacter();
-        });
+        removeCharacterButton.addActionListener(e -> removeCharacter());
     }
 
     private void updateSelectionCombo() {

@@ -62,7 +62,8 @@ public class EditCharacterMenu extends JDialog {
         if (newInitiative != (int) currentCharacterData.get("Initiative")) {
             currentCharacter.editInitiativeNum(newInitiative);
         }
-        if (!newDeathStatus.equals((String) currentCharacterData.get("DeathStatus"))) {
+        assert newDeathStatus != null;
+        if (!newDeathStatus.equals(currentCharacterData.get("DeathStatus"))) {
             currentCharacter.editDeathStatus(newDeathStatus);
         }
         savedCharacterLabel.setVisible(true);
@@ -90,7 +91,7 @@ public class EditCharacterMenu extends JDialog {
             for (Character character : characterMap.values()) {
                 String name = character.getCharacterData().get("Name").toString();
                 this.characterMap.put(name, character);
-                charactersCombo.addItem((String) name);
+                charactersCombo.addItem(name);
             }
 
             displayCurrentCharacterData();
@@ -124,7 +125,7 @@ public class EditCharacterMenu extends JDialog {
             return characterMap.entrySet().iterator().next().getValue();
         }
         String name = charactersCombo.getSelectedItem().toString();
-        return (Character) characterMap.get(name);
+        return characterMap.get(name);
     }
 
     {

@@ -7,7 +7,6 @@ import java.util.List;
 import java.awt.*;
 
 import com.eubi.initiativetracker.characters.Character;
-import com.eubi.initiativetracker.characters.CharacterManager;
 
 /**
  * Class for the tracker's add character menu

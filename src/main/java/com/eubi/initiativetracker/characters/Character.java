@@ -15,7 +15,7 @@ public class Character {
     private float baseInitiative;
     private float initiativeValue;
     private float dexValue;
-    private boolean currentCharater;
+    private boolean currentCharacter;
     private Map<String, Integer> deathSaves;
     private CharacterType characterType;
     private DeathStatus deathStatus;
@@ -38,7 +38,7 @@ public class Character {
         characterName = name;
         characterType = type;
         deathStatus = status;
-        currentCharater = false;
+        currentCharacter = false;
         deathSaves = new HashMap<>();
         dexValue = (float) dex / 100;
         baseInitiative = initiative;
@@ -75,12 +75,12 @@ public class Character {
     }
 
     private static CharacterType typeFromId(int id) {
-        switch (id) {
-            case 0: return CharacterType.PLAYER;
-            case 1: return CharacterType.ENEMY;
-            case 2: return CharacterType.ALLY;
-            default: return CharacterType.UNKNOWN;
-        }
+        return switch (id) {
+            case 0 -> CharacterType.PLAYER;
+            case 1 -> CharacterType.ENEMY;
+            case 2 -> CharacterType.ALLY;
+            default -> CharacterType.UNKNOWN;
+        };
     }
 
     private static DeathStatus deathFromId(int id) {
@@ -262,10 +262,10 @@ public class Character {
     }
 
     public void editCurrentCharacter(boolean current){
-        currentCharater = current;
+        currentCharacter = current;
     }
 
-    public boolean isCurrentCharacter() { return currentCharater; }
+    public boolean isCurrentCharacter() { return currentCharacter; }
 
     /**
      * Retrieves the character's current, fully calculated initiative value.
