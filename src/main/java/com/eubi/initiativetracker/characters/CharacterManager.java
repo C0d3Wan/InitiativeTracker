@@ -33,6 +33,11 @@ public class CharacterManager {
 
     }
 
+    public void updateCharacters() {
+        sortCharacters();
+        initiativeOrdered = getTurnOrder();
+    }
+
     /**
      * Removes a character from the unsorted tracker list.
      *

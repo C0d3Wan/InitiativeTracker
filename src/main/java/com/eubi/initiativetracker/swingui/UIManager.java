@@ -32,7 +32,6 @@ public class UIManager {
         if (addCharacterMenu.isConfirmed()) {
             Character newCharacter = addCharacterMenu.getNewCharacter();
             characterManager.addCharacter(newCharacter);
-            characterManager.sortCharacters();
             updateCharacterMap();
 
             updateInitiativeList();
@@ -45,8 +44,7 @@ public class UIManager {
         EditCharacterMenu editCharacterMenu = new EditCharacterMenu(parentFrame, characterMap);
         editCharacterMenu.setVisible(true);
 
-
-        characterManager.sortCharacters();
+        characterManager.updateCharacters();
         updateInitiativeList();
     }
 
