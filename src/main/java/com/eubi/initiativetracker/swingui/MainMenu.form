@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.eubi.initiativetracker.swingui.MainMenu">
-  <grid id="27dc6" binding="mainMenuPane" layout-manager="GridLayoutManager" row-count="6" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="5" left="5" bottom="5" right="5"/>
+  <grid id="27dc6" binding="mainMenuPane" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="547" height="400"/>
+      <xy x="20" y="20" width="595" height="430"/>
     </constraints>
     <properties/>
-    <border type="none"/>
+    <border type="empty">
+      <size top="5" left="5" bottom="5" right="5"/>
+    </border>
     <children>
       <component id="1fe2c" class="javax.swing.JButton" binding="removeCharacterButton" default-binding="true">
         <constraints>
-          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="1" bottom="2" right="0" weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
           <borderPainted value="true"/>
@@ -25,27 +27,24 @@
       </component>
       <component id="a9ce1" class="javax.swing.JSeparator">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="0" bottom="2" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
       </component>
       <component id="98416" class="javax.swing.JLabel">
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="0" bottom="2" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Initiative Order"/>
         </properties>
       </component>
-      <component id="5d33e" class="javax.swing.JSeparator">
-        <constraints>
-          <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-      </component>
       <component id="d8892" class="javax.swing.JLabel">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="0" bottom="2" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Options"/>
@@ -53,7 +52,8 @@
       </component>
       <component id="b9d27" class="javax.swing.JButton" binding="nextTurnButton" default-binding="true">
         <constraints>
-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="0" bottom="2" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <borderPainted value="true"/>
@@ -65,7 +65,8 @@
       </component>
       <component id="4e0c0" class="javax.swing.JButton" binding="addCharacterButton" default-binding="true">
         <constraints>
-          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="0" bottom="2" right="1" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <borderPainted value="true"/>
@@ -78,7 +79,8 @@
       </component>
       <component id="48e32" class="javax.swing.JButton" binding="editCharacterButton" default-binding="true">
         <constraints>
-          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="1" bottom="2" right="1" weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
           <borderPainted value="true"/>
@@ -91,7 +93,8 @@
       </component>
       <component id="443d6" class="javax.swing.JButton" binding="passButton" default-binding="true">
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="1" bottom="2" right="1" weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Pass"/>
@@ -99,7 +102,8 @@
       </component>
       <component id="3e777" class="javax.swing.JButton" binding="failButton" default-binding="true">
         <constraints>
-          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="1" bottom="2" right="0" weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Fail"/>
@@ -107,7 +111,8 @@
       </component>
       <component id="4880b" class="javax.swing.JLabel" binding="deathSaveLabel">
         <constraints>
-          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="0" bottom="2" right="4" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Death Saves:"/>
@@ -115,7 +120,8 @@
       </component>
       <scrollpane id="ec582">
         <constraints>
-          <grid row="5" column="0" row-span="1" col-span="4" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="0" row-span="1" col-span="6" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="0" bottom="0" right="0" weightx="0.0" weighty="1.0"/>
         </constraints>
         <properties/>
         <border type="none"/>

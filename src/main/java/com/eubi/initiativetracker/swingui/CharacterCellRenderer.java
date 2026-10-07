@@ -1,11 +1,11 @@
 package com.eubi.initiativetracker.swingui;
 
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.eubi.initiativetracker.characters.Character;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.util.*;
 
@@ -23,18 +23,10 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
     private JPanel deathSavePanel = new JPanel();
 
     public CharacterCellRenderer() {
-        setLayout(new GridLayoutManager(1, 8, new Insets(0, 0, 0, 0), 5, 0));
-        setBorder(new EmptyBorder(4, 12, 4, 12));
+        setLayout(new GridBagLayout());
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 
-        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
-        initiativeLabel.setFont(new Font("SansSerif", Font.PLAIN, 20));
-        characterTypeLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        deathStatusLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-
-        add(nameLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        add(initiativeLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        add(characterTypeLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        add(deathStatusLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        setupLabels();
 
         setupRadioButtons();
     }
@@ -72,40 +64,175 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         return this;
     }
 
+    private void setupLabels() {
+        GridBagConstraints gbc;
+
+        Font nameLabelFont = this.$$$getFont$$$("SansSerif", Font.BOLD, 20, nameLabel.getFont());
+        if (nameLabelFont != null) nameLabel.setFont(nameLabelFont);
+        nameLabel.setText("Label");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridheight = 3;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 0, 4);
+        add(nameLabel, gbc);
+
+        Font initiativeLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, initiativeLabel.getFont());
+        if (initiativeLabelFont != null) initiativeLabel.setFont(initiativeLabelFont);
+        initiativeLabel.setText("Label");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.gridheight = 3;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(0, 4, 0, 4);
+        add(initiativeLabel, gbc);
+
+        Font characterTypeLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, characterTypeLabel.getFont());
+        if (characterTypeLabelFont != null) characterTypeLabel.setFont(characterTypeLabelFont);
+        characterTypeLabel.setText("Label");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.gridheight = 3;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(0, 4, 0, 4);
+        add(characterTypeLabel, gbc);
+
+        Font deathStatusLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, deathStatusLabel.getFont());
+        if (deathStatusLabelFont != null) deathStatusLabel.setFont(deathStatusLabelFont);
+        deathStatusLabel.setText("Label");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 4;
+        gbc.gridy = 0;
+        gbc.gridheight = 3;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(0, 4, 0, 4);
+        add(deathStatusLabel, gbc);
+
+        final JPanel spacer1 = new JPanel();
+        spacer1.setOpaque(false);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(spacer1, gbc);
+    }
+
     private void setupRadioButtons() {
-        deathSavePanel.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1, true, true));
+        GridBagConstraints gbc;
+
+        deathSavePanel.setLayout(new GridBagLayout());
         deathSavePanel.setOpaque(false);
-        add(deathSavePanel, new GridConstraints(0, 4, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.gridheight = 3;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(0, 4, 0, 4);
+        add(deathSavePanel, gbc);
 
-        deathPass1.setText("");
-        deathSavePanel.add(deathPass1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        deathPass1.setEnabled(true);
         deathPass1.setOpaque(false);
+        deathPass1.setText("");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        deathSavePanel.add(deathPass1, gbc);
 
-        deathPass2.setText("");
-        deathSavePanel.add(deathPass2, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deathPass2.setOpaque(false);
+        deathPass2.setText("");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        deathSavePanel.add(deathPass2, gbc);
 
-        deathPass3.setText("");
-        deathSavePanel.add(deathPass3, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deathPass3.setOpaque(false);
+        deathPass3.setText("");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        deathSavePanel.add(deathPass3, gbc);
 
-        deathFail1.setText("");
-        deathSavePanel.add(deathFail1, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deathFail1.setOpaque(false);
+        deathFail1.setText("");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        deathSavePanel.add(deathFail1, gbc);
 
-        deathFail2.setText("");
-        deathSavePanel.add(deathFail2, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deathFail2.setOpaque(false);
+        deathFail2.setText("");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        deathSavePanel.add(deathFail2, gbc);
 
-        deathFail3.setText("");
-        deathSavePanel.add(deathFail3, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         deathFail3.setOpaque(false);
+        deathFail3.setText("");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        deathSavePanel.add(deathFail3, gbc);
 
         final JLabel label1 = new JLabel();
-        label1.setText("Pass");
-        deathSavePanel.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        label1.setText("Fail");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 0, 2);
+        deathSavePanel.add(label1, gbc);
+
         final JLabel label2 = new JLabel();
-        label2.setText("Fail");
-        deathSavePanel.add(label2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        label2.setText("Pass");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 0, 2);
+        deathSavePanel.add(label2, gbc);
+    }
+
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 }

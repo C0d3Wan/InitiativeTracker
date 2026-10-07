@@ -1,14 +1,13 @@
 package com.eubi.initiativetracker.swingui;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 import java.util.List;
 import java.awt.*;
 
 import com.eubi.initiativetracker.characters.Character;
 import com.eubi.initiativetracker.characters.CharacterManager;
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 
 /**
  * Class for the tracker's add character menu
@@ -49,10 +48,12 @@ public class AddCharacterMenu extends JDialog {
             public void insertUpdate(DocumentEvent documentEvent) {
                 validateName();
             }
+
             @Override
             public void removeUpdate(DocumentEvent documentEvent) {
                 validateName();
             }
+
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
                 validateName();
@@ -79,7 +80,7 @@ public class AddCharacterMenu extends JDialog {
     private void validateName() {
         String name = characterName.getText().trim();
         boolean isValid = !name.isEmpty();
-        for  (Character character : characters) {
+        for (Character character : characters) {
             if (name.equalsIgnoreCase(character.getCharacterData().get("Name").toString())) {
                 isValid = false;
             }
@@ -112,47 +113,132 @@ public class AddCharacterMenu extends JDialog {
      */
     private void $$$setupUI$$$() {
         addCharacterPane = new JPanel();
-        addCharacterPane.setLayout(new GridLayoutManager(6, 3, new Insets(5, 5, 5, 5), -1, -1));
+        addCharacterPane.setLayout(new GridBagLayout());
+        addCharacterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         characterName = new JTextField();
-        addCharacterPane.add(characterName, new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        GridBagConstraints gbc;
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 0, 2, 0);
+        addCharacterPane.add(characterName, gbc);
         characterTypeCombo = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
         defaultComboBoxModel1.addElement("PLAYER");
         defaultComboBoxModel1.addElement("ENEMY");
         defaultComboBoxModel1.addElement("ALLY");
         characterTypeCombo.setModel(defaultComboBoxModel1);
-        addCharacterPane.add(characterTypeCombo, new GridConstraints(3, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        addCharacterPane.add(characterTypeCombo, gbc);
         final JLabel label1 = new JLabel();
         label1.setText("Character Name");
-        addCharacterPane.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        addCharacterPane.add(label1, gbc);
         final JLabel label2 = new JLabel();
         label2.setText("Initiative");
-        addCharacterPane.add(label2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        addCharacterPane.add(label2, gbc);
         final JLabel label3 = new JLabel();
         label3.setText("Dexterity (0-30)");
-        addCharacterPane.add(label3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        addCharacterPane.add(label3, gbc);
         final JLabel label4 = new JLabel();
         label4.setText("Character Type");
-        addCharacterPane.add(label4, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        addCharacterPane.add(label4, gbc);
         initiativeSpinner = new JSpinner();
-        addCharacterPane.add(initiativeSpinner, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        addCharacterPane.add(initiativeSpinner, gbc);
         dexteritySpinner = new JSpinner();
-        addCharacterPane.add(dexteritySpinner, new GridConstraints(2, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        addCharacterPane.add(dexteritySpinner, gbc);
         addCharacterButton = new JButton();
         addCharacterButton.setFocusPainted(false);
         addCharacterButton.setOpaque(true);
         addCharacterButton.setText("Add character");
-        addCharacterPane.add(addCharacterButton, new GridConstraints(5, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 5;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 0, 0, 0);
+        addCharacterPane.add(addCharacterButton, gbc);
         deathStatusCombo = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
         defaultComboBoxModel2.addElement("ALIVE");
         defaultComboBoxModel2.addElement("DEAD");
         defaultComboBoxModel2.addElement("DOWN");
         deathStatusCombo.setModel(defaultComboBoxModel2);
-        addCharacterPane.add(deathStatusCombo, new GridConstraints(4, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 0, 5, 0);
+        addCharacterPane.add(deathStatusCombo, gbc);
         final JLabel label5 = new JLabel();
         label5.setText("Death Status");
-        addCharacterPane.add(label5, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(2, 0, 5, 0);
+        addCharacterPane.add(label5, gbc);
+        final JPanel spacer1 = new JPanel();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        addCharacterPane.add(spacer1, gbc);
     }
 
     /**
