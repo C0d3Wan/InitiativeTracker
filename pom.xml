@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>InitiativeTracker</artifactId>
-    <version>0.7.5-SNAPSHOT</version>
+    <version>1.1</version>
 
     <properties>
         <java.version>25</java.version>
