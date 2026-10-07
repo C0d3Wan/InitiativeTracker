@@ -71,7 +71,7 @@ public class CharacterCellRendererTestingFile extends JPanel implements ListCell
         characterCellRenderer.setLayout(new GridBagLayout());
         characterCellRenderer.setBackground(new Color(-11286380));
         characterCellRenderer.setVisible(true);
-        characterCellRenderer.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        characterCellRenderer.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(2, 12, 2, 12), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         initiativeLabel = new JLabel();
         Font initiativeLabelFont = this.$$$getFont$$$("SansSerif", Font.BOLD, 14, initiativeLabel.getFont());
         if (initiativeLabelFont != null) initiativeLabel.setFont(initiativeLabelFont);

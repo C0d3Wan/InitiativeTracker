@@ -24,11 +24,13 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
     public CharacterCellRenderer() {
         setLayout(new GridBagLayout());
-        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.WEST;
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(2, 2, 2, 12), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 
-        setupLabels();
+        setupLabels(gbc);
 
-        setupRadioButtons();
+        setupRadioButtons(gbc);
     }
 
     @Override
@@ -60,17 +62,15 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
             setBackground(index % 2 == 0 ? list.getBackground() : list.getBackground().darker());
             deathSavePanel.setVisible(false);
         }
+        setPreferredSize(new Dimension(list.getWidth(), getPreferredSize().height));
 
         return this;
     }
 
-    private void setupLabels() {
-        GridBagConstraints gbc;
-
+    private void setupLabels(GridBagConstraints gbc) {
         Font nameLabelFont = this.$$$getFont$$$("SansSerif", Font.BOLD, 20, nameLabel.getFont());
         if (nameLabelFont != null) nameLabel.setFont(nameLabelFont);
         nameLabel.setText("Label");
-        gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridheight = 3;
@@ -82,7 +82,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         Font initiativeLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, initiativeLabel.getFont());
         if (initiativeLabelFont != null) initiativeLabel.setFont(initiativeLabelFont);
         initiativeLabel.setText("Label");
-        gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 0;
         gbc.gridheight = 3;
@@ -93,7 +92,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         Font characterTypeLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, characterTypeLabel.getFont());
         if (characterTypeLabelFont != null) characterTypeLabel.setFont(characterTypeLabelFont);
         characterTypeLabel.setText("Label");
-        gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 0;
         gbc.gridheight = 3;
@@ -104,7 +102,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         Font deathStatusLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, deathStatusLabel.getFont());
         if (deathStatusLabelFont != null) deathStatusLabel.setFont(deathStatusLabelFont);
         deathStatusLabel.setText("Label");
-        gbc = new GridBagConstraints();
         gbc.gridx = 4;
         gbc.gridy = 0;
         gbc.gridheight = 3;
@@ -114,19 +111,15 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         final JPanel spacer1 = new JPanel();
         spacer1.setOpaque(false);
-        gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         add(spacer1, gbc);
     }
 
-    private void setupRadioButtons() {
-        GridBagConstraints gbc;
-
+    private void setupRadioButtons(GridBagConstraints gbc) {
         deathSavePanel.setLayout(new GridBagLayout());
         deathSavePanel.setOpaque(false);
-        gbc = new GridBagConstraints();
         gbc.gridx = 5;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -138,7 +131,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         deathPass1.setEnabled(true);
         deathPass1.setOpaque(false);
         deathPass1.setText("");
-        gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
@@ -148,7 +140,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         deathPass2.setOpaque(false);
         deathPass2.setText("");
-        gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
@@ -158,7 +149,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         deathPass3.setOpaque(false);
         deathPass3.setText("");
-        gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
@@ -168,7 +158,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         deathFail1.setOpaque(false);
         deathFail1.setText("");
-        gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.weightx = 1.0;
@@ -178,7 +167,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         deathFail2.setOpaque(false);
         deathFail2.setText("");
-        gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 1;
         gbc.weightx = 1.0;
@@ -188,7 +176,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         deathFail3.setOpaque(false);
         deathFail3.setText("");
-        gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 1;
         gbc.weightx = 1.0;
@@ -198,7 +185,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         final JLabel label1 = new JLabel();
         label1.setText("Fail");
-        gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weighty = 1.0;
@@ -208,7 +194,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         final JLabel label2 = new JLabel();
         label2.setText("Pass");
-        gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weighty = 1.0;

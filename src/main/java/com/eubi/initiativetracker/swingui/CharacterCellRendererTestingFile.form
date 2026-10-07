@@ -9,7 +9,7 @@
       <visible value="true"/>
     </properties>
     <border type="empty">
-      <size top="8" left="12" bottom="8" right="12"/>
+      <size top="2" left="12" bottom="2" right="12"/>
     </border>
     <children>
       <component id="873e5" class="javax.swing.JLabel" binding="initiativeLabel">
