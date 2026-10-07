@@ -50,20 +50,18 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         deathStatusLabel.setText(characterData.get("DeathStatus").toString());
 
         setOpaque(true);
-
+        deathSavePanel.setVisible(false);
         if (index == 0) {
             setBackground(Color.green);
             if (characterData.get("DeathStatus").toString().equals("DOWN")) {
                 deathSavePanel.setVisible(true);
-            } else {
-                deathSavePanel.setVisible(false);
             }
         } else if (isSelected) {
+
             setBackground(list.getSelectionBackground());
             setForeground(list.getSelectionForeground());
         } else {
             setBackground(index % 2 == 0 ? list.getBackground() : list.getBackground().darker());
-            deathSavePanel.setVisible(false);
         }
         //setPreferredSize(new Dimension(list.getWidth(), getPreferredSize().height));
 
