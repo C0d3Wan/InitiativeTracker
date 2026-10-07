@@ -32,7 +32,7 @@ public class MainMenu extends JFrame {
      */
     public MainMenu(CharacterManager characterManager) {
         cManager = characterManager;
-        uiManager = new UIManager(this, cManager, initiativeList);
+        uiManager = new UIManager(this, cManager, initiativeList, passButton, failButton, deathSaveLabel);
 
         setContentPane(mainMenuPane);
         setTitle("Initiative Tracker");
@@ -48,6 +48,9 @@ public class MainMenu extends JFrame {
         editCharacterButton.addActionListener(e -> uiManager.openEditCharacterMenu());
         removeCharacterButton.addActionListener(e -> uiManager.openRemoveCharacterMenu());
         nextTurnButton.addActionListener(e -> uiManager.nextTurn());
+
+        passButton.addActionListener(e -> uiManager.passDeathSave(true));
+        failButton.addActionListener(e -> uiManager.passDeathSave(false));
     }
 
     {

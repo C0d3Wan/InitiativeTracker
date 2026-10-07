@@ -15,11 +15,11 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
     private JLabel characterTypeLabel = new JLabel();
     private JLabel deathStatusLabel = new JLabel();
     private JRadioButton deathPass1 = new JRadioButton();
-    private JRadioButton deathPass2= new JRadioButton();
-    private JRadioButton deathPass3= new JRadioButton();
-    private JRadioButton deathFail1= new JRadioButton();
-    private JRadioButton deathFail2= new JRadioButton();
-    private JRadioButton deathFail3= new JRadioButton();
+    private JRadioButton deathPass2 = new JRadioButton();
+    private JRadioButton deathPass3 = new JRadioButton();
+    private JRadioButton deathFail1 = new JRadioButton();
+    private JRadioButton deathFail2 = new JRadioButton();
+    private JRadioButton deathFail3 = new JRadioButton();
     private JPanel deathSavePanel = new JPanel();
 
     public CharacterCellRenderer() {
@@ -63,7 +63,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         } else {
             setBackground(index % 2 == 0 ? list.getBackground() : list.getBackground().darker());
         }
-        //setPreferredSize(new Dimension(list.getWidth(), getPreferredSize().height));
 
         return this;
     }

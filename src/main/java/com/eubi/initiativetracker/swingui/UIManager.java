@@ -13,12 +13,18 @@ public class UIManager {
     private JFrame parentFrame;
     private Map<String, Character> characterMap;
     private DefaultListModel<Character> characterListModel;
+    private JButton passSaveButton;
+    private JButton failSaveButton;
+    private JLabel deathSaveLabel;
 
-    public UIManager(JFrame parentFrame, CharacterManager characterManager, JList<Character> initiativeList) {
+    public UIManager(JFrame parentFrame, CharacterManager characterManager, JList<Character> initiativeList, JButton passSaveButton, JButton failSaveButton, JLabel deathSaveLabel) {
         this.characterManager = characterManager;
         this.parentFrame = parentFrame;
         characterMap = new HashMap<>();
         characterListModel = new DefaultListModel<>();
+        this.passSaveButton = passSaveButton;
+        this.failSaveButton = failSaveButton;
+        this.deathSaveLabel = deathSaveLabel;
 
         initiativeList.setModel(characterListModel);
         initiativeList.setCellRenderer(new CharacterCellRenderer());
@@ -68,6 +74,8 @@ public class UIManager {
         for (Character character : characterManager.getInitiativeOrder()) {
             characterListModel.addElement(character);
         }
+
+        updateDeathSaveButtons();
     }
 
     public void nextTurn() {
@@ -75,5 +83,24 @@ public class UIManager {
         updateInitiativeList();
     }
 
+    public void passDeathSave(boolean passed) {
+        Character currentCharacter = characterListModel.get(0);
+        currentCharacter.deathSave(passed);
+    }
 
+    private void updateDeathSaveButtons() {
+        passSaveButton.setVisible(false);
+        failSaveButton.setVisible(false);
+        deathSaveLabel.setVisible(false);
+
+        Character currentCharacter = characterListModel.get(0);
+
+        if (currentCharacter.getDeathStatus().toString().equals("DOWN")) {
+            passSaveButton.setVisible(true);
+            failSaveButton.setVisible(true);
+            deathSaveLabel.setVisible(true);
+        }
+
+        parentFrame.revalidate();
+    }
 }

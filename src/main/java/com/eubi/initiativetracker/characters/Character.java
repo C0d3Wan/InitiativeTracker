@@ -84,30 +84,30 @@ public class Character {
     }
 
     private static DeathStatus deathFromId(int id) {
-        switch (id) {
-            case 0: return DeathStatus.DEAD;
-            case 1: return DeathStatus.ALIVE;
-            case 2: return DeathStatus.DOWN;
-            default: return DeathStatus.UNKNOWN;
-        }
+        return switch (id) {
+            case 0 -> DeathStatus.DEAD;
+            case 1 -> DeathStatus.ALIVE;
+            case 2 -> DeathStatus.DOWN;
+            default -> DeathStatus.UNKNOWN;
+        };
     }
 
     private static CharacterType typeFromString(String id) {
-        switch (id) {
-            case "PLAYER": return CharacterType.PLAYER;
-            case "ENEMY": return CharacterType.ENEMY;
-            case "ALLY": return CharacterType.ALLY;
-            default: return CharacterType.UNKNOWN;
-        }
+        return switch (id) {
+            case "PLAYER" -> CharacterType.PLAYER;
+            case "ENEMY" -> CharacterType.ENEMY;
+            case "ALLY" -> CharacterType.ALLY;
+            default -> CharacterType.UNKNOWN;
+        };
     }
 
     private static DeathStatus deathFromString(String id) {
-        switch (id) {
-            case "DEAD": return DeathStatus.DEAD;
-            case "ALIVE": return DeathStatus.ALIVE;
-            case "DOWN": return DeathStatus.DOWN;
-            default: return DeathStatus.UNKNOWN;
-        }
+        return switch (id) {
+            case "DEAD" -> DeathStatus.DEAD;
+            case "ALIVE" -> DeathStatus.ALIVE;
+            case "DOWN" -> DeathStatus.DOWN;
+            default -> DeathStatus.UNKNOWN;
+        };
     }
 
 
@@ -287,5 +287,13 @@ public class Character {
                 ". Initiative: " + initiativeValue +
                 ". Type: " + characterType +
                 ". DeathStatus: " + deathStatus;
+    }
+
+    public DeathStatus getDeathStatus() {
+        return deathStatus;
+    }
+
+    public Map<String, Integer> getDeathSaves() {
+        return deathSaves;
     }
 }
