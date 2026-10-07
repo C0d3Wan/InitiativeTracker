@@ -28,9 +28,12 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         gbc.anchor = GridBagConstraints.WEST;
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(2, 2, 2, 12), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
         setupLabels(gbc);
 
-        setupRadioButtons(gbc);
+        setupRadioButtons();
     }
 
     @Override
@@ -62,7 +65,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
             setBackground(index % 2 == 0 ? list.getBackground() : list.getBackground().darker());
             deathSavePanel.setVisible(false);
         }
-        setPreferredSize(new Dimension(list.getWidth(), getPreferredSize().height));
+        //setPreferredSize(new Dimension(list.getWidth(), getPreferredSize().height));
 
         return this;
     }
@@ -76,7 +79,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         gbc.gridheight = 3;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 0, 0, 4);
+        gbc.insets = new Insets(0, 2, 0, 4);
         add(nameLabel, gbc);
 
         Font initiativeLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, initiativeLabel.getFont());
@@ -115,9 +118,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         gbc.gridy = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         add(spacer1, gbc);
-    }
 
-    private void setupRadioButtons(GridBagConstraints gbc) {
         deathSavePanel.setLayout(new GridBagLayout());
         deathSavePanel.setOpaque(false);
         gbc.gridx = 5;
@@ -127,7 +128,10 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         gbc.weighty = 1.0;
         gbc.insets = new Insets(0, 4, 0, 4);
         add(deathSavePanel, gbc);
+    }
 
+    private void setupRadioButtons() {
+        GridBagConstraints gbc = new GridBagConstraints();
         deathPass1.setEnabled(true);
         deathPass1.setOpaque(false);
         deathPass1.setText("");
@@ -140,7 +144,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         deathPass2.setOpaque(false);
         deathPass2.setText("");
-        gbc.gridx = 3;
+        gbc.gridx = 2;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -149,7 +153,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         deathPass3.setOpaque(false);
         deathPass3.setText("");
-        gbc.gridx = 2;
+        gbc.gridx = 3;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -167,7 +171,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         deathFail2.setOpaque(false);
         deathFail2.setText("");
-        gbc.gridx = 3;
+        gbc.gridx = 2;
         gbc.gridy = 1;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -176,7 +180,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         deathFail3.setOpaque(false);
         deathFail3.setText("");
-        gbc.gridx = 2;
+        gbc.gridx = 3;
         gbc.gridy = 1;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -189,7 +193,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         gbc.gridy = 1;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 0, 0, 2);
+        gbc.insets = new Insets(0, 0, 0, 4);
         deathSavePanel.add(label1, gbc);
 
         final JLabel label2 = new JLabel();
@@ -198,7 +202,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         gbc.gridy = 0;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 0, 0, 2);
+        gbc.insets = new Insets(0, 0, 0, 4);
         deathSavePanel.add(label2, gbc);
     }
 
