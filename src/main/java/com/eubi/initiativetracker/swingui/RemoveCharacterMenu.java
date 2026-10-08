@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Modal dialog interface for selecting and removing single or all characters from tracking.
+ */
 public class RemoveCharacterMenu extends JDialog {
     private JPanel removeCharacterPane;
     private JComboBox characterSelectionCombo;
@@ -22,6 +25,12 @@ public class RemoveCharacterMenu extends JDialog {
     private Map<String, Character> characterMap = new HashMap<>();
     private CharacterManager cManager;
 
+    /**
+     * Constructs a modal dialog to remove characters from the initiative tracker.
+     *
+     * @param parent           The parent {@link Frame} window.
+     * @param characterManager The {@link CharacterManager} maintaining combatants.
+     */
     public RemoveCharacterMenu(Frame parent, CharacterManager characterManager) {
         super(parent, "Remove Character", true);
         setContentPane(removeCharacterPane);
@@ -38,6 +47,10 @@ public class RemoveCharacterMenu extends JDialog {
         removeCharacterButton.addActionListener(e -> removeCharacter());
     }
 
+    /**
+     * Reloads the selection drop-down list with all currently registered character names
+     * as well as an "All Characters" option.
+     */
     private void updateSelectionCombo() {
         List<Character> characters = this.cManager.getCharacterList();
         characterSelectionCombo.removeAllItems();
@@ -56,6 +69,10 @@ public class RemoveCharacterMenu extends JDialog {
         pack();
     }
 
+    /**
+     * Executes the removal of the selected character (or all characters) from the manager
+     * and refreshes the selection menu.
+     */
     private void removeCharacter() {
         String name = characterSelectionCombo.getSelectedItem().toString();
         if (name.equals("All Characters")) {

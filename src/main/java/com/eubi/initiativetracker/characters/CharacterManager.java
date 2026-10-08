@@ -2,6 +2,10 @@ package com.eubi.initiativetracker.characters;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Manages the collection of active combatants, handles descending initiative sorting,
+ * tracks the active turn holder, and rotates turn order cyclically.
+ */
 public class CharacterManager {
     private final List<Character> characters;
     private List<Character> charactersOrdered;
@@ -9,7 +13,7 @@ public class CharacterManager {
     private Character currentCharacter;
 
     /**
-     * Constructs a new, empty CharacterManager.
+     * Constructs a new, empty CharacterManager instance.
      */
     public CharacterManager() {
         characters = new ArrayList<>();
@@ -18,9 +22,11 @@ public class CharacterManager {
     }
 
     /**
-     * Adds a new character to the underlying, unsorted tracker list.
+     * Registers a new character into combat, resorts the roster, and recalculates turn order.
+     * <p>
+     * If no turn is currently underway, this method automatically starts the first turn.
      *
-     * @param character The {@link Character} object to be added.
+     * @param character The {@link Character} instance to append to combat.
      */
     public void addCharacter(Character character) {
         characters.add(character);
@@ -33,15 +39,23 @@ public class CharacterManager {
 
     }
 
+    /**
+     * Refreshes the descending sorted order and updates the initiative queue.
+     * <p>
+     * Typically invoked following batch attribute edits (such as initiative or status changes).
+     */
     public void updateCharacters() {
         sortCharacters();
         initiativeOrdered = getTurnOrder();
     }
 
     /**
-     * Removes a character from the unsorted tracker list.
+     * Removes an active character from combat and advances turn order smoothly if necessary.
+     * <p>
+     * If the character being removed is currently taking their turn, active status advances
+     * to the next eligible character in the cycle.
      *
-     * @param character The exact {@link Character} instance to remove.
+     * @param character The exact {@link Character} reference to remove.
      */
     public void removeCharacter(Character character) {
         sortCharacters();
@@ -68,8 +82,10 @@ public class CharacterManager {
     }
 
     /**
-     * Advances the turn tracker to the next character in ordered list.
-     * Operates cyclically, returning to the top of the list when reaching the end.
+     * Advances combat to the next character's turn.
+     * <p>
+     * Rotates cyclically to the beginning of the initiative list once the end of
+     * the round is reached. Marks the prior combatant inactive and the new combatant active.
      */
     public void newTurn() {
         sortCharacters();
@@ -91,6 +107,12 @@ public class CharacterManager {
         initiativeOrdered = getTurnOrder();
     }
 
+    /**
+     * Generates a circular rotation of the sorted initiative list positioned so that the
+     * active character is at index 0.
+     *
+     * @return A newly allocated {@link List} containing all combatants in current turn sequence.
+     */
     public List<Character> getTurnOrder() {
         sortCharacters();
         int i = charactersOrdered.indexOf(currentCharacter);
@@ -101,11 +123,8 @@ public class CharacterManager {
         return rotated;
     }
 
-
-
     /**
-     * Completely empties the unsorted character list.
-     * Note: The sorted list will remain populated until {@link #sortCharacters()} is called again.
+     * Clears all combatants from the manager and resets active turn state to empty.
      */
     public void clearCharacters() {
         characters.clear();
@@ -115,10 +134,7 @@ public class CharacterManager {
     }
 
     /**
-     * Triggers a recalculation of the sorted character list.
-     * <p>
-     * It processes the unsorted list and generates a new Vector ordered by
-     * {@link Character#getInitiativeValue()} from highest to lowest.
+     * Sorts the underlying character roster by descending composite initiative score.
      */
     public void sortCharacters() {
         charactersOrdered = characters.stream()
@@ -127,10 +143,10 @@ public class CharacterManager {
     }
 
     /**
-     * Safely retrieves a character from the original unsorted list using its index.
+     * Safely retrieves a character from the unsorted internal storage list by index.
      *
-     * @param characterIndex The position of the character to retrieve.
-     * @return The requested {@link Character}, or {@code null} if the index is out of bounds.
+     * @param characterIndex The zero-based position in the insertion list.
+     * @return The {@link Character} at that index, or {@code null} if the index is out of bounds.
      */
     public Character getCharacter(int characterIndex) {
         try {
@@ -142,31 +158,33 @@ public class CharacterManager {
     }
 
     /**
-     * Retrieves the character whose turn it currently is.
+     * Retrieves the character whose combat turn is currently active.
      *
-     * @return The active {@link Character}.
+     * @return The active {@link Character}, or {@code null} if combat has no participants.
      */
     public Character getCurrentCharacter() {
         return currentCharacter;
     }
 
     /**
-     * Retrieves the entire original, unsorted collection of characters.
+     * Retrieves the raw, unsorted list of combatants in their original insertion order.
      *
-     * @return A {@link List} of all added characters in their insertion order.
+     * @return The mutable master {@link List} of all added characters.
      */
     public List<Character> getCharacterList() {return characters;}
 
     /**
-     * Retrieves the sorted collection of characters.
+     * Retrieves the combat-ready list of characters rotated to the current turn order.
      *
-     * @return A {@link List} of characters ordered by initiative descending.
+     * @return The {@link List} of characters starting with the active combatant at index 0.
      */
     public List<Character> getInitiativeOrder() {return initiativeOrdered;}
 
     /**
-     * Outputs a formatted representation of both the original and sorted lists to the console.
-     * Used primarily to verify the underlying state of the manager during development.
+     * Prints state diagnostics to standard output, detailing active turn holder,
+     * insertion-order list, and initiative-sorted order.
+     *
+     * @param sort {@code true} to force a resort before displaying; {@code false} to print as-is.
      */
     public void debugDisplay(boolean sort) {
         System.out.println("\n=== Character Manager Debug Output ===");

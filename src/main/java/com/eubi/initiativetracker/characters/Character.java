@@ -3,12 +3,12 @@ package com.eubi.initiativetracker.characters;
 import java.util.*;
 
 /**
- * Represents a character entity within an initiative tracking system.
+ * Represents a combatant entity within the initiative tracking system.
  * <p>
- * This class stores essential combat data for a character, including their name,
- * combat status, alignment type, and their calculated initiative. It uniquely
- * handles dexterity by converting it into a decimal value to act as a tie-breaker
- * for initiative rolls.
+ * This class encapsulates state data for an individual participant, including their
+ * unique display name, rolled initiative, tie-breaker dexterity modifier, alignment/type,
+ * death status, and death saving throw tally. Dexterity is converted into a two-decimal
+ * fractional modifier to automatically resolve ties in turn ordering.
  */
 public class Character {
     private final String characterName;
@@ -20,19 +20,18 @@ public class Character {
     private CharacterType characterType;
     private DeathStatus deathStatus;
 
-
     /**
-     * Constructs a new Character with the specified starting attributes.
+     * Constructs a new Character instance with fully qualified types.
      * <p>
-     * Note: The final initiative value is calculated by taking the base initiative
-     * and adding the dexterity score divided by 100 as a decimal (e.g., an initiative
-     * of 15 and a dexterity of 14 results in an initiativeValue of 15.14).
+     * The final {@code initiativeValue} is calculated as {@code baseInitiative + (dex / 100.0f)}.
+     * If the character type is {@link CharacterType#ENEMY}, the dexterity tie-breaker
+     * modifier defaults to zero.
      *
-     * @param name       The display name of the character.
-     * @param initiative The base initiative roll or score.
-     * @param dex        The dexterity score, used to calculate the fractional tie-breaker.
-     * @param type       The initial {@link CharacterType} (alignment) of the character.
-     * @param status     The initial {@link DeathStatus} of the character.
+     * @param name       The unique display name of the character.
+     * @param initiative The base integer initiative roll.
+     * @param dex        The dexterity attribute score (typically 0–30) used for tie-breakers.
+     * @param type       The {@link CharacterType} classification of this character.
+     * @param status     The initial {@link DeathStatus} of this character.
      */
     public Character(String name, int initiative, int dex, CharacterType type, DeathStatus status) {
         characterName = name;
@@ -49,31 +48,37 @@ public class Character {
     }
 
     /**
-     * A different way of constructing a new Character with the specified starting attributes.
+     * Constructs a new Character instance using numeric identifiers for type and status.
      *
-     * @param name       The display name of the character.
-     * @param initiative The base initiative roll or score.
-     * @param dex        The dexterity score, used to calculate the fractional tie-breaker.
-     * @param typeID       The initial id of the {@link CharacterType} (alignment) of the character.
-     * @param deathID     The initial id of the  {@link DeathStatus} of the character.
+     * @param name       The unique display name of the character.
+     * @param initiative The base integer initiative roll.
+     * @param dex        The dexterity attribute score used for tie-breaking.
+     * @param typeID     The integer ID representing the {@link CharacterType} (0: PLAYER, 1: ENEMY, 2: ALLY).
+     * @param deathID    The integer ID representing the {@link DeathStatus} (0: DEAD, 1: ALIVE, 2: DOWN).
      */
     public Character(String name, int initiative, int dex, int typeID, int deathID) {
         this(name, initiative, dex, typeFromId(typeID), deathFromId(deathID));
     }
 
     /**
-     * A different way of constructing a new Character with the specified starting attributes.
+     * Constructs a new Character instance using string representations for type and status.
      *
-     * @param name       The display name of the character.
-     * @param initiative The base initiative roll or score.
-     * @param dex        The dexterity score, used to calculate the fractional tie-breaker.
-     * @param typeID       The initial String of the {@link CharacterType} (alignment) of the character.
-     * @param deathID     The initial String of the  {@link DeathStatus} of the character.
+     * @param name       The unique display name of the character.
+     * @param initiative The base integer initiative roll.
+     * @param dex        The dexterity attribute score used for tie-breaking.
+     * @param typeID     The string name representing the {@link CharacterType}.
+     * @param deathID    The string name representing the {@link DeathStatus}.
      */
     public Character(String name, int initiative, int dex, String typeID, String deathID) {
         this(name, initiative, dex, typeFromString(typeID), deathFromString(deathID));
     }
 
+    /**
+     * Maps an integer identifier to its corresponding {@link CharacterType}.
+     *
+     * @param id The numeric identifier to parse.
+     * @return The matching {@link CharacterType}, or {@link CharacterType#UNKNOWN} if unrecognized.
+     */
     private static CharacterType typeFromId(int id) {
         return switch (id) {
             case 0 -> CharacterType.PLAYER;
@@ -83,6 +88,12 @@ public class Character {
         };
     }
 
+    /**
+     * Maps an integer identifier to its corresponding {@link DeathStatus}.
+     *
+     * @param id The numeric identifier to parse.
+     * @return The matching {@link DeathStatus}, or {@link DeathStatus#UNKNOWN} if unrecognized.
+     */
     private static DeathStatus deathFromId(int id) {
         return switch (id) {
             case 0 -> DeathStatus.DEAD;
@@ -92,6 +103,12 @@ public class Character {
         };
     }
 
+    /**
+     * Maps a case-sensitive string identifier to its corresponding {@link CharacterType}.
+     *
+     * @param id The name string of the character type.
+     * @return The matching {@link CharacterType}, or {@link CharacterType#UNKNOWN} if unrecognized.
+     */
     private static CharacterType typeFromString(String id) {
         return switch (id) {
             case "PLAYER" -> CharacterType.PLAYER;
@@ -101,6 +118,12 @@ public class Character {
         };
     }
 
+    /**
+     * Maps a case-sensitive string identifier to its corresponding {@link DeathStatus}.
+     *
+     * @param id The name string of the death status.
+     * @return The matching {@link DeathStatus}, or {@link DeathStatus#UNKNOWN} if unrecognized.
+     */
     private static DeathStatus deathFromString(String id) {
         return switch (id) {
             case "DEAD" -> DeathStatus.DEAD;
@@ -110,12 +133,19 @@ public class Character {
         };
     }
 
-
     /**
-     * Compiles and retrieves the core state of the character as a key-value data structure.
+     * Compiles a snapshot of the character's primary combat statistics into a key-value structure.
+     * <p>
+     * Keys provided in the map:
+     * <ul>
+     *   <li>{@code "Name"} - {@link String}</li>
+     *   <li>{@code "Initiative"} - {@link Integer}</li>
+     *   <li>{@code "Dexterity"} - {@link Integer}</li>
+     *   <li>{@code "Type"} - {@link String}</li>
+     *   <li>{@code "DeathStatus"} - {@link String}</li>
+     * </ul>
      *
-     * @return A {@link Map} containing the character's Name, Initiative, Type,
-     *         and DeathStatus mapped to their respective current values.
+     * @return A {@link Map} populated with the character's core attributes.
      */
     public Map<String, Object> getCharacterData() {
         Map<String, Object> displayData = new HashMap<>();
@@ -123,22 +153,22 @@ public class Character {
         displayData.put("Name", characterName);
         displayData.put("Initiative", (int) baseInitiative);
         displayData.put("Dexterity",(int)(dexValue*100));
+        displayData.put("TotalInitiative", initiativeValue);
         displayData.put("Type", characterType.name());
         displayData.put("DeathStatus", deathStatus.name());
 
         return displayData;
     }
 
-
+    /**
+     * Recalculates {@code initiativeValue} by combining the base initiative with the dexterity modifier.
+     */
     private void recalculateInitiative() {
         initiativeValue = baseInitiative + dexValue;
     }
 
     /**
-     * Updates the character's base initiative score.
-     * <p>
-     * The character's previously calculated decimal dexterity value is automatically
-     * reapplied to the new base number to maintain tie-breaker formatting.
+     * Updates the base initiative roll and recalculates the compound initiative score.
      *
      * @param newInitiativeNum The new base initiative score.
      */
@@ -148,15 +178,27 @@ public class Character {
     }
 
     /**
-     * Updates the character's dexterity stat
+     * Updates the dexterity attribute score and recalculates the compound initiative score.
+     * <p>
+     * If the character type is {@link CharacterType#ENEMY}, the tie-breaker is set to 0.
      *
-     * @param newDexValue - The new Dex Value
+     * @param newDexValue The new integer dexterity score (typically 0–30).
      */
     public void editDexValue(int newDexValue) {
         dexValue = (characterType == CharacterType.ENEMY) ? 0 : (float) newDexValue / 100;
         recalculateInitiative();
     }
 
+    /**
+     * Registers a single death saving throw result for a downed combatant.
+     * <p>
+     * Ignored if {@code deathStatus} is not {@link DeathStatus#DOWN}.
+     * When successful passes reach 3, the character becomes {@link DeathStatus#ALIVE}
+     * and death saves are reset. When failed saves reach 3, the character becomes
+     * {@link DeathStatus#DEAD} and death saves are reset.
+     *
+     * @param pass {@code true} for a successful saving throw; {@code false} for a failure.
+     */
     public void deathSave(boolean pass){
         if (deathStatus != DeathStatus.DOWN){
             return;
@@ -179,107 +221,100 @@ public class Character {
 
     }
 
+    /**
+     * Clears all accumulated death save passes and failures back to zero.
+     */
+    public void resetDeathSaves() {
+        deathSaves.put("Pass", 0);
+        deathSaves.put("Fail", 0);
+    }
 
     /**
      * Updates the character's life status.
+     * <p>
+     * If the new status is anything other than {@link DeathStatus#DOWN}, all accumulated
+     * death saves are automatically reset via {@link #resetDeathSaves()}.
      *
-     * @param newDeathStatus The new {@link DeathStatus} to apply.
+     * @param newDeathStatus The new {@link DeathStatus} to assign.
      */
     public void editDeathStatus(DeathStatus newDeathStatus) {
         deathStatus = newDeathStatus;
-    }
-
-    /**
-     * Allows updating the death status using Int
-     *
-     * @param statusID The new {@link DeathStatus} to apply.
-     */
-    public void editDeathStatus(int statusID) {
-            switch (statusID) {
-                case 0:
-                    deathStatus = DeathStatus.DEAD;
-                    break;
-                case 1:
-                    deathStatus = DeathStatus.ALIVE;
-                    break;
-                case 2:
-                    deathStatus = DeathStatus.DOWN;
-                    break;
-                default:
-                    deathStatus = DeathStatus.UNKNOWN;
-            }
-    }
-
-    /**
-     * Allows updating the death status using String
-     *
-     * @param statusID The new {@link DeathStatus} to apply.
-     */
-    public void editDeathStatus(String statusID) {
-        switch (statusID) {
-            case "DEAD":
-                deathStatus = DeathStatus.DEAD;
-                break;
-            case "ALIVE":
-                deathStatus = DeathStatus.ALIVE;
-                break;
-            case "DOWN":
-                deathStatus = DeathStatus.DOWN;
-                break;
-            default:
-                deathStatus = DeathStatus.UNKNOWN;
+        if (newDeathStatus != DeathStatus.DOWN) {
+            resetDeathSaves();
         }
     }
 
     /**
-     * Updates the character's category.
+     * Updates the character's life status using an integer identifier.
      *
-     * @param newCharacterType The new {@link CharacterType} to apply.
+     * @param statusID The numeric identifier corresponding to a {@link DeathStatus}.
+     */
+    public void editDeathStatus(int statusID) {
+        editDeathStatus(deathFromId(statusID));
+
+    }
+
+    /**
+     * Updates the character's life status using a string identifier.
+     *
+     * @param statusID The string identifier matching a {@link DeathStatus} name.
+     */
+    public void editDeathStatus(String statusID) {
+        editDeathStatus(deathFromString(statusID));
+    }
+
+    /**
+     * Updates the character's alignment or entity category.
+     *
+     * @param newCharacterType The new {@link CharacterType} to assign.
      */
     public void editCharacterType(CharacterType newCharacterType) {
         characterType = newCharacterType;
     }
 
     /**
-     * Allows updating the character's category using Int
+     * Updates the character's alignment or entity category using an integer identifier.
      *
-     * @param statusID The new {@link CharacterType} to apply.
+     * @param statusID The numeric identifier representing a {@link CharacterType}.
      */
     public void editCharacterType(int statusID) {
         switch (statusID) {
-            case 0:
-                characterType = CharacterType.PLAYER;
-                break;
-            case 1:
-                characterType = CharacterType.ENEMY;
-                break;
-            case 2:
-                characterType = CharacterType.ALLY;
-                break;
-            default:
-                characterType = CharacterType.UNKNOWN;
+            case 0 -> characterType = CharacterType.PLAYER;
+            case 1 -> characterType = CharacterType.ENEMY;
+            case 2 -> characterType = CharacterType.ALLY;
+            default -> characterType = CharacterType.UNKNOWN;
         }
     }
 
+    /**
+     * Updates the flag indicating whether this character holds the active combat turn.
+     *
+     * @param current {@code true} to designate as the active turn holder; {@code false} otherwise.
+     */
     public void editCurrentCharacter(boolean current){
         currentCharacter = current;
     }
 
+    /**
+     * Checks if this character is currently taking their combat turn.
+     *
+     * @return {@code true} if it is this character's turn; {@code false} otherwise.
+     */
     public boolean isCurrentCharacter() { return currentCharacter; }
 
     /**
-     * Retrieves the character's current, fully calculated initiative value.
+     * Retrieves the fully calculated initiative value, including decimal tie-breakers.
      *
-     * @return The initiative value, including the fractional dexterity modifier.
+     * @return The composite floating-point initiative score.
      */
     public float getInitiativeValue() {
         return initiativeValue;
     }
 
     /**
-     * Returns a human-readable string representation of the character's current state.
+     * Generates a descriptive string containing name, initiative, type, and status.
      *
-     * @return A formatted string detailing the character's name, initiative, type, and status.
+     * @return A formatted text representation of this character.
      */
     @Override
     public String toString(){
@@ -289,10 +324,20 @@ public class Character {
                 ". DeathStatus: " + deathStatus;
     }
 
+    /**
+     * Retrieves the character's current life status.
+     *
+     * @return The current {@link DeathStatus}.
+     */
     public DeathStatus getDeathStatus() {
         return deathStatus;
     }
 
+    /**
+     * Retrieves the map containing current pass and fail tallies for death saves.
+     *
+     * @return A map containing key-value pairs for {@code "Pass"} and {@code "Fail"}.
+     */
     public Map<String, Integer> getDeathSaves() {
         return deathSaves;
     }

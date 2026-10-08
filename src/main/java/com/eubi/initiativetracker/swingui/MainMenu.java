@@ -9,7 +9,7 @@ import com.eubi.initiativetracker.characters.CharacterManager;
 import java.awt.*;
 
 /**
- * Class for the tracker's main menu
+ * Top-level application window hosting the main initiative tracker user interface.
  */
 public class MainMenu extends JFrame {
     private JPanel mainMenuPane;
@@ -26,9 +26,9 @@ public class MainMenu extends JFrame {
     private final UIManager uiManager;
 
     /**
-     * Constructs a window for the initiative tracker
+     * Constructs and initializes the main application window.
      *
-     * @param characterManager Allows use of {@link CharacterManager}
+     * @param characterManager The {@link CharacterManager} maintaining combat data.
      */
     public MainMenu(CharacterManager characterManager) {
         cManager = characterManager;

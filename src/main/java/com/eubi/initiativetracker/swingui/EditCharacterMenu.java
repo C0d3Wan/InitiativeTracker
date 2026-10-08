@@ -8,7 +8,8 @@ import java.awt.*;
 import java.util.*;
 
 /**
- * Class for the tracker's edit character menu
+ * Modal dialog interface for editing statistics (initiative, dexterity, life status)
+ * of an existing character.
  */
 public class EditCharacterMenu extends JDialog {
     private JPanel editCharacterPane;
@@ -26,9 +27,10 @@ public class EditCharacterMenu extends JDialog {
     private Map<String, Character> characterMap;
 
     /**
-     * Constructs a new window to edit the current character
+     * Constructs a modal dialog to modify attributes of existing characters.
      *
-     * @param characterMap Allows methods to scan all characters and names
+     * @param parent       The parent {@link Frame} window binding this dialog.
+     * @param characterMap Lookup map containing all registered characters keyed by name.
      */
     public EditCharacterMenu(Frame parent, Map<String, Character> characterMap) {
         super(parent, "Edit Character", true);
@@ -47,10 +49,15 @@ public class EditCharacterMenu extends JDialog {
     }
 
     /**
-     * Saves the newly edited character to the character manager
+     * Reads form fields and commits modified initiative, dexterity, and death status
+     * back to the selected character instance.
      */
     private void saveEditedCharacter() {
         Character currentCharacter = getCurrentCharacter();
+        if (currentCharacter == null) {
+            return;
+        }
+
         Map<String, Object> currentCharacterData = currentCharacter.getCharacterData();
         int newDexterity = (int) newDexteritySpinner.getValue();
         int newInitiative = (int) newInitiativeSpinner.getValue();
@@ -73,7 +80,8 @@ public class EditCharacterMenu extends JDialog {
     }
 
     /**
-     * Updates the selection box from the list of available characters
+     * Populates the character selection dropdown with registered characters
+     * and initializes selection state.
      */
     private void updateCharactersCombo() {
         newDexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
@@ -99,6 +107,9 @@ public class EditCharacterMenu extends JDialog {
         pack();
     }
 
+    /**
+     * Refreshes the display view with attributes from the currently selected character in the combo box.
+     */
     private void updateDetails() {
         savedCharacterLabel.setVisible(false);
 
@@ -108,6 +119,9 @@ public class EditCharacterMenu extends JDialog {
         }
     }
 
+    /**
+     * Populates the label indicators and spinner fields with the active character's current values.
+     */
     private void displayCurrentCharacterData() {
         Map<String, Object> currentCharacterData = getCurrentCharacter().getCharacterData();
         characterNameLabel.setText(currentCharacterData.get("Name").toString());
@@ -120,9 +134,17 @@ public class EditCharacterMenu extends JDialog {
         newDeathStatusCombo.setSelectedItem(currentCharacterData.get("DeathStatus"));
     }
 
+    /**
+     * Finds and returns the character currently selected in the dropdown combo box.
+     *
+     * @return The active {@link Character} chosen in the combo box.
+     */
     private Character getCurrentCharacter() {
-        if (charactersCombo.getSelectedItem() == null) {
-            return characterMap.entrySet().iterator().next().getValue();
+        if (charactersCombo.getSelectedItem() == null || characterMap.isEmpty()) {
+            if (!characterMap.isEmpty()) {
+                return characterMap.entrySet().iterator().next().getValue();
+            }
+            return null;
         }
         String name = charactersCombo.getSelectedItem().toString();
         return characterMap.get(name);

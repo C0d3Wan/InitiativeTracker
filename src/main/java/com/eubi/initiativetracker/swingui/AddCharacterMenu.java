@@ -9,7 +9,7 @@ import java.awt.*;
 import com.eubi.initiativetracker.characters.Character;
 
 /**
- * Class for the tracker's add character menu
+ * Modal dialog interface for creating and adding a new character to the initiative tracker.
  */
 public class AddCharacterMenu extends JDialog {
     private JPanel addCharacterPane;
@@ -25,9 +25,10 @@ public class AddCharacterMenu extends JDialog {
     private List<Character> characters;
 
     /**
-     * Constructs a new dialog to add a new character to the character manager
+     * Constructs a new modal dialog to create a character.
      *
-     * @param parent Binds a parent to the dialog box
+     * @param parent        The parent {@link Frame} window binding this dialog.
+     * @param characterList The existing list of characters used to prevent duplicate names.
      */
     public AddCharacterMenu(Frame parent, List<Character> characterList) {
         super(parent, "Add Character", true);
@@ -74,7 +75,8 @@ public class AddCharacterMenu extends JDialog {
     }
 
     /**
-     * Validates if the character has at least a name
+     * Checks that the entered name is non-empty and case-insensitively unique against existing characters.
+     * Enables or disables the submit button accordingly.
      */
     private void validateName() {
         String name = characterName.getText().trim();
@@ -88,10 +90,20 @@ public class AddCharacterMenu extends JDialog {
         addCharacterButton.setEnabled(isValid);
     }
 
+    /**
+     * Checks if the creation form was submitted successfully.
+     *
+     * @return {@code true} if confirmed; {@code false} if canceled or closed.
+     */
     public boolean isConfirmed() {
         return confirmed;
     }
 
+    /**
+     * Retrieves the newly created character instance.
+     *
+     * @return The configured {@link Character}, or {@code null} if unconfirmed.
+     */
     public Character getNewCharacter() {
         return newCharacter;
     }

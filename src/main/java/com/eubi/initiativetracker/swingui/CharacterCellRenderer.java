@@ -9,6 +9,10 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.util.*;
 
+/**
+ * Custom {@link ListCellRenderer} panel responsible for rendering character summary rows
+ * and their active death save indicators.
+ */
 public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Character> {
     private JLabel nameLabel = new JLabel();
     private JLabel initiativeLabel = new JLabel();
@@ -22,6 +26,9 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
     private JRadioButton deathFail3 = new JRadioButton();
     private JPanel deathSavePanel = new JPanel();
 
+    /**
+     * Constructs a new CharacterCellRenderer and configures subcomponents and layouts.
+     */
     public CharacterCellRenderer() {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -36,6 +43,16 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         setupRadioButtons();
     }
 
+    /**
+     * Configures the component to render the given character entry inside a {@link JList}.
+     *
+     * @param list         The JList being painted.
+     * @param character    The Character object to render.
+     * @param index        The cell index.
+     * @param isSelected   {@code true} if the row is selected.
+     * @param cellHasFocus {@code true} if the cell has focus.
+     * @return This configured {@link Component} instance.
+     */
     @Override
     public Component getListCellRendererComponent(
             JList<? extends Character> list,
@@ -45,30 +62,54 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
             boolean cellHasFocus) {
         Map<String, Object> characterData = character.getCharacterData();
         nameLabel.setText(characterData.get("Name").toString());
-        initiativeLabel.setText(characterData.get("Initiative").toString());
+        initiativeLabel.setText(characterData.get("TotalInitiative").toString());
         characterTypeLabel.setText(characterData.get("Type").toString());
         deathStatusLabel.setText(characterData.get("DeathStatus").toString());
 
         setOpaque(true);
-        deathSavePanel.setVisible(false);
-        System.out.println("Test");
+
         if (index == 0) {
             setBackground(Color.green);
-            if (characterData.get("DeathStatus").toString().equals("DOWN")) {
+            if ("DOWN".equals(characterData.get("DeathStatus").toString())) {
                 deathSavePanel.setVisible(true);
                 updateDeathSaves(character);
+            } else {
+                deathSavePanel.setVisible(false);
+                clearDeathSaves();
             }
-        } else if (isSelected) {
-
-            setBackground(list.getSelectionBackground());
-            setForeground(list.getSelectionForeground());
         } else {
-            setBackground(index % 2 == 0 ? list.getBackground() : list.getBackground().darker());
+            deathSavePanel.setVisible(false);
+            clearDeathSaves();
+
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(index % 2 == 0 ? list.getBackground() : list.getBackground().darker());
+                setForeground(list.getForeground());
+            }
         }
 
         return this;
     }
 
+    /**
+     * Deselects all pass and fail death save radio buttons.
+     */
+    private void clearDeathSaves() {
+        deathPass1.setSelected(false);
+        deathPass2.setSelected(false);
+        deathPass3.setSelected(false);
+        deathFail1.setSelected(false);
+        deathFail2.setSelected(false);
+        deathFail3.setSelected(false);
+    }
+
+    /**
+     * Instantiates and arranges the character information labels on the renderer panel.
+     *
+     * @param gbc The layout constraints applied to the labels.
+     */
     private void setupLabels(GridBagConstraints gbc) {
         Font nameLabelFont = this.$$$getFont$$$("SansSerif", Font.BOLD, 20, nameLabel.getFont());
         if (nameLabelFont != null) nameLabel.setFont(nameLabelFont);
@@ -129,6 +170,9 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         add(deathSavePanel, gbc);
     }
 
+    /**
+     * Initializes and positions the pass and fail death save indicator radio buttons.
+     */
     private void setupRadioButtons() {
         GridBagConstraints gbc = new GridBagConstraints();
         deathPass1.setEnabled(true);
@@ -224,15 +268,22 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
+    /**
+     * Updates the checked state of death save radio buttons based on the character's death saves.
+     *
+     * @param character The character whose saves are being rendered.
+     */
     private void updateDeathSaves(Character character) {
         Map<String, Integer> deathSaves = character.getDeathSaves();
-        System.out.println(deathSaves);
-        switch (deathSaves.get("Pass")) {
-            case 1 -> deathPass1.doClick();
-            case 2 -> {
-                deathPass1.doClick();
-                deathPass2.doClick();
-            }
-        }
+        int passes = (deathSaves != null && deathSaves.containsKey("Pass")) ? deathSaves.get("Pass") : 0;
+        int fails  = (deathSaves != null && deathSaves.containsKey("Fail")) ? deathSaves.get("Fail") : 0;
+
+        deathPass1.setSelected(passes >= 1);
+        deathPass2.setSelected(passes >= 2);
+        deathPass3.setSelected(passes >= 3);
+
+        deathFail1.setSelected(fails >= 1);
+        deathFail2.setSelected(fails >= 2);
+        deathFail3.setSelected(fails >= 3);
     }
 }
