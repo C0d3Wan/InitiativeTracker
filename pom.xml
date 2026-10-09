@@ -106,7 +106,7 @@
                                 <argument>--type</argument>
                                 <argument>app-image</argument>
                                 <argument>--dest</argument>
-                                <argument>${project.build.directory}</argument>
+                                <argument>${project.build.directory}/dist</argument>
                             </arguments>
                         </configuration>
                     </execution>
