@@ -41,6 +41,7 @@ public class AddCharacterMenu extends JDialog {
         setLocationRelativeTo(null);
 
         dexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
+        initiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
         addCharacterButton.setEnabled(false);
 
         characterName.getDocument().addDocumentListener(new DocumentListener() {

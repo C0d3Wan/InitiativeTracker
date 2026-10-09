@@ -85,6 +85,7 @@ public class EditCharacterMenu extends JDialog {
      */
     private void updateCharactersCombo() {
         newDexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
+        newInitiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
         savedCharacterLabel.setVisible(false);
 
         if (characterMap.isEmpty()) {
