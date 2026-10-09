@@ -96,13 +96,13 @@
                             <executable>${java.home}/bin/jpackage</executable>
                             <arguments>
                                 <argument>--name</argument>
-                                <argument>MyApp</argument>
+                                <argument>InitiativeTracker</argument>
                                 <argument>--input</argument>
                                 <argument>${project.build.directory}</argument>
                                 <argument>--main-jar</argument>
                                 <argument>${project.build.finalName}-shaded.jar</argument>
                                 <argument>--main-class</argument>
-                                <argument>com.example.Main</argument>
+                                <argument>${main.class}</argument>
                                 <argument>--type</argument>
                                 <argument>app-image</argument>
                                 <argument>--dest</argument>
