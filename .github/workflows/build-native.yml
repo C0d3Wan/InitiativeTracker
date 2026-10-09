@@ -38,5 +38,5 @@ jobs:
       - name: Upload Native Output
         uses: actions/upload-artifact@v7
         with:
-          name: MyApp-${{ runner.os }}
+          name: InitiativeTracker-${{ runner.os }}-V1
           path: target/dist/
