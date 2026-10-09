@@ -3,7 +3,7 @@ name: Package Native Executables
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch: # Allows you to manually trigger the workflow from GitHub
+  workflow_dispatch:
 
 jobs:
   build:
@@ -22,11 +22,9 @@ jobs:
             executable-ext: bin
 
     steps:
-      # 1. Checkout repository source code
       - name: Checkout Code
         uses: actions/checkout@v7
 
-      # 2. Set up JDK (jpackage requires JDK 14+)
       - name: Set up JDK 25
         uses: actions/setup-java@v6
         with:
@@ -34,11 +32,9 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      # 3. Build & Package using Maven + jpackage
       - name: Build Application with Maven
         run: mvn clean package
 
-      # 4. Upload the built native package as a downloadable artifact
       - name: Upload Native Output
         uses: actions/upload-artifact@v7
         with:
