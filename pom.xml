@@ -100,7 +100,7 @@
                                 <argument>--input</argument>
                                 <argument>${project.build.directory}</argument>
                                 <argument>--main-jar</argument>
-                                <argument>${project.build.finalName}-shaded.jar</argument>
+                                <argument>${project.build.finalName}.jar</argument>
                                 <argument>--main-class</argument>
                                 <argument>${main.class}</argument>
                                 <argument>--type</argument>
