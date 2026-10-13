@@ -70,11 +70,10 @@ public class AddCharacterMenu extends JDialog {
             String status = (String) deathStatusCombo.getSelectedItem();
 
             if (!type.equalsIgnoreCase("PLAYER")) {
-                newCharacter = new NonePlayerCharacter(name, initiative, dexterity,0, type, status);
+                newCharacter = new NonePlayerCharacter(name, initiative, dexterity, 0, type, status);
+            } else {
+                newCharacter = new Character(name, initiative, dexterity, type, status);
             }
-
-            newCharacter = new Character(name, initiative, dexterity, type, status);
-
             confirmed = true;
             dispose();
         });

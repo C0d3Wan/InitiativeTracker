@@ -20,7 +20,6 @@ public class NonePlayerCharacter extends Character {
      * @param name       The unique display name of the character.
      * @param initiative The base integer initiative roll.
      * @param dex        The dexterity attribute score (typically 0–30) used for tie-breakers.
-     * @param health     The health of the character.
      * @param maxHealth  The max health of the character.
      * @param type       The {@link CharacterType} classification of this character.
      * @param status     The initial {@link DeathStatus} of this character.
@@ -37,7 +36,6 @@ public class NonePlayerCharacter extends Character {
      * @param name       The unique display name of the character.
      * @param initiative The base integer initiative roll.
      * @param dex        The dexterity attribute score (typically 0–30) used for tie-breakers.
-     * @param health     The health of the character.
      * @param maxHealth  The max health of the character.
      * @param typeID     The integer ID representing the {@link CharacterType} (0: PLAYER, 1: ENEMY, 2: ALLY).
      * @param deathID    The integer ID representing the {@link DeathStatus} (0: DEAD, 1: ALIVE, 2: DOWN).
@@ -54,8 +52,20 @@ public class NonePlayerCharacter extends Character {
      */
     public void editHealth(int amount){
         health += amount;
+        if (health > maxHealth) {
+            health = maxHealth;
+        }
         if (health <= 0){
+            health = 0;
             editDeathStatus(DeathStatus.DEAD);
         }
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public int getHealth() {
+        return health;
     }
 }
