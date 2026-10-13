@@ -49,13 +49,15 @@ public class UIManager {
      * Refreshes the initiative list if the user confirms creation.
      */
     public void openAddCharacterMenu() {
-        List<Character> characters = characterManager.getCharacterList();
-        AddCharacterMenu addCharacterMenu = new AddCharacterMenu(parentFrame, characters);
+        updateCharacterMap();
+        AddCharacterMenu addCharacterMenu = new AddCharacterMenu(parentFrame, characterMap);
         addCharacterMenu.setVisible(true);
 
         if (addCharacterMenu.isConfirmed()) {
-            Character newCharacter = addCharacterMenu.getNewCharacter();
-            characterManager.addCharacter(newCharacter);
+            List<Character> newCharacters = addCharacterMenu.getNewCharacter();
+            for (Character character: newCharacters) {
+                characterManager.addCharacter(character);
+            }
             updateCharacterMap();
 
             updateInitiativeList();

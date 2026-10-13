@@ -3,7 +3,9 @@ package com.eubi.initiativetracker.swingui;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.awt.*;
 
 import com.eubi.initiativetracker.characters.Character;
@@ -22,20 +24,22 @@ public class AddCharacterMenu extends JDialog {
     private JComboBox<String> deathStatusCombo;
     private JSpinner maxHealthSpinner;
     private JLabel maxHealthLabel;
+    private JLabel savedCharacterLabel;
 
     private boolean confirmed = false;
     private Character newCharacter;
-    private final List<Character> characters;
+    private final List<Character> characters = new ArrayList<>();
+    private final Map<String, Character> characterMap;
 
     /**
      * Constructs a new modal dialog to create a character.
      *
-     * @param parent        The parent {@link Frame} window binding this dialog.
-     * @param characterList The existing list of characters used to prevent duplicate names.
+     * @param parent       The parent {@link Frame} window binding this dialog.
+     * @param characterMap The existing map of characters used to prevent duplicate names.
      */
-    public AddCharacterMenu(Frame parent, List<Character> characterList) {
+    public AddCharacterMenu(Frame parent, Map<String, Character> characterMap) {
         super(parent, "Add Character", true);
-        characters = characterList;
+        this.characterMap = characterMap;
 
         setContentPane(addCharacterPane);
         setTitle("Add Character");
@@ -48,6 +52,7 @@ public class AddCharacterMenu extends JDialog {
         addCharacterButton.setEnabled(false);
         maxHealthLabel.setVisible(false);
         maxHealthSpinner.setVisible(false);
+        savedCharacterLabel.setVisible(false);
 
         pack();
 
@@ -89,7 +94,10 @@ public class AddCharacterMenu extends JDialog {
                 newCharacter = new Character(name, initiative, dexterity, type, status);
             }
             confirmed = true;
-            dispose();
+            characters.add(newCharacter);
+            savedCharacterLabel.setVisible(true);
+            resetWidgets();
+            pack();
         });
     }
 
@@ -100,8 +108,8 @@ public class AddCharacterMenu extends JDialog {
     private void validateName() {
         String name = characterName.getText().trim();
         boolean isValid = !name.isEmpty();
-        for (Character character : characters) {
-            if (name.equalsIgnoreCase(character.getCharacterData().get("Name").toString())) {
+        for (String characterName : characterMap.keySet()) {
+            if (name.equalsIgnoreCase(characterName)) {
                 isValid = false;
             }
         }
@@ -136,8 +144,17 @@ public class AddCharacterMenu extends JDialog {
      *
      * @return The configured {@link Character}, or {@code null} if unconfirmed.
      */
-    public Character getNewCharacter() {
-        return newCharacter;
+    public List<Character> getNewCharacter() {
+        return characters;
+    }
+
+    private void resetWidgets() {
+        characterName.setText("");
+        initiativeSpinner.setValue(0);
+        dexteritySpinner.setValue(0);
+        characterTypeCombo.setSelectedIndex(0);
+        maxHealthSpinner.setValue(0);
+        deathStatusCombo.setSelectedIndex(0);
     }
 
     {
@@ -250,7 +267,7 @@ public class AddCharacterMenu extends JDialog {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 0, 0, 0);
+        gbc.insets = new Insets(5, 0, 2, 0);
         addCharacterPane.add(addCharacterButton, gbc);
         deathStatusCombo = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
@@ -301,6 +318,14 @@ public class AddCharacterMenu extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(2, 0, 2, 0);
         addCharacterPane.add(maxHealthSpinner, gbc);
+        savedCharacterLabel = new JLabel();
+        savedCharacterLabel.setText("Character Saved!!!");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.gridwidth = 4;
+        gbc.insets = new Insets(4, 0, 2, 0);
+        addCharacterPane.add(savedCharacterLabel, gbc);
     }
 
     /**
