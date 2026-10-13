@@ -27,7 +27,6 @@ public class AddCharacterMenu extends JDialog {
     private JLabel savedCharacterLabel;
 
     private boolean confirmed = false;
-    private Character newCharacter;
     private final List<Character> characters = new ArrayList<>();
     private final Map<String, Character> characterMap;
 
@@ -87,6 +86,7 @@ public class AddCharacterMenu extends JDialog {
             }
 
             assert type != null;
+            Character newCharacter;
             if (!type.equalsIgnoreCase("PLAYER")) {
                 int maxHealth = (int) maxHealthSpinner.getValue();
                 newCharacter = new NonePlayerCharacter(name, initiative, dexterity, maxHealth, type, status);
@@ -111,6 +111,7 @@ public class AddCharacterMenu extends JDialog {
         for (String characterName : characterMap.keySet()) {
             if (name.equalsIgnoreCase(characterName)) {
                 isValid = false;
+                break;
             }
         }
 
