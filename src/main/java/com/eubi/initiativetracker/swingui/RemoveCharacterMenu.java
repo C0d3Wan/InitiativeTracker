@@ -59,10 +59,8 @@ public class RemoveCharacterMenu extends JDialog {
             removeCharacterButton.setEnabled(false);
         } else {
             removeCharacterButton.setEnabled(true);
-            for (Character character : characters) {
-                String name = character.getCharacterData().get("Name").toString();
-                this.characterMap.put(name, character);
-                characterSelectionCombo.addItem(name);
+            for (Character characterName : characters) {
+                characterSelectionCombo.addItem(characterName);
             }
             characterSelectionCombo.addItem("All Characters");
         }

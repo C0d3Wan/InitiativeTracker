@@ -38,7 +38,7 @@ public class EditCharacterMenu extends JDialog {
 
         setContentPane(editCharacterPane);
         setTitle("Edit Character");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
 
@@ -97,10 +97,8 @@ public class EditCharacterMenu extends JDialog {
             saveEditButton.setEnabled(false);
         } else {
             saveEditButton.setEnabled(true);
-            for (Character character : characterMap.values()) {
-                String name = character.getCharacterData().get("Name").toString();
-                this.characterMap.put(name, character);
-                charactersCombo.addItem(name);
+            for (String characterName : characterMap.keySet()) {
+                charactersCombo.addItem(characterName);
             }
 
             displayCurrentCharacterData();
