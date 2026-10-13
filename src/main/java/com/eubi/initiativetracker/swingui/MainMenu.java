@@ -21,8 +21,8 @@ public class MainMenu extends JFrame {
     private JButton passButton;
     private JButton failButton;
     private JLabel deathSaveLabel;
+    private JButton editNPCHealthButton;
 
-    private final CharacterManager cManager;
     private final UIManager uiManager;
 
     /**
@@ -31,8 +31,7 @@ public class MainMenu extends JFrame {
      * @param characterManager The {@link CharacterManager} maintaining combat data.
      */
     public MainMenu(CharacterManager characterManager) {
-        cManager = characterManager;
-        uiManager = new UIManager(this, cManager, initiativeList, passButton, failButton, deathSaveLabel);
+        uiManager = new UIManager(this, characterManager, initiativeList, passButton, failButton, deathSaveLabel);
 
         setContentPane(mainMenuPane);
         setTitle("Initiative Tracker");
@@ -46,6 +45,7 @@ public class MainMenu extends JFrame {
 
         addCharacterButton.addActionListener(e -> uiManager.openAddCharacterMenu());
         editCharacterButton.addActionListener(e -> uiManager.openEditCharacterMenu());
+        editNPCHealthButton.addActionListener(e -> uiManager.openEditNPCHealthMenu());
         removeCharacterButton.addActionListener(e -> uiManager.openRemoveCharacterMenu());
         nextTurnButton.addActionListener(e -> uiManager.nextTurn());
 
@@ -104,13 +104,6 @@ public class MainMenu extends JFrame {
         gbc.gridwidth = 6;
         gbc.insets = new Insets(2, 0, 2, 0);
         mainMenuPane.add(label1, gbc);
-        final JLabel label2 = new JLabel();
-        label2.setText("Options");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        mainMenuPane.add(label2, gbc);
         nextTurnButton = new JButton();
         nextTurnButton.setBorderPainted(true);
         nextTurnButton.setFocusPainted(false);
@@ -123,33 +116,6 @@ public class MainMenu extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(2, 0, 2, 0);
         mainMenuPane.add(nextTurnButton, gbc);
-        addCharacterButton = new JButton();
-        addCharacterButton.setBorderPainted(true);
-        addCharacterButton.setContentAreaFilled(true);
-        addCharacterButton.setFocusPainted(false);
-        addCharacterButton.setFocusable(false);
-        addCharacterButton.setHideActionText(false);
-        addCharacterButton.setText("Add Character");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 0, 2, 1);
-        mainMenuPane.add(addCharacterButton, gbc);
-        editCharacterButton = new JButton();
-        editCharacterButton.setBorderPainted(true);
-        editCharacterButton.setContentAreaFilled(true);
-        editCharacterButton.setFocusPainted(false);
-        editCharacterButton.setFocusable(true);
-        editCharacterButton.setHideActionText(false);
-        editCharacterButton.setText("Edit Character");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 1, 2, 1);
-        mainMenuPane.add(editCharacterButton, gbc);
         passButton = new JButton();
         passButton.setText("Pass");
         gbc = new GridBagConstraints();
@@ -189,6 +155,41 @@ public class MainMenu extends JFrame {
         final DefaultListModel defaultListModel1 = new DefaultListModel();
         initiativeList.setModel(defaultListModel1);
         scrollPane1.setViewportView(initiativeList);
+        addCharacterButton = new JButton();
+        addCharacterButton.setBorderPainted(true);
+        addCharacterButton.setContentAreaFilled(true);
+        addCharacterButton.setFocusPainted(false);
+        addCharacterButton.setFocusable(false);
+        addCharacterButton.setHideActionText(false);
+        addCharacterButton.setText("Add Character");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 0, 2, 1);
+        mainMenuPane.add(addCharacterButton, gbc);
+        editCharacterButton = new JButton();
+        editCharacterButton.setBorderPainted(true);
+        editCharacterButton.setContentAreaFilled(true);
+        editCharacterButton.setFocusPainted(false);
+        editCharacterButton.setFocusable(true);
+        editCharacterButton.setHideActionText(false);
+        editCharacterButton.setText("Edit Character");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 1, 2, 1);
+        mainMenuPane.add(editCharacterButton, gbc);
+        editNPCHealthButton = new JButton();
+        editNPCHealthButton.setText("Edit NPC Health");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 1, 2, 1);
+        mainMenuPane.add(editNPCHealthButton, gbc);
     }
 
     /**

@@ -14,18 +14,7 @@ public class Main {
      * @param args Command-line arguments passed during startup (unused).
      */
     public static void main(String[] args) {
-        CharacterManager characterManager = init();
-    }
-
-    /**
-     * Instantiates necessary models and schedules the primary {@link MainMenu}
-     * window for rendering on the Swing Event Dispatch Thread (EDT).
-     *
-     * @return The initialized {@link CharacterManager} instance.
-     */
-    private static CharacterManager init(){
         CharacterManager characterManager = new CharacterManager();
         SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
-        return characterManager;
     }
 }

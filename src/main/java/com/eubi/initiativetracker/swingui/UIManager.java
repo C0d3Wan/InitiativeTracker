@@ -77,11 +77,24 @@ public class UIManager {
     }
 
     /**
+     * Opens the modal dialog to modify existing NPC health values.
+     */
+    public void openEditNPCHealthMenu() {
+        updateCharacterMap();
+
+        EditNPCHealth editNPCHealthMenu = new EditNPCHealth(parentFrame, characterMap);
+        editNPCHealthMenu.setVisible(true);
+
+        characterManager.updateCharacters();
+        updateInitiativeList();
+    }
+
+    /**
      * Opens the modal dialog to remove selected or all characters from the combat session.
      */
     public void openRemoveCharacterMenu() {
         updateCharacterMap();
-        RemoveCharacterMenu removeCharacterMenu = new RemoveCharacterMenu(parentFrame, characterManager);
+        RemoveCharacterMenu removeCharacterMenu = new RemoveCharacterMenu(parentFrame, characterManager, characterMap);
         removeCharacterMenu.setVisible(true);
 
         updateInitiativeList();

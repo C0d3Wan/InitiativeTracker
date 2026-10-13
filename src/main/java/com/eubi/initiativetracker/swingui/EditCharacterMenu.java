@@ -19,12 +19,12 @@ public class EditCharacterMenu extends JDialog {
     private JLabel dexterityLabel;
     private JLabel deathStatusLabel;
     private JSpinner newDexteritySpinner;
-    private JComboBox newDeathStatusCombo;
-    private JComboBox charactersCombo;
+    private JComboBox<String> newDeathStatusCombo;
+    private JComboBox<String> charactersCombo;
     private JButton saveEditButton;
     private JLabel savedCharacterLabel;
 
-    private Map<String, Character> characterMap;
+    private final Map<String, Character> characterMap;
 
     /**
      * Constructs a modal dialog to modify attributes of existing characters.
@@ -38,7 +38,7 @@ public class EditCharacterMenu extends JDialog {
 
         setContentPane(editCharacterPane);
         setTitle("Edit Character");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
 
@@ -97,10 +97,8 @@ public class EditCharacterMenu extends JDialog {
             saveEditButton.setEnabled(false);
         } else {
             saveEditButton.setEnabled(true);
-            for (Character character : characterMap.values()) {
-                String name = character.getCharacterData().get("Name").toString();
-                this.characterMap.put(name, character);
-                charactersCombo.addItem(name);
+            for (String characterName : characterMap.keySet()) {
+                charactersCombo.addItem(characterName);
             }
 
             displayCurrentCharacterData();
@@ -124,7 +122,9 @@ public class EditCharacterMenu extends JDialog {
      * Populates the label indicators and spinner fields with the active character's current values.
      */
     private void displayCurrentCharacterData() {
-        Map<String, Object> currentCharacterData = getCurrentCharacter().getCharacterData();
+        Character currentCharacter = getCurrentCharacter();
+        assert currentCharacter != null;
+        Map<String, Object> currentCharacterData = currentCharacter.getCharacterData();
         characterNameLabel.setText(currentCharacterData.get("Name").toString());
         initiativeLabel.setText(currentCharacterData.get("Initiative").toString());
         dexterityLabel.setText(currentCharacterData.get("Dexterity").toString());

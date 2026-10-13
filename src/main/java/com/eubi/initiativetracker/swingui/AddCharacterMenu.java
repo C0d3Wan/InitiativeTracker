@@ -7,6 +7,7 @@ import java.util.List;
 import java.awt.*;
 
 import com.eubi.initiativetracker.characters.Character;
+import com.eubi.initiativetracker.characters.NonePlayerCharacter;
 
 /**
  * Modal dialog interface for creating and adding a new character to the initiative tracker.
@@ -14,15 +15,17 @@ import com.eubi.initiativetracker.characters.Character;
 public class AddCharacterMenu extends JDialog {
     private JPanel addCharacterPane;
     private JTextField characterName;
-    private JComboBox characterTypeCombo;
+    private JComboBox<String> characterTypeCombo;
     private JSpinner initiativeSpinner;
     private JSpinner dexteritySpinner;
     private JButton addCharacterButton;
-    private JComboBox deathStatusCombo;
+    private JComboBox<String> deathStatusCombo;
+    private JSpinner maxHealthSpinner;
+    private JLabel maxHealthLabel;
 
     private boolean confirmed = false;
     private Character newCharacter;
-    private List<Character> characters;
+    private final List<Character> characters;
 
     /**
      * Constructs a new modal dialog to create a character.
@@ -37,12 +40,16 @@ public class AddCharacterMenu extends JDialog {
         setContentPane(addCharacterPane);
         setTitle("Add Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        pack();
         setLocationRelativeTo(null);
 
         dexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
         initiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
+        maxHealthSpinner.setModel(new SpinnerNumberModel(1, 1, 2000, 1));
         addCharacterButton.setEnabled(false);
+        maxHealthLabel.setVisible(false);
+        maxHealthSpinner.setVisible(false);
+
+        pack();
 
         characterName.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -61,6 +68,8 @@ public class AddCharacterMenu extends JDialog {
             }
         });
 
+        characterTypeCombo.addActionListener(e -> updateForMaxHealth());
+
         addCharacterButton.addActionListener(e -> {
             String name = characterName.getText().trim();
             int initiative = (int) initiativeSpinner.getValue();
@@ -68,8 +77,17 @@ public class AddCharacterMenu extends JDialog {
             String type = (String) characterTypeCombo.getSelectedItem();
             String status = (String) deathStatusCombo.getSelectedItem();
 
-            newCharacter = new Character(name, initiative, dexterity, type, status);
+            if (name.length() > 16) {
+                name = name.substring(0, 14) + "...";
+            }
 
+            assert type != null;
+            if (!type.equalsIgnoreCase("PLAYER")) {
+                int maxHealth = (int) maxHealthSpinner.getValue();
+                newCharacter = new NonePlayerCharacter(name, initiative, dexterity, maxHealth, type, status);
+            } else {
+                newCharacter = new Character(name, initiative, dexterity, type, status);
+            }
             confirmed = true;
             dispose();
         });
@@ -89,6 +107,19 @@ public class AddCharacterMenu extends JDialog {
         }
 
         addCharacterButton.setEnabled(isValid);
+    }
+
+    private void updateForMaxHealth() {
+        Object selectedItem = characterTypeCombo.getSelectedItem();
+        assert selectedItem != null;
+        if (!selectedItem.equals("PLAYER")) {
+            maxHealthLabel.setVisible(true);
+            maxHealthSpinner.setVisible(true);
+        } else {
+            maxHealthLabel.setVisible(false);
+            maxHealthSpinner.setVisible(false);
+        }
+        pack();
     }
 
     /**
@@ -215,7 +246,7 @@ public class AddCharacterMenu extends JDialog {
         addCharacterButton.setText("Add character");
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -229,7 +260,7 @@ public class AddCharacterMenu extends JDialog {
         deathStatusCombo.setModel(defaultComboBoxModel2);
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
@@ -240,7 +271,7 @@ public class AddCharacterMenu extends JDialog {
         label5.setText("Death Status");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(2, 0, 5, 0);
@@ -251,6 +282,25 @@ public class AddCharacterMenu extends JDialog {
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         addCharacterPane.add(spacer1, gbc);
+        maxHealthLabel = new JLabel();
+        maxHealthLabel.setText("Max Health");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        addCharacterPane.add(maxHealthLabel, gbc);
+        maxHealthSpinner = new JSpinner();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        addCharacterPane.add(maxHealthSpinner, gbc);
     }
 
     /**
