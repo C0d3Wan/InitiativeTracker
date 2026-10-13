@@ -77,6 +77,10 @@ public class AddCharacterMenu extends JDialog {
             String type = (String) characterTypeCombo.getSelectedItem();
             String status = (String) deathStatusCombo.getSelectedItem();
 
+            if (name.length() > 16) {
+                name = name.substring(0, 14) + "...";
+            }
+
             assert type != null;
             if (!type.equalsIgnoreCase("PLAYER")) {
                 int maxHealth = (int) maxHealthSpinner.getValue();

@@ -1,6 +1,7 @@
 package com.eubi.initiativetracker.swingui;
 
 import com.eubi.initiativetracker.characters.Character;
+import com.eubi.initiativetracker.characters.NonePlayerCharacter;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -26,6 +27,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
     private final JRadioButton deathFail2 = new JRadioButton();
     private final JRadioButton deathFail3 = new JRadioButton();
     private final JPanel deathSavePanel = new JPanel();
+    private final JLabel npcHealth = new JLabel();
 
     /**
      * Constructs a new CharacterCellRenderer and configures subcomponents and layouts.
@@ -68,6 +70,13 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         deathStatusLabel.setText(characterData.get("DeathStatus").toString());
 
         setOpaque(true);
+
+        if (!characterData.get("Type").toString().equals("PLAYER")) {
+            NonePlayerCharacter npc = (NonePlayerCharacter) character;
+            npcHealth.setText(npc.getHealth() + "/" + npc.getMaxHealth());
+        } else {
+            npcHealth.setText("N/A");
+        }
 
         if (index == 0) {
             setBackground(Color.green);
@@ -118,10 +127,17 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridheight = 3;
-        gbc.weighty = 1.0;
+        gbc.weighty = 5.0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 2, 0, 4);
         add(nameLabel, gbc);
+
+        final JPanel spacer1 = new JPanel();
+        spacer1.setOpaque(false);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(spacer1, gbc);
 
         Font initiativeLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, initiativeLabel.getFont());
         if (initiativeLabelFont != null) initiativeLabel.setFont(initiativeLabelFont);
@@ -143,26 +159,29 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         gbc.insets = new Insets(0, 4, 0, 4);
         add(characterTypeLabel, gbc);
 
+        Font npcHealthFont = this.$$$getFont$$$("SansSerif", Font.BOLD, 12, nameLabel.getFont());
+        if (nameLabelFont != null) npcHealth.setFont(npcHealthFont);
+        npcHealth.setText("Label");
+        gbc.gridx = 4;
+        gbc.gridy = 0;
+        gbc.gridheight = 3;
+        gbc.weighty = 1.0;
+        gbc.insets = new Insets(0, 4, 0, 4);
+        add(npcHealth, gbc);
+
         Font deathStatusLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, deathStatusLabel.getFont());
         if (deathStatusLabelFont != null) deathStatusLabel.setFont(deathStatusLabelFont);
         deathStatusLabel.setText("Label");
-        gbc.gridx = 4;
+        gbc.gridx = 5;
         gbc.gridy = 0;
         gbc.gridheight = 3;
         gbc.weighty = 1.0;
         gbc.insets = new Insets(0, 4, 0, 4);
         add(deathStatusLabel, gbc);
 
-        final JPanel spacer1 = new JPanel();
-        spacer1.setOpaque(false);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        add(spacer1, gbc);
-
         deathSavePanel.setLayout(new GridBagLayout());
         deathSavePanel.setOpaque(false);
-        gbc.gridx = 5;
+        gbc.gridx = 6;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.gridheight = 3;
