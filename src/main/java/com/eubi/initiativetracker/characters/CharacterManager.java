@@ -62,8 +62,8 @@ public class CharacterManager {
         boolean wasCurrent = (character == currentCharacter);
         int index = charactersOrdered.indexOf(character);
 
-        characters.remove(character);
         character.editCurrentCharacter(false);
+        characters.remove(character);
         sortCharacters();
 
 

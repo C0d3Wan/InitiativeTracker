@@ -41,15 +41,6 @@
           <text value="Initiative Order"/>
         </properties>
       </component>
-      <component id="d8892" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag top="2" left="0" bottom="2" right="0" weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <text value="Options"/>
-        </properties>
-      </component>
       <component id="b9d27" class="javax.swing.JButton" binding="nextTurnButton" default-binding="true">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -61,34 +52,6 @@
           <focusable value="true"/>
           <selected value="false"/>
           <text value="Next Turn"/>
-        </properties>
-      </component>
-      <component id="4e0c0" class="javax.swing.JButton" binding="addCharacterButton" default-binding="true">
-        <constraints>
-          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag top="2" left="0" bottom="2" right="1" weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <borderPainted value="true"/>
-          <contentAreaFilled value="true"/>
-          <focusPainted value="false"/>
-          <focusable value="false"/>
-          <hideActionText value="false"/>
-          <text value="Add Character"/>
-        </properties>
-      </component>
-      <component id="48e32" class="javax.swing.JButton" binding="editCharacterButton" default-binding="true">
-        <constraints>
-          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag top="2" left="1" bottom="2" right="1" weightx="1.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <borderPainted value="true"/>
-          <contentAreaFilled value="true"/>
-          <focusPainted value="false"/>
-          <focusable value="true"/>
-          <hideActionText value="false"/>
-          <text value="Edit Character"/>
         </properties>
       </component>
       <component id="443d6" class="javax.swing.JButton" binding="passButton" default-binding="true">
@@ -134,6 +97,43 @@
           </component>
         </children>
       </scrollpane>
+      <component id="4e0c0" class="javax.swing.JButton" binding="addCharacterButton" default-binding="true">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="0" bottom="2" right="1" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <borderPainted value="true"/>
+          <contentAreaFilled value="true"/>
+          <focusPainted value="false"/>
+          <focusable value="false"/>
+          <hideActionText value="false"/>
+          <text value="Add Character"/>
+        </properties>
+      </component>
+      <component id="48e32" class="javax.swing.JButton" binding="editCharacterButton" default-binding="true">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="1" bottom="2" right="1" weightx="1.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <borderPainted value="true"/>
+          <contentAreaFilled value="true"/>
+          <focusPainted value="false"/>
+          <focusable value="true"/>
+          <hideActionText value="false"/>
+          <text value="Edit Character"/>
+        </properties>
+      </component>
+      <component id="a0c10" class="javax.swing.JButton" binding="editNPCHealthButton" default-binding="true">
+        <constraints>
+          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="1" bottom="2" right="1" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text value="Edit NPC Health"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

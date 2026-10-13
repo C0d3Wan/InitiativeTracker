@@ -22,7 +22,7 @@ public class RemoveCharacterMenu extends JDialog {
     private JButton removeCharacterButton;
     private JLabel removedCharacterLabel;
 
-    private Map<String, Character> characterMap = new HashMap<>();
+    private Map<String, Character> characterMap;
     private CharacterManager cManager;
 
     /**
@@ -31,10 +31,11 @@ public class RemoveCharacterMenu extends JDialog {
      * @param parent           The parent {@link Frame} window.
      * @param characterManager The {@link CharacterManager} maintaining combatants.
      */
-    public RemoveCharacterMenu(Frame parent, CharacterManager characterManager) {
+    public RemoveCharacterMenu(Frame parent, CharacterManager characterManager, Map<String, Character> characterMap) {
         super(parent, "Remove Character", true);
         setContentPane(removeCharacterPane);
         this.cManager = characterManager;
+        this.characterMap= characterMap;
 
         removedCharacterLabel.setVisible(false);
         setTitle("Remove Character");
@@ -59,8 +60,9 @@ public class RemoveCharacterMenu extends JDialog {
             removeCharacterButton.setEnabled(false);
         } else {
             removeCharacterButton.setEnabled(true);
-            for (Character characterName : characters) {
-                characterSelectionCombo.addItem(characterName);
+            for (Character character : characters) {
+                String name = character.getCharacterData().get("Name").toString();
+                characterSelectionCombo.addItem(name);
             }
             characterSelectionCombo.addItem("All Characters");
         }

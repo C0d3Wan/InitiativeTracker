@@ -18,7 +18,7 @@ public class EditNPCHealth extends JDialog {
     private JButton saveEditButton;
     private JLabel saveEditLabel;
 
-    private Map<String, NonePlayerCharacter> npcMap;
+    private Map<String, NonePlayerCharacter> npcMap = new HashMap<>();
 
     public EditNPCHealth(Frame parent, Map<String, Character> characterMap) {
         super(parent, "Edit NPC Health", true);
@@ -34,6 +34,10 @@ public class EditNPCHealth extends JDialog {
                 npcMap.put(characterData.get("Name").toString(), (NonePlayerCharacter) character);
             }
         }
+
+        setCharacterDetails();
+
+        characterCombo.addActionListener(e -> updateCharactersDetails());
     }
 
     private void setCharacterDetails() {
