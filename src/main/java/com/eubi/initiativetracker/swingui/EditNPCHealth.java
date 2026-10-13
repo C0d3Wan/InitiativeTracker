@@ -37,7 +37,12 @@ public class EditNPCHealth extends JDialog {
 
         setCharacterDetails();
 
+        changeValueSpinner.addChangeListener(e -> {
+            int health = Integer.parseInt(currentHealth.getText()) + (int) changeValueSpinner.getValue();
+            newHealth.setText(String.valueOf(health));
+        });
         characterCombo.addActionListener(e -> updateCharactersDetails());
+        saveEditButton.addActionListener(e -> saveNPCHealth());
     }
 
     private void setCharacterDetails() {
@@ -92,6 +97,15 @@ public class EditNPCHealth extends JDialog {
         }
         String name = characterCombo.getSelectedItem().toString();
         return npcMap.get(name);
+    }
+
+    private void saveNPCHealth() {
+        NonePlayerCharacter currentCharacter = getCurrentCharacter();
+        int health = (int) changeValueSpinner.getValue();
+        currentCharacter.editHealth(health);
+
+        saveEditLabel.setVisible(true);
+        pack();
     }
 
     {
