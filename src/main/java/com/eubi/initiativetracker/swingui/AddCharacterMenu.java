@@ -154,7 +154,7 @@ public class AddCharacterMenu extends JDialog {
         initiativeSpinner.setValue(0);
         dexteritySpinner.setValue(0);
         characterTypeCombo.setSelectedIndex(0);
-        maxHealthSpinner.setValue(0);
+        maxHealthSpinner.setValue(1);
         deathStatusCombo.setSelectedIndex(0);
     }
 

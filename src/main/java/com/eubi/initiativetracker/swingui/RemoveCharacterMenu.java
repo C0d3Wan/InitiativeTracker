@@ -2,6 +2,7 @@ package com.eubi.initiativetracker.swingui;
 
 import com.eubi.initiativetracker.characters.Character;
 import com.eubi.initiativetracker.characters.CharacterManager;
+import com.eubi.initiativetracker.characters.NonePlayerCharacter;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -22,7 +23,8 @@ public class RemoveCharacterMenu extends JDialog {
     private JLabel removedCharacterLabel;
 
     private final Map<String, Character> characterMap;
-    private final CharacterManager cManager;
+    private final Map<String, NonePlayerCharacter> npcMap;
+    private final CharacterManager characterManager;
 
     /**
      * Constructs a modal dialog to remove characters from the initiative tracker.
@@ -30,11 +32,12 @@ public class RemoveCharacterMenu extends JDialog {
      * @param parent           The parent {@link Frame} window.
      * @param characterManager The {@link CharacterManager} maintaining combatants.
      */
-    public RemoveCharacterMenu(Frame parent, CharacterManager characterManager, Map<String, Character> characterMap) {
+    public RemoveCharacterMenu(Frame parent, CharacterManager characterManager, Map<String, Character> characterMap, Map<String, NonePlayerCharacter> npcMap) {
         super(parent, "Remove Character", true);
         setContentPane(removeCharacterPane);
-        this.cManager = characterManager;
+        this.characterManager = characterManager;
         this.characterMap= characterMap;
+        this.npcMap = npcMap;
 
         removedCharacterLabel.setVisible(false);
         setTitle("Remove Character");
@@ -52,7 +55,7 @@ public class RemoveCharacterMenu extends JDialog {
      * as well as an "All Characters" option.
      */
     private void updateSelectionCombo() {
-        List<Character> characters = this.cManager.getCharacterList();
+        List<Character> characters = this.characterManager.getCharacterList();
         characterSelectionCombo.removeAllItems();
         if (characters.isEmpty()) {
             characterSelectionCombo.addItem("No Characters");
@@ -63,6 +66,7 @@ public class RemoveCharacterMenu extends JDialog {
                 String name = character.getCharacterData().get("Name").toString();
                 characterSelectionCombo.addItem(name);
             }
+            characterSelectionCombo.addItem("All NPCs");
             characterSelectionCombo.addItem("All Characters");
         }
         pack();
@@ -76,14 +80,21 @@ public class RemoveCharacterMenu extends JDialog {
         Object selectedItem = characterSelectionCombo.getSelectedItem();
         assert selectedItem != null;
         String name = selectedItem.toString();
-        if (name.equals("All Characters")) {
-            this.cManager.clearCharacters();
-        } else {
-            Character character = this.characterMap.get(name);
-            this.cManager.removeCharacter(character);
-            this.cManager.sortCharacters();
-
+        switch (name) {
+            case "All NPCs" -> {
+                for (NonePlayerCharacter npc: npcMap.values()) {
+                    characterManager.removeCharacter(npc);
+                    characterManager.sortCharacters();
+                }
+            }
+            case "All Characters" -> characterManager.clearCharacters();
+            default -> {
+                Character character = characterMap.get(name);
+                characterManager.removeCharacter(character);
+                characterManager.sortCharacters();
+            }
         }
+
         updateSelectionCombo();
         removedCharacterLabel.setVisible(true);
         pack();

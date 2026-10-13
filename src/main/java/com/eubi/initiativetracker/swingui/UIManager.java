@@ -2,6 +2,7 @@ package com.eubi.initiativetracker.swingui;
 
 import com.eubi.initiativetracker.characters.CharacterManager;
 import com.eubi.initiativetracker.characters.Character;
+import com.eubi.initiativetracker.characters.NonePlayerCharacter;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -15,8 +16,9 @@ import java.util.Map;
 public class UIManager {
     private final CharacterManager characterManager;
     private final JFrame parentFrame;
-    private final Map<String, Character> characterMap;
-    private final DefaultListModel<Character> characterListModel;
+    private final Map<String, Character> characterMap = new HashMap<>();
+    private final Map<String, NonePlayerCharacter> npcMap = new HashMap<>();
+    private final DefaultListModel<Character> characterListModel = new DefaultListModel<>();
     private final JButton passSaveButton;
     private final JButton failSaveButton;
     private final JLabel deathSaveLabel;
@@ -34,8 +36,6 @@ public class UIManager {
     public UIManager(JFrame parentFrame, CharacterManager characterManager, JList<Character> initiativeList, JButton passSaveButton, JButton failSaveButton, JLabel deathSaveLabel) {
         this.characterManager = characterManager;
         this.parentFrame = parentFrame;
-        characterMap = new HashMap<>();
-        characterListModel = new DefaultListModel<>();
         this.passSaveButton = passSaveButton;
         this.failSaveButton = failSaveButton;
         this.deathSaveLabel = deathSaveLabel;
@@ -96,7 +96,7 @@ public class UIManager {
      */
     public void openRemoveCharacterMenu() {
         updateCharacterMap();
-        RemoveCharacterMenu removeCharacterMenu = new RemoveCharacterMenu(parentFrame, characterManager, characterMap);
+        RemoveCharacterMenu removeCharacterMenu = new RemoveCharacterMenu(parentFrame, characterManager, characterMap, npcMap);
         removeCharacterMenu.setVisible(true);
 
         updateInitiativeList();
@@ -108,7 +108,11 @@ public class UIManager {
     private void updateCharacterMap() {
         if  (!characterMap.isEmpty()) {characterMap.clear();}
         for (Character character : characterManager.getCharacterList()) {
-            characterMap.put(character.getCharacterData().get("Name").toString(), character);
+            Map<String, Object> characterData = character.getCharacterData();
+            characterMap.put(characterData.get("Name").toString(), character);
+            if (!characterData.get("Type").equals("PLAYER")) {
+                npcMap.put(characterData.get("Name").toString(), (NonePlayerCharacter) character);
+            }
         }
     }
 
