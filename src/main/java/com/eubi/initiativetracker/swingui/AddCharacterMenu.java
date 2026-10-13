@@ -7,6 +7,7 @@ import java.util.List;
 import java.awt.*;
 
 import com.eubi.initiativetracker.characters.Character;
+import com.eubi.initiativetracker.characters.NonePlayerCharacter;
 
 /**
  * Modal dialog interface for creating and adding a new character to the initiative tracker.
@@ -67,6 +68,10 @@ public class AddCharacterMenu extends JDialog {
             int dexterity = (int) dexteritySpinner.getValue();
             String type = (String) characterTypeCombo.getSelectedItem();
             String status = (String) deathStatusCombo.getSelectedItem();
+
+            if (!type.equalsIgnoreCase("PLAYER")) {
+                newCharacter = new NonePlayerCharacter(name, initiative, dexterity,0, type, status);
+            }
 
             newCharacter = new Character(name, initiative, dexterity, type, status);
 
