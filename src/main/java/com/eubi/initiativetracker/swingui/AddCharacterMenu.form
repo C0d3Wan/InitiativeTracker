@@ -83,7 +83,7 @@
       </component>
       <component id="1dcde" class="javax.swing.JButton" binding="addCharacterButton" default-binding="true">
         <constraints>
-          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag top="5" left="0" bottom="0" right="0" weightx="1.0" weighty="1.0"/>
         </constraints>
         <properties>
@@ -94,7 +94,7 @@
       </component>
       <component id="b53a6" class="javax.swing.JComboBox" binding="deathStatusCombo">
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag top="2" left="0" bottom="5" right="0" weightx="0.0" weighty="1.0"/>
         </constraints>
         <properties>
@@ -107,7 +107,7 @@
       </component>
       <component id="fd410" class="javax.swing.JLabel">
         <constraints>
-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="2" left="0" bottom="5" right="0" weightx="0.0" weighty="1.0"/>
         </constraints>
         <properties>
@@ -120,6 +120,22 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
       </hspacer>
+      <component id="578b8" class="javax.swing.JLabel" binding="maxHealthLabel">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="0" bottom="2" right="0" weightx="0.0" weighty="1.0"/>
+        </constraints>
+        <properties>
+          <text value="Max Health"/>
+        </properties>
+      </component>
+      <component id="1012" class="javax.swing.JSpinner" binding="maxHealthSpinner">
+        <constraints>
+          <grid row="4" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="2" left="0" bottom="2" right="0" weightx="0.0" weighty="1.0"/>
+        </constraints>
+        <properties/>
+      </component>
     </children>
   </grid>
 </form>
