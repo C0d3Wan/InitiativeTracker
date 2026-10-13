@@ -25,9 +25,9 @@ public class NonePlayerCharacter extends Character {
      * @param type       The {@link CharacterType} classification of this character.
      * @param status     The initial {@link DeathStatus} of this character.
      */
-    public NonePlayerCharacter(String name, int initiative, int dex, int health, int maxHealth, CharacterType type, DeathStatus status) {
+    public NonePlayerCharacter(String name, int initiative, int dex, int maxHealth, CharacterType type, DeathStatus status) {
         super(name, initiative, dex, type, status);
-        this.health = health;
+        this.health = maxHealth;
         this.maxHealth = maxHealth;
     }
 
@@ -42,8 +42,8 @@ public class NonePlayerCharacter extends Character {
      * @param typeID     The integer ID representing the {@link CharacterType} (0: PLAYER, 1: ENEMY, 2: ALLY).
      * @param deathID    The integer ID representing the {@link DeathStatus} (0: DEAD, 1: ALIVE, 2: DOWN).
      */
-    public NonePlayerCharacter(String name, int initiative, int dex, int health, int maxHealth, String typeID, String deathID) {
-        this(name, initiative, dex, health, maxHealth, typeFromString(typeID), deathFromString(deathID));
+    public NonePlayerCharacter(String name, int initiative, int dex,  int maxHealth, String typeID, String deathID) {
+        this(name, initiative, dex, maxHealth, typeFromString(typeID), deathFromString(deathID));
     }
 
     /**
