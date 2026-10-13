@@ -1,7 +1,5 @@
 package com.eubi.initiativetracker.characters;
 
-import java.util.*;
-
 /**
  * Represents a non-player combatant entity within the initiative tracking system.
  * <p>
@@ -12,7 +10,7 @@ import java.util.*;
  */
 public class NonePlayerCharacter extends Character {
     private int health;
-    private int maxHealth;
+    private final int maxHealth;
 
     /**
      * Constructs a new NPC instance
@@ -45,7 +43,7 @@ public class NonePlayerCharacter extends Character {
     }
 
     /**
-     * Edits the health of the chaarcter
+     * Edits the health of the character
      * <p>
      * Kills them if the run out of health
      * @param amount amount to edit health (+/-)

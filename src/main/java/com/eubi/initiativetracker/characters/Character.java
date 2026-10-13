@@ -15,9 +15,8 @@ public class Character {
     private float baseInitiative;
     private float initiativeValue;
     private float dexValue;
-    private boolean currentCharacter;
-    private Map<String, Integer> deathSaves;
-    private CharacterType characterType;
+    private final Map<String, Integer> deathSaves;
+    private final CharacterType characterType;
     private DeathStatus deathStatus;
 
     /**
@@ -37,7 +36,6 @@ public class Character {
         characterName = name;
         characterType = type;
         deathStatus = status;
-        currentCharacter = false;
         deathSaves = new HashMap<>();
         dexValue = (characterType == CharacterType.ENEMY) ? 0 : (float) dex / 100;
         baseInitiative = initiative;
@@ -245,16 +243,6 @@ public class Character {
     }
 
     /**
-     * Updates the character's life status using an integer identifier.
-     *
-     * @param statusID The numeric identifier corresponding to a {@link DeathStatus}.
-     */
-    public void editDeathStatus(int statusID) {
-        editDeathStatus(deathFromId(statusID));
-
-    }
-
-    /**
      * Updates the character's life status using a string identifier.
      *
      * @param statusID The string identifier matching a {@link DeathStatus} name.
@@ -262,45 +250,6 @@ public class Character {
     public void editDeathStatus(String statusID) {
         editDeathStatus(deathFromString(statusID));
     }
-
-    /**
-     * Updates the character's alignment or entity category.
-     *
-     * @param newCharacterType The new {@link CharacterType} to assign.
-     */
-    public void editCharacterType(CharacterType newCharacterType) {
-        characterType = newCharacterType;
-    }
-
-    /**
-     * Updates the character's alignment or entity category using an integer identifier.
-     *
-     * @param statusID The numeric identifier representing a {@link CharacterType}.
-     */
-    public void editCharacterType(int statusID) {
-        switch (statusID) {
-            case 0 -> characterType = CharacterType.PLAYER;
-            case 1 -> characterType = CharacterType.ENEMY;
-            case 2 -> characterType = CharacterType.ALLY;
-            default -> characterType = CharacterType.UNKNOWN;
-        }
-    }
-
-    /**
-     * Updates the flag indicating whether this character holds the active combat turn.
-     *
-     * @param current {@code true} to designate as the active turn holder; {@code false} otherwise.
-     */
-    public void editCurrentCharacter(boolean current){
-        currentCharacter = current;
-    }
-
-    /**
-     * Checks if this character is currently taking their combat turn.
-     *
-     * @return {@code true} if it is this character's turn; {@code false} otherwise.
-     */
-    public boolean isCurrentCharacter() { return currentCharacter; }
 
     /**
      * Retrieves the fully calculated initiative value, including decimal tie-breakers.

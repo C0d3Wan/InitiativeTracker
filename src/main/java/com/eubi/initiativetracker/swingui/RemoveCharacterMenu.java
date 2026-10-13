@@ -8,7 +8,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -18,12 +17,12 @@ import java.util.Map;
  */
 public class RemoveCharacterMenu extends JDialog {
     private JPanel removeCharacterPane;
-    private JComboBox characterSelectionCombo;
+    private JComboBox<String> characterSelectionCombo;
     private JButton removeCharacterButton;
     private JLabel removedCharacterLabel;
 
-    private Map<String, Character> characterMap;
-    private CharacterManager cManager;
+    private final Map<String, Character> characterMap;
+    private final CharacterManager cManager;
 
     /**
      * Constructs a modal dialog to remove characters from the initiative tracker.
@@ -74,7 +73,9 @@ public class RemoveCharacterMenu extends JDialog {
      * and refreshes the selection menu.
      */
     private void removeCharacter() {
-        String name = characterSelectionCombo.getSelectedItem().toString();
+        Object selectedItem = characterSelectionCombo.getSelectedItem();
+        assert selectedItem != null;
+        String name = selectedItem.toString();
         if (name.equals("All Characters")) {
             this.cManager.clearCharacters();
         } else {

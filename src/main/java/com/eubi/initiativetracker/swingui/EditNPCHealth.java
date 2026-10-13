@@ -10,7 +10,7 @@ import com.eubi.initiativetracker.characters.NonePlayerCharacter;
 public class EditNPCHealth extends JDialog {
 
     private JPanel editNPCHealth;
-    private JComboBox characterCombo;
+    private JComboBox<String> characterCombo;
     private JLabel nameLabel;
     private JLabel currentHealth;
     private JLabel newHealth;
@@ -18,7 +18,7 @@ public class EditNPCHealth extends JDialog {
     private JButton saveEditButton;
     private JLabel saveEditLabel;
 
-    private Map<String, NonePlayerCharacter> npcMap = new HashMap<>();
+    private final Map<String, NonePlayerCharacter> npcMap = new HashMap<>();
 
     public EditNPCHealth(Frame parent, Map<String, Character> characterMap) {
         super(parent, "Edit NPC Health", true);
@@ -77,6 +77,7 @@ public class EditNPCHealth extends JDialog {
 
     private void displayCurrentData() {
         NonePlayerCharacter currentCharacter = getCurrentCharacter();
+        assert currentCharacter != null;
         Map<String, Object> currentCharacterData = currentCharacter.getCharacterData();
         int health = currentCharacter.getHealth();
         int maxHealth = currentCharacter.getMaxHealth();
@@ -102,6 +103,7 @@ public class EditNPCHealth extends JDialog {
     private void saveNPCHealth() {
         NonePlayerCharacter currentCharacter = getCurrentCharacter();
         int health = (int) changeValueSpinner.getValue();
+        assert currentCharacter != null;
         currentCharacter.editHealth(health);
 
         saveEditLabel.setVisible(true);

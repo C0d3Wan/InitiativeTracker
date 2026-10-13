@@ -13,18 +13,19 @@ import java.util.*;
  * Custom {@link ListCellRenderer} panel responsible for rendering character summary rows
  * and their active death save indicators.
  */
+@SuppressWarnings({"SameParameterValue", "MagicConstant"})
 public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Character> {
-    private JLabel nameLabel = new JLabel();
-    private JLabel initiativeLabel = new JLabel();
-    private JLabel characterTypeLabel = new JLabel();
-    private JLabel deathStatusLabel = new JLabel();
-    private JRadioButton deathPass1 = new JRadioButton();
-    private JRadioButton deathPass2 = new JRadioButton();
-    private JRadioButton deathPass3 = new JRadioButton();
-    private JRadioButton deathFail1 = new JRadioButton();
-    private JRadioButton deathFail2 = new JRadioButton();
-    private JRadioButton deathFail3 = new JRadioButton();
-    private JPanel deathSavePanel = new JPanel();
+    private final JLabel nameLabel = new JLabel();
+    private final JLabel initiativeLabel = new JLabel();
+    private final JLabel characterTypeLabel = new JLabel();
+    private final JLabel deathStatusLabel = new JLabel();
+    private final JRadioButton deathPass1 = new JRadioButton();
+    private final JRadioButton deathPass2 = new JRadioButton();
+    private final JRadioButton deathPass3 = new JRadioButton();
+    private final JRadioButton deathFail1 = new JRadioButton();
+    private final JRadioButton deathFail2 = new JRadioButton();
+    private final JRadioButton deathFail3 = new JRadioButton();
+    private final JPanel deathSavePanel = new JPanel();
 
     /**
      * Constructs a new CharacterCellRenderer and configures subcomponents and layouts.

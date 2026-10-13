@@ -23,7 +23,6 @@ public class MainMenu extends JFrame {
     private JLabel deathSaveLabel;
     private JButton editNPCHealthButton;
 
-    private final CharacterManager cManager;
     private final UIManager uiManager;
 
     /**
@@ -32,8 +31,7 @@ public class MainMenu extends JFrame {
      * @param characterManager The {@link CharacterManager} maintaining combat data.
      */
     public MainMenu(CharacterManager characterManager) {
-        cManager = characterManager;
-        uiManager = new UIManager(this, cManager, initiativeList, passButton, failButton, deathSaveLabel);
+        uiManager = new UIManager(this, characterManager, initiativeList, passButton, failButton, deathSaveLabel);
 
         setContentPane(mainMenuPane);
         setTitle("Initiative Tracker");

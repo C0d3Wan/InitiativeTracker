@@ -15,17 +15,17 @@ import com.eubi.initiativetracker.characters.NonePlayerCharacter;
 public class AddCharacterMenu extends JDialog {
     private JPanel addCharacterPane;
     private JTextField characterName;
-    private JComboBox characterTypeCombo;
+    private JComboBox<String> characterTypeCombo;
     private JSpinner initiativeSpinner;
     private JSpinner dexteritySpinner;
     private JButton addCharacterButton;
-    private JComboBox deathStatusCombo;
+    private JComboBox<String> deathStatusCombo;
     private JSpinner maxHealthSpinner;
     private JLabel maxHealthLabel;
 
     private boolean confirmed = false;
     private Character newCharacter;
-    private List<Character> characters;
+    private final List<Character> characters;
 
     /**
      * Constructs a new modal dialog to create a character.
@@ -44,6 +44,7 @@ public class AddCharacterMenu extends JDialog {
 
         dexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
         initiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
+        maxHealthSpinner.setModel(new SpinnerNumberModel(1, 1, 2000, 1));
         addCharacterButton.setEnabled(false);
         maxHealthLabel.setVisible(false);
         maxHealthSpinner.setVisible(false);
@@ -67,9 +68,7 @@ public class AddCharacterMenu extends JDialog {
             }
         });
 
-        characterTypeCombo.addActionListener(e -> {
-            updateForMaxHealth();
-        });
+        characterTypeCombo.addActionListener(e -> updateForMaxHealth());
 
         addCharacterButton.addActionListener(e -> {
             String name = characterName.getText().trim();
@@ -78,6 +77,7 @@ public class AddCharacterMenu extends JDialog {
             String type = (String) characterTypeCombo.getSelectedItem();
             String status = (String) deathStatusCombo.getSelectedItem();
 
+            assert type != null;
             if (!type.equalsIgnoreCase("PLAYER")) {
                 int maxHealth = (int) maxHealthSpinner.getValue();
                 newCharacter = new NonePlayerCharacter(name, initiative, dexterity, maxHealth, type, status);
@@ -106,7 +106,9 @@ public class AddCharacterMenu extends JDialog {
     }
 
     private void updateForMaxHealth() {
-        if (!characterTypeCombo.getSelectedItem().equals("PLAYER")) {
+        Object selectedItem = characterTypeCombo.getSelectedItem();
+        assert selectedItem != null;
+        if (!selectedItem.equals("PLAYER")) {
             maxHealthLabel.setVisible(true);
             maxHealthSpinner.setVisible(true);
         } else {

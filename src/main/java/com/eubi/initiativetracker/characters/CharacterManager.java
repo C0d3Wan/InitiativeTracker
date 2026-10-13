@@ -62,7 +62,6 @@ public class CharacterManager {
         boolean wasCurrent = (character == currentCharacter);
         int index = charactersOrdered.indexOf(character);
 
-        character.editCurrentCharacter(false);
         characters.remove(character);
         sortCharacters();
 
@@ -75,7 +74,6 @@ public class CharacterManager {
         currentCharacter = null;
         if (!charactersOrdered.isEmpty()) {
             currentCharacter = charactersOrdered.get(index % charactersOrdered.size());
-            currentCharacter.editCurrentCharacter(true);
         }
         initiativeOrdered = getTurnOrder();
 
@@ -96,13 +94,11 @@ public class CharacterManager {
 
         int nextIndex = 0;
         if (currentCharacter != null) {
-            currentCharacter.editCurrentCharacter(false);
             int currentIndex = charactersOrdered.indexOf(currentCharacter);
             nextIndex = (currentIndex + 1) % charactersOrdered.size();
         }
 
         currentCharacter = charactersOrdered.get(nextIndex);
-        currentCharacter.editCurrentCharacter(true);
 
         initiativeOrdered = getTurnOrder();
     }
@@ -143,30 +139,6 @@ public class CharacterManager {
     }
 
     /**
-     * Safely retrieves a character from the unsorted internal storage list by index.
-     *
-     * @param characterIndex The zero-based position in the insertion list.
-     * @return The {@link Character} at that index, or {@code null} if the index is out of bounds.
-     */
-    public Character getCharacter(int characterIndex) {
-        try {
-            return characters.get(characterIndex);
-        }
-        catch (IndexOutOfBoundsException e) {
-            return null;
-        }
-    }
-
-    /**
-     * Retrieves the character whose combat turn is currently active.
-     *
-     * @return The active {@link Character}, or {@code null} if combat has no participants.
-     */
-    public Character getCurrentCharacter() {
-        return currentCharacter;
-    }
-
-    /**
      * Retrieves the raw, unsorted list of combatants in their original insertion order.
      *
      * @return The mutable master {@link List} of all added characters.
@@ -180,42 +152,4 @@ public class CharacterManager {
      */
     public List<Character> getInitiativeOrder() {return initiativeOrdered;}
 
-    /**
-     * Prints state diagnostics to standard output, detailing active turn holder,
-     * insertion-order list, and initiative-sorted order.
-     *
-     * @param sort {@code true} to force a resort before displaying; {@code false} to print as-is.
-     */
-    public void debugDisplay(boolean sort) {
-        System.out.println("\n=== Character Manager Debug Output ===");
-        if (currentCharacter != null) {
-            System.out.println("Current Turn: " + currentCharacter.toString());
-        }else{
-            System.out.println("Current Turn: " + "N/A");
-        }
-
-        System.out.println("\nOriginal List (" + characters.size() + " characters):");
-        if (characters.isEmpty()) {
-            System.out.println("  [Empty]");
-        } else {
-            for (int i = 0; i < characters.size(); i++) {
-                System.out.printf("  [%d] %s%n", i, characters.get(i).toString());
-            }
-        }
-        System.out.println("\nSorted List (By Initiative Descending):");
-        if (characters.isEmpty() || !sort) {
-            System.out.println(" ");
-        } else {
-            sortCharacters();
-        }
-        if (charactersOrdered.isEmpty()) {
-            System.out.println("  [Empty]");
-        } else {
-            for (int i = 0; i < charactersOrdered.size(); i++) {
-                System.out.printf("  [%d] %s%n", i, charactersOrdered.get(i).toString());
-            }
-        }
-
-        System.out.println("----------------------------------------------------------------------------------------------------------------------");
-    }
 }
