@@ -109,7 +109,7 @@ public class Character {
      * @param id The name string of the character type.
      * @return The matching {@link CharacterType}, or {@link CharacterType#UNKNOWN} if unrecognized.
      */
-    private static CharacterType typeFromString(String id) {
+    static CharacterType typeFromString(String id) {
         return switch (id) {
             case "PLAYER" -> CharacterType.PLAYER;
             case "ENEMY" -> CharacterType.ENEMY;
@@ -124,7 +124,7 @@ public class Character {
      * @param id The name string of the death status.
      * @return The matching {@link DeathStatus}, or {@link DeathStatus#UNKNOWN} if unrecognized.
      */
-    private static DeathStatus deathFromString(String id) {
+    static DeathStatus deathFromString(String id) {
         return switch (id) {
             case "DEAD" -> DeathStatus.DEAD;
             case "ALIVE" -> DeathStatus.ALIVE;
