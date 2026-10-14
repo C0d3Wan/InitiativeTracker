@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=InitiativeTracker
+Comment=Track combat initiatives and encounters
+Exec=InitiativeTracker
+Icon=InitiativeTracker
+Categories=Game;
+Terminal=false
