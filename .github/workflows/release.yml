@@ -48,7 +48,16 @@ jobs:
 
       - name: Inspect AppDir
         run: |
-          ls -R InitiativeTracker
+          echo "=== Permissions ==="
+          ls -la InitiativeTracker/bin
+
+          echo ""
+          echo "=== Files ==="
+          find InitiativeTracker -type f
+
+          echo ""
+          echo "=== Desktop File ==="
+          cat InitiativeTracker/InitiativeTracker.desktop
 
       - name: Build AppImage
         run: |
