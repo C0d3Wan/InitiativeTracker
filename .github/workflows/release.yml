@@ -33,6 +33,14 @@ jobs:
             --main-jar InitiativeTracker.jar \
             --name InitiativeTracker
 
+      - name: Add Desktop File
+        run: |
+          cp packaging/InitiativeTracker.desktop InitiativeTracker/
+
+      - name: Add Icon
+        run: |
+          cp packaging/InitiativeTracker.png InitiativeTracker/
+
       - name: Download linuxdeploy
         run: |
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
@@ -41,8 +49,10 @@ jobs:
       - name: Build AppImage
         run: |
           ./linuxdeploy-x86_64.AppImage \
-            --appdir InitiativeTracker \
-            --output appimage
+          --appdir InitiativeTracker \
+          --desktop-file InitiativeTracker/InitiativeTracker.desktop \
+          --icon-file InitiativeTracker/InitiativeTracker.png \
+          --output appimage
 
       - uses: actions/upload-artifact@v7
         with:
