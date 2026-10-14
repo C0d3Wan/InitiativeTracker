@@ -54,6 +54,10 @@ jobs:
           --icon-file InitiativeTracker/InitiativeTracker.png \
           --output appimage
 
+      - name: Inspect AppDir
+        run: |
+          find InitiativeTracker -type f
+
       - uses: actions/upload-artifact@v7
         with:
           name: linux-installer
