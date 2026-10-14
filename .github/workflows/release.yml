@@ -22,7 +22,7 @@ jobs:
           jpackage \
             --type deb \
             --input target \
-            --main-jar InititativeTracker.jar \
+            --main-jar InitiativeTracker.jar \
             --name InitiativeTracker
 
       - name: Create App Image Directory
