@@ -59,6 +59,15 @@ jobs:
           echo "===== Full Tree ====="
           find InitiativeTracker
 
+      - name: Create AppRun
+        run: |
+          cat > InitiativeTracker/AppRun << 'EOF'
+          #!/bin/sh
+          exec "$APPDIR/bin/InitiativeTracker" "$@"
+          EOF
+
+          chmod +x InitiativeTracker/AppRun
+
       - name: Build AppImage
         run: |
           ./linuxdeploy-x86_64.AppImage \
