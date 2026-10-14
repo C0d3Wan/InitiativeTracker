@@ -46,6 +46,19 @@ jobs:
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           chmod +x linuxdeploy-x86_64.AppImage
 
+      - name: Debug AppDir
+        run: |
+          echo "===== Desktop File ====="
+          cat InitiativeTracker/InitiativeTracker.desktop
+      
+          echo ""
+          echo "===== Executables ====="
+          find InitiativeTracker -type f -executable
+      
+          echo ""
+          echo "===== Full Tree ====="
+          find InitiativeTracker
+
       - name: Build AppImage
         run: |
           ./linuxdeploy-x86_64.AppImage \
@@ -53,10 +66,6 @@ jobs:
           --desktop-file InitiativeTracker/InitiativeTracker.desktop \
           --icon-file InitiativeTracker/InitiativeTracker.png \
           --output appimage
-
-      - name: Inspect AppDir
-        run: |
-          find InitiativeTracker -type f
 
       - uses: actions/upload-artifact@v7
         with:
