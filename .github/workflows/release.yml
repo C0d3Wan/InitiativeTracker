@@ -71,7 +71,7 @@ jobs:
 
       - uses: actions/upload-artifact@v7
         with:
-          name: linux-installer
+          name: linux-packages
           path: |
             *.deb
             InitiativeTracker*.AppImage
@@ -119,7 +119,7 @@ jobs:
       - name: Download Linux Packages
         uses: actions/download-artifact@v8
         with:
-          name: linux-installer
+          name: linux-packages
           path: release
 
       - name: Download Windows Installer
