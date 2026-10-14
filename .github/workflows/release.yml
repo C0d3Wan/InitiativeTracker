@@ -1,8 +1,7 @@
 name: Build Installers
 on:
   push:
-    branches:
-      - main
+    branches: ["main", "master"]
 
 jobs:
   build-linux:
