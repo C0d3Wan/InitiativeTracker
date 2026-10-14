@@ -1,7 +1,13 @@
 name: Build Installers
 on:
+  workflow_dispatch:
+
   push:
-    branches: ["main", "master"]
+    tags:
+      - "v*"
+
+env:
+  IS_RELEASE: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
 jobs:
   build-linux:
@@ -46,19 +52,6 @@ jobs:
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           chmod +x linuxdeploy-x86_64.AppImage
 
-      - name: Debug AppDir
-        run: |
-          echo "===== Desktop File ====="
-          cat InitiativeTracker/InitiativeTracker.desktop
-      
-          echo ""
-          echo "===== Executables ====="
-          find InitiativeTracker -type f -executable
-      
-          echo ""
-          echo "===== Full Tree ====="
-          find InitiativeTracker
-
       - name: Create AppRun
         run: |
           cat > InitiativeTracker/AppRun << 'EOF'
@@ -81,8 +74,7 @@ jobs:
           name: linux-installer
           path: |
             *.deb
-            *.AppImage
-
+            InitiativeTracker*.AppImage
 
   build-windows:
     runs-on: windows-latest
@@ -111,3 +103,35 @@ jobs:
           name: windows-installer
           path: "*.exe"
 
+  release:
+    needs:
+      - build-linux
+      - build-windows
+
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Linux Packages
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-packages
+          path: release
+
+      - name: Download Windows Installer
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: release
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/*.exe
+            release/*.deb
+            release/*.AppImage
