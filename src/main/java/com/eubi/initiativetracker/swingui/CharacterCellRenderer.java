@@ -29,10 +29,13 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
     private final JPanel deathSavePanel = new JPanel();
     private final JLabel npcHealth = new JLabel();
 
+    private final UIManager uimanager;
+
     /**
      * Constructs a new CharacterCellRenderer and configures subcomponents and layouts.
      */
-    public CharacterCellRenderer() {
+    public CharacterCellRenderer(UIManager uiManager) {
+        this.uimanager = uiManager;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.WEST;

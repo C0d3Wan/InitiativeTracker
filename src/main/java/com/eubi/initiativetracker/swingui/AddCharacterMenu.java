@@ -94,6 +94,7 @@ public class AddCharacterMenu extends JDialog {
                 newCharacter = new Character(name, initiative, dexterity, type, status);
             }
             confirmed = true;
+            characterMap.put(name, (Character) newCharacter);
             characters.add(newCharacter);
             savedCharacterLabel.setVisible(true);
             resetWidgets();

@@ -41,7 +41,7 @@ public class UIManager {
         this.deathSaveLabel = deathSaveLabel;
 
         initiativeList.setModel(characterListModel);
-        initiativeList.setCellRenderer(new CharacterCellRenderer());
+        initiativeList.setCellRenderer(new CharacterCellRenderer(this));
     }
 
     /**
