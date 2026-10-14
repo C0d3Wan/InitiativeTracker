@@ -48,7 +48,7 @@ jobs:
 
       - name: Inspect AppDir
         run: |
-          find InitiativeTracker -type f
+          ls -R InitiativeTracker
 
       - name: Build AppImage
         run: |
