@@ -80,38 +80,6 @@
                     <target>14</target>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.6.4</version>
-                <executions>
-                    <execution>
-                        <id>create-native-executable</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${java.home}/bin/jpackage</executable>
-                            <arguments>
-                                <argument>--name</argument>
-                                <argument>InitiativeTracker</argument>
-                                <argument>--input</argument>
-                                <argument>${project.build.directory}</argument>
-                                <argument>--main-jar</argument>
-                                <argument>${project.build.finalName}.jar</argument>
-                                <argument>--main-class</argument>
-                                <argument>${main.class}</argument>
-                                <argument>--type</argument>
-                                <argument>app-image</argument>
-                                <argument>--dest</argument>
-                                <argument>${project.build.directory}/dist</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
 
         <pluginManagement>
