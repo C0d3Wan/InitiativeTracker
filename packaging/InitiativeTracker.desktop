@@ -2,7 +2,7 @@
 Type=Application
 Name=InitiativeTracker
 Comment=Track combat initiatives and encounters
-Exec=bin/InitiativeTracker
+Exec= InitiativeTracker/bin/InitiativeTracker
 Icon=InitiativeTracker
 Categories=Game;
 Terminal=false

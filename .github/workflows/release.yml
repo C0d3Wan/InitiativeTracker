@@ -46,18 +46,7 @@ jobs:
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           chmod +x linuxdeploy-x86_64.AppImage
 
-      - name: Inspect AppDir
-        run: |
-          echo "=== Permissions ==="
-          ls -la InitiativeTracker/bin
 
-          echo ""
-          echo "=== Files ==="
-          find InitiativeTracker -type f
-
-          echo ""
-          echo "=== Desktop File ==="
-          cat InitiativeTracker/InitiativeTracker.desktop
 
       - name: Build AppImage
         run: |
