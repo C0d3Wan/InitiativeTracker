@@ -50,11 +50,14 @@ jobs:
             --input target \
             --main-jar InitiativeTracker.jar \
             --name InitiativeTracker
-            --icon packaging/InitiativeTracker.png
 
       - name: Add Desktop File
         run: |
           cp packaging/InitiativeTracker.desktop InitiativeTracker/
+
+      - name: Add App Icon
+        run: |
+          cp packaging/InitiativeTracker.png InitiativeTracker/
 
       - name: Download linuxdeploy
         run: |
