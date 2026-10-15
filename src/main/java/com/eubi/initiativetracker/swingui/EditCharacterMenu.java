@@ -1,6 +1,7 @@
 package com.eubi.initiativetracker.swingui;
 
 import com.eubi.initiativetracker.characters.Character;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -12,17 +13,17 @@ import java.util.*;
  * of an existing character.
  */
 public class EditCharacterMenu extends JDialog {
-    private JPanel editCharacterPane;
-    private JLabel characterNameLabel;
-    private JSpinner newInitiativeSpinner;
-    private JLabel initiativeLabel;
-    private JLabel dexterityLabel;
-    private JLabel deathStatusLabel;
-    private JSpinner newDexteritySpinner;
-    private JComboBox<String> newDeathStatusCombo;
-    private JComboBox<String> charactersCombo;
-    private JButton saveEditButton;
-    private JLabel savedCharacterLabel;
+    private final JPanel editCharacterPane = new JPanel();
+    private final JLabel characterNameLabel = new JLabel();
+    private final JSpinner newInitiativeSpinner = new JSpinner();
+    private final JLabel oldInitiativeLabel = new JLabel();
+    private final JLabel oldDexterityLabel = new JLabel();
+    private final JLabel oldDeathStatusLabel = new JLabel();
+    private final JSpinner newDexteritySpinner = new JSpinner();
+    private final JComboBox<String> newDeathStatusCombo = new JComboBox<>();
+    private final JComboBox<String> charactersCombo = new JComboBox<>();
+    private final JButton saveEditButton = new JButton("Save Edit");
+    private final JLabel savedCharacterLabel = new JLabel("Character Saved!!");
 
     private final Map<String, Character> characterMap;
 
@@ -35,8 +36,8 @@ public class EditCharacterMenu extends JDialog {
     public EditCharacterMenu(Frame parent, Map<String, Character> characterMap) {
         super(parent, "Edit Character", true);
         this.characterMap = characterMap;
+        setupMenu();
 
-        setContentPane(editCharacterPane);
         setTitle("Edit Character");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         pack();
@@ -46,6 +47,56 @@ public class EditCharacterMenu extends JDialog {
 
         charactersCombo.addActionListener(e -> updateDetails());
         saveEditButton.addActionListener(e -> saveEditedCharacter());
+    }
+
+    private void setupMenu() {
+        Dimension windowSize = new Dimension(400, 240);
+        editCharacterPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][l][r, grow, push]", "[][][][][][][][]"));
+        editCharacterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        setMinimumSize(windowSize);
+
+        setContentPane(editCharacterPane);
+
+        final DefaultComboBoxModel<String> charactersComboModel = new DefaultComboBoxModel<>();
+        charactersCombo.setModel(charactersComboModel);
+
+        final JLabel characterEditLabel = new JLabel("Characters To Edit");
+        final JSeparator separator1 = new JSeparator();
+        final JLabel nameLabel = new JLabel("Name:");
+        final JLabel initiativeLabel = new JLabel("Initiative:");
+        final JLabel dexterityLabel = new JLabel("Dexterity:");
+        final JLabel deathStatusLabel = new JLabel("Death Status:");
+
+        newDexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
+        newInitiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
+
+        final DefaultComboBoxModel<String> deathStatusComboModel = new DefaultComboBoxModel<>();
+        deathStatusComboModel.addElement("ALIVE");
+        deathStatusComboModel.addElement("DEAD");
+        deathStatusComboModel.addElement("DOWN");
+        newDeathStatusCombo.setModel(deathStatusComboModel);
+
+        saveEditButton.setFocusPainted(false);
+        savedCharacterLabel.setVisible(false);
+
+        editCharacterPane.add(characterEditLabel, "cell 0 0, span, growx");
+        editCharacterPane.add(separator1, "cell 0 1, span, growx");
+        editCharacterPane.add(nameLabel, "cell 0 2, span, growx");
+        editCharacterPane.add(initiativeLabel, "cell 0 3");
+        editCharacterPane.add(dexterityLabel, "cell 0 4");
+        editCharacterPane.add(deathStatusLabel, "cell 0 5");
+        editCharacterPane.add(savedCharacterLabel, "cell 0 7, span, growx, hidemode 3");
+
+        editCharacterPane.add(characterNameLabel, "cell 1 2");
+        editCharacterPane.add(oldInitiativeLabel, "cell 1 3");
+        editCharacterPane.add(oldDexterityLabel, "cell 1 4");
+        editCharacterPane.add(oldDeathStatusLabel, "cell 1 5");
+
+        editCharacterPane.add(charactersCombo, "cell 2 0, growx");
+        editCharacterPane.add(newInitiativeSpinner, "cell 2 3, growx");
+        editCharacterPane.add(newDexteritySpinner, "cell 2 4, growx");
+        editCharacterPane.add(newDeathStatusCombo, "cell 2 5, growx");
+        editCharacterPane.add(saveEditButton, "cell 2 6, growx");
     }
 
     /**
@@ -85,16 +136,15 @@ public class EditCharacterMenu extends JDialog {
      * and initializes selection state.
      */
     private void updateCharactersCombo() {
-        newDexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
-        newInitiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
+
         savedCharacterLabel.setVisible(false);
 
         if (characterMap.isEmpty()) {
             charactersCombo.addItem("No Characters");
             characterNameLabel.setText("Null");
-            initiativeLabel.setText("Null");
-            dexterityLabel.setText("Null");
-            deathStatusLabel.setText("Null");
+            oldInitiativeLabel.setText("Null");
+            oldDexterityLabel.setText("Null");
+            oldDeathStatusLabel.setText("Null");
             saveEditButton.setEnabled(false);
         } else {
             saveEditButton.setEnabled(true);
@@ -127,9 +177,9 @@ public class EditCharacterMenu extends JDialog {
         assert currentCharacter != null;
         Map<String, Object> currentCharacterData = currentCharacter.getCharacterData();
         characterNameLabel.setText(currentCharacterData.get("Name").toString());
-        initiativeLabel.setText(currentCharacterData.get("Initiative").toString());
-        dexterityLabel.setText(currentCharacterData.get("Dexterity").toString());
-        deathStatusLabel.setText(currentCharacterData.get("DeathStatus").toString());
+        oldInitiativeLabel.setText(currentCharacterData.get("Initiative").toString());
+        oldDexterityLabel.setText(currentCharacterData.get("Dexterity").toString());
+        oldDeathStatusLabel.setText(currentCharacterData.get("DeathStatus").toString());
 
         newInitiativeSpinner.setValue(currentCharacterData.get("Initiative"));
         newDexteritySpinner.setValue(currentCharacterData.get("Dexterity"));
@@ -151,199 +201,4 @@ public class EditCharacterMenu extends JDialog {
         String name = charactersCombo.getSelectedItem().toString();
         return characterMap.get(name);
     }
-
-    {
-// GUI initializer generated by IntelliJ IDEA GUI Designer
-// >>> IMPORTANT!! <<<
-// DO NOT EDIT OR ADD ANY CODE HERE!
-        $$$setupUI$$$();
-    }
-
-    /**
-     * Method generated by IntelliJ IDEA GUI Designer
-     * >>> IMPORTANT!! <<<
-     * DO NOT edit this method OR call it in your code!
-     *
-     * @noinspection ALL
-     */
-    private void $$$setupUI$$$() {
-        editCharacterPane = new JPanel();
-        editCharacterPane.setLayout(new GridBagLayout());
-        editCharacterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        final JLabel label1 = new JLabel();
-        label1.setText("Name");
-        GridBagConstraints gbc;
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        editCharacterPane.add(label1, gbc);
-        final JLabel label2 = new JLabel();
-        label2.setText("Initiative");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        editCharacterPane.add(label2, gbc);
-        final JLabel label3 = new JLabel();
-        label3.setText("Dexterity");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        editCharacterPane.add(label3, gbc);
-        final JLabel label4 = new JLabel();
-        label4.setText("Death Status");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        editCharacterPane.add(label4, gbc);
-        final JSeparator separator1 = new JSeparator();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 5;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        editCharacterPane.add(separator1, gbc);
-        characterNameLabel = new JLabel();
-        characterNameLabel.setEnabled(true);
-        characterNameLabel.setText("Label");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 2;
-        gbc.gridwidth = 3;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        editCharacterPane.add(characterNameLabel, gbc);
-        newInitiativeSpinner = new JSpinner();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 4;
-        gbc.gridy = 3;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        editCharacterPane.add(newInitiativeSpinner, gbc);
-        initiativeLabel = new JLabel();
-        initiativeLabel.setText("Label");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 3;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        editCharacterPane.add(initiativeLabel, gbc);
-        dexterityLabel = new JLabel();
-        dexterityLabel.setText("Label");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 4;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        editCharacterPane.add(dexterityLabel, gbc);
-        deathStatusLabel = new JLabel();
-        deathStatusLabel.setText("Label");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 5;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        editCharacterPane.add(deathStatusLabel, gbc);
-        newDexteritySpinner = new JSpinner();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 4;
-        gbc.gridy = 4;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        editCharacterPane.add(newDexteritySpinner, gbc);
-        newDeathStatusCombo = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
-        defaultComboBoxModel1.addElement("ALIVE");
-        defaultComboBoxModel1.addElement("DEAD");
-        defaultComboBoxModel1.addElement("DOWN");
-        newDeathStatusCombo.setModel(defaultComboBoxModel1);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 4;
-        gbc.gridy = 5;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        editCharacterPane.add(newDeathStatusCombo, gbc);
-        charactersCombo = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
-        charactersCombo.setModel(defaultComboBoxModel2);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 4;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        editCharacterPane.add(charactersCombo, gbc);
-        final JLabel label5 = new JLabel();
-        label5.setText("Character to Edit");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 4;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        editCharacterPane.add(label5, gbc);
-        saveEditButton = new JButton();
-        saveEditButton.setText("Save Edit");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 4;
-        gbc.gridy = 6;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 0, 5, 0);
-        editCharacterPane.add(saveEditButton, gbc);
-        savedCharacterLabel = new JLabel();
-        savedCharacterLabel.setText("Character Saved!!");
-        savedCharacterLabel.setVisible(true);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 7;
-        gbc.gridwidth = 5;
-        gbc.weighty = 1.0;
-        gbc.insets = new Insets(5, 0, 0, 0);
-        editCharacterPane.add(savedCharacterLabel, gbc);
-        final JPanel spacer1 = new JPanel();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 5;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        editCharacterPane.add(spacer1, gbc);
-        final JPanel spacer2 = new JPanel();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 5;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        editCharacterPane.add(spacer2, gbc);
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    public JComponent $$$getRootComponent$$$() {
-        return editCharacterPane;
-    }
-
 }
