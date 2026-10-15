@@ -114,7 +114,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
 
         setOpaque(true);
 
-        if (!characterData.get("Type").toString().equals("PLAYER")) {
+        if (!isPlayer(characterData)) {
             NonePlayerCharacter npc = (NonePlayerCharacter) character;
             npcHealth.setText(npc.getHealth() + "/" + npc.getMaxHealth());
         } else {
@@ -133,7 +133,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         } else {
             deathSavePanel.setVisible(false);
             clearDeathSaves();
-
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
                 setForeground(list.getSelectionForeground());
@@ -144,6 +143,10 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         }
 
         return this;
+    }
+
+    private boolean isPlayer(Map<String, Object> characterData) {
+        return characterData.get("Type").toString().equals("PLAYER");
     }
 
     /**
