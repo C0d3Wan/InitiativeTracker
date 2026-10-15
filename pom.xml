@@ -104,7 +104,7 @@
             </plugins>
         </pluginManagement>
 
-        <!--<finalName>InitiativeTracker</finalName> -->
+        <finalName>InitiativeTracker</finalName>
     </build>
 
 </project>
