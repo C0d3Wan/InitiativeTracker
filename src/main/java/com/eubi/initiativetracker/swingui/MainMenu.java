@@ -24,6 +24,8 @@ public class MainMenu extends JFrame {
     private final JLabel deathSaveLabel = new JLabel("Death Saves:");
     private final JButton editNPCHealthButton = new JButton("Edit NPC Health");
 
+    private final JMenuBar menuBar = new JMenuBar();
+
     private final UIManager uiManager;
 
     /**
@@ -34,17 +36,7 @@ public class MainMenu extends JFrame {
     public MainMenu(CharacterManager characterManager) {
         uiManager = new UIManager(this, characterManager, initiativeList, passButton, failButton, deathSaveLabel);
         setupMainMenu();
-
-        JMenuBar menuBar = new JMenuBar();
-
-        JMenu fileMenu = new JMenu("File");
-        JMenu viewMenu = new JMenu("View");
-        JMenuItem exitItem = new JMenuItem("Exit");
-
-        fileMenu.add(exitItem);
-        menuBar.add(fileMenu);
-
-        menuBar.add(viewMenu);
+        setupMenuBar();
 
         setJMenuBar(menuBar);
         setContentPane(mainMenuPane);
@@ -52,12 +44,6 @@ public class MainMenu extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
-
-
-
-        deathSaveLabel.setVisible(false);
-        passButton.setVisible(false);
-        failButton.setVisible(false);
 
         addCharacterButton.addActionListener(e -> uiManager.openAddCharacterMenu());
         editCharacterButton.addActionListener(e -> uiManager.openEditCharacterMenu());
@@ -103,5 +89,20 @@ public class MainMenu extends JFrame {
         mainMenuPane.add(failButton, "cell 3 3, growx");
 
         mainMenuPane.add(scrollPane1, "cell 0 4, span, grow");
+
+        deathSaveLabel.setVisible(false);
+        passButton.setVisible(false);
+        failButton.setVisible(false);
+    }
+
+    private void setupMenuBar() {
+        JMenu fileMenu = new JMenu("File");
+        JMenu viewMenu = new JMenu("View");
+        JMenuItem exitItem = new JMenuItem("Exit");
+
+        fileMenu.add(exitItem);
+        menuBar.add(fileMenu);
+
+        menuBar.add(viewMenu);
     }
 }
