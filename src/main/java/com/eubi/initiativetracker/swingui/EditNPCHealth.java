@@ -81,7 +81,9 @@ public class EditNPCHealth extends JDialog {
         Map<String, Object> currentCharacterData = currentCharacter.getCharacterData();
         int health = currentCharacter.getHealth();
         int maxHealth = currentCharacter.getMaxHealth();
-        changeValueSpinner.setModel(new SpinnerNumberModel(0, -maxHealth, maxHealth, 1));
+        int maxChangeAmount = maxHealth - health;
+        int minChangeAmount = -health;
+        changeValueSpinner.setModel(new SpinnerNumberModel(0, minChangeAmount, maxChangeAmount, 1));
 
         nameLabel.setText(currentCharacterData.get("Name").toString());
         currentHealth.setText(String.valueOf(health));
@@ -108,6 +110,7 @@ public class EditNPCHealth extends JDialog {
 
         saveEditLabel.setVisible(true);
         pack();
+        updateCharactersDetails();
     }
 
     {
@@ -195,7 +198,7 @@ public class EditNPCHealth extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         editNPCHealth.add(spacer2, gbc);
         final JLabel label3 = new JLabel();
-        label3.setText("Change");
+        label3.setText("Change (-/+)");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 3;

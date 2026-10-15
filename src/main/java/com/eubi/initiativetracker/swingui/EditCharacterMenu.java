@@ -73,6 +73,7 @@ public class EditCharacterMenu extends JDialog {
         if (!newDeathStatus.equals(currentCharacterData.get("DeathStatus"))) {
             currentCharacter.editDeathStatus(newDeathStatus);
         }
+        updateDetails();
         savedCharacterLabel.setVisible(true);
         pack();
 

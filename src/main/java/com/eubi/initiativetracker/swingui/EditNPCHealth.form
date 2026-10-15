@@ -75,7 +75,7 @@
           <gridbag top="2" left="0" bottom="2" right="0" weightx="0.0" weighty="1.0"/>
         </constraints>
         <properties>
-          <text value="Change"/>
+          <text value="Change (-/+)"/>
         </properties>
       </component>
       <component id="db2a3" class="javax.swing.JLabel" binding="currentHealth">
