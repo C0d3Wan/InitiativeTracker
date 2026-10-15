@@ -165,6 +165,7 @@ public class MainMenu extends JFrame {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(2, 0, 2, 1);
         mainMenuPane.add(addCharacterButton, gbc);
@@ -187,6 +188,7 @@ public class MainMenu extends JFrame {
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 0;
+        gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(2, 1, 2, 1);
         mainMenuPane.add(editNPCHealthButton, gbc);

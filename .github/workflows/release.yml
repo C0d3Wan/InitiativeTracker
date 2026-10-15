@@ -91,6 +91,13 @@ jobs:
       - name: Build jar
         run: mvn clean package
 
+      - name: Show repository structure
+        run: |
+          pwd
+          ls
+          find . -type f | sort
+
+
       - name: Create EXE
         run: |
           jpackage `

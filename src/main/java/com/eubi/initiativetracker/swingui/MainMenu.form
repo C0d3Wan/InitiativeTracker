@@ -100,7 +100,7 @@
       <component id="4e0c0" class="javax.swing.JButton" binding="addCharacterButton" default-binding="true">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag top="2" left="0" bottom="2" right="1" weightx="0.0" weighty="0.0"/>
+          <gridbag top="2" left="0" bottom="2" right="1" weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
           <borderPainted value="true"/>
@@ -128,7 +128,7 @@
       <component id="a0c10" class="javax.swing.JButton" binding="editNPCHealthButton" default-binding="true">
         <constraints>
           <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag top="2" left="1" bottom="2" right="1" weightx="0.0" weighty="0.0"/>
+          <gridbag top="2" left="1" bottom="2" right="1" weightx="1.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Edit NPC Health"/>
