@@ -33,11 +33,25 @@ public class MainMenu extends JFrame {
     public MainMenu(CharacterManager characterManager) {
         uiManager = new UIManager(this, characterManager, initiativeList, passButton, failButton, deathSaveLabel);
 
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("File");
+        JMenu viewMenu = new JMenu("View");
+        JMenuItem exitItem = new JMenuItem("Exit");
+
+        fileMenu.add(exitItem);
+        menuBar.add(fileMenu);
+
+        menuBar.add(viewMenu);
+
+        setJMenuBar(menuBar);
         setContentPane(mainMenuPane);
         setTitle("Initiative Tracker");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
+
+
 
         deathSaveLabel.setVisible(false);
         passButton.setVisible(false);

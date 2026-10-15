@@ -2,6 +2,7 @@ package com.eubi.initiativetracker.swingui;
 
 import com.eubi.initiativetracker.characters.Character;
 import com.eubi.initiativetracker.characters.NonePlayerCharacter;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -29,24 +30,64 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
     private final JPanel deathSavePanel = new JPanel();
     private final JLabel npcHealth = new JLabel();
 
-    private final UIManager uimanager;
+    private final UIManager uiManager;
 
     /**
      * Constructs a new CharacterCellRenderer and configures subcomponents and layouts.
      */
     public CharacterCellRenderer(UIManager uiManager) {
-        this.uimanager = uiManager;
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.WEST;
+        this.uiManager = uiManager;
+        setLayout(new MigLayout("insets 2 2 2 12, fillx, aligny center", "[grow, push][gap 8][gap 8][gap 8][gap 8][]", "[]"));
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(2, 2, 2, 12), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 
-        gbc.weightx = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        setupLabels();
+        setupDeathSavePanel();
+    }
 
-        setupLabels(gbc);
+    /**
+     * Instantiates and arranges the character information labels on the renderer panel.
+     */
+    private void setupLabels() {
+        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 20));
+        initiativeLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        characterTypeLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        npcHealth.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        deathStatusLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
 
-        setupRadioButtons();
+        add(nameLabel, "growx");
+        add(initiativeLabel);
+        add(characterTypeLabel);
+        add(npcHealth);
+        add(deathStatusLabel);
+        add(deathSavePanel);
+    }
+
+    private void setupDeathSavePanel() {
+        deathSavePanel.setLayout(new MigLayout("insets 0, gap 2 2", "[right][][][]", "[][]"));
+        deathSavePanel.setOpaque(false);
+
+        JRadioButton[] passes = {deathPass1, deathPass2, deathPass3};
+        JRadioButton[] fails = {deathFail1, deathFail2, deathFail3};
+
+        for (JRadioButton pass : passes) {
+            pass.setOpaque(false);
+            pass.setText("");
+        }
+        for (JRadioButton fail : fails) {
+            fail.setOpaque(false);
+            fail.setText("");
+        }
+
+        JLabel passLabel = new JLabel("Pass");
+        deathSavePanel.add(deathPass1);
+        deathSavePanel.add(deathPass2);
+        deathSavePanel.add(deathPass3, "wrap");
+
+        JLabel failLabel = new JLabel("Fail");
+        deathSavePanel.add(failLabel, "gapright 4");
+        deathSavePanel.add(deathFail1);
+        deathSavePanel.add(deathFail2);
+        deathSavePanel.add(deathFail3);
     }
 
     /**
@@ -82,7 +123,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         }
 
         if (index == 0) {
-            setBackground(Color.green);
+            setBackground(new Color(38, 162, 105));
             if ("DOWN".equals(characterData.get("DeathStatus").toString())) {
                 deathSavePanel.setVisible(true);
                 updateDeathSaves(character);
@@ -118,80 +159,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         deathFail3.setSelected(false);
     }
 
-    /**
-     * Instantiates and arranges the character information labels on the renderer panel.
-     *
-     * @param gbc The layout constraints applied to the labels.
-     */
-    private void setupLabels(GridBagConstraints gbc) {
-        Font nameLabelFont = this.$$$getFont$$$("SansSerif", Font.BOLD, 20, nameLabel.getFont());
-        if (nameLabelFont != null) nameLabel.setFont(nameLabelFont);
-        nameLabel.setText("Label");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridheight = 3;
-        gbc.weighty = 5.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 2, 0, 4);
-        add(nameLabel, gbc);
 
-        final JPanel spacer1 = new JPanel();
-        spacer1.setOpaque(false);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        add(spacer1, gbc);
-
-        Font initiativeLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, initiativeLabel.getFont());
-        if (initiativeLabelFont != null) initiativeLabel.setFont(initiativeLabelFont);
-        initiativeLabel.setText("Label");
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        gbc.gridheight = 3;
-        gbc.weighty = 1.0;
-        gbc.insets = new Insets(0, 4, 0, 4);
-        add(initiativeLabel, gbc);
-
-        Font characterTypeLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, characterTypeLabel.getFont());
-        if (characterTypeLabelFont != null) characterTypeLabel.setFont(characterTypeLabelFont);
-        characterTypeLabel.setText("Label");
-        gbc.gridx = 3;
-        gbc.gridy = 0;
-        gbc.gridheight = 3;
-        gbc.weighty = 1.0;
-        gbc.insets = new Insets(0, 4, 0, 4);
-        add(characterTypeLabel, gbc);
-
-        Font npcHealthFont = this.$$$getFont$$$("SansSerif", Font.BOLD, 12, nameLabel.getFont());
-        if (nameLabelFont != null) npcHealth.setFont(npcHealthFont);
-        npcHealth.setText("Label");
-        gbc.gridx = 4;
-        gbc.gridy = 0;
-        gbc.gridheight = 3;
-        gbc.weighty = 1.0;
-        gbc.insets = new Insets(0, 4, 0, 4);
-        add(npcHealth, gbc);
-
-        Font deathStatusLabelFont = this.$$$getFont$$$("SansSerif", Font.PLAIN, 14, deathStatusLabel.getFont());
-        if (deathStatusLabelFont != null) deathStatusLabel.setFont(deathStatusLabelFont);
-        deathStatusLabel.setText("Label");
-        gbc.gridx = 5;
-        gbc.gridy = 0;
-        gbc.gridheight = 3;
-        gbc.weighty = 1.0;
-        gbc.insets = new Insets(0, 4, 0, 4);
-        add(deathStatusLabel, gbc);
-
-        deathSavePanel.setLayout(new GridBagLayout());
-        deathSavePanel.setOpaque(false);
-        gbc.gridx = 6;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.gridheight = 3;
-        gbc.weighty = 1.0;
-        gbc.insets = new Insets(0, 4, 0, 4);
-        add(deathSavePanel, gbc);
-    }
 
     /**
      * Initializes and positions the pass and fail death save indicator radio buttons.
