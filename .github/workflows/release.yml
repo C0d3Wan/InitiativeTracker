@@ -29,7 +29,8 @@ jobs:
             --type deb \
             --input target \
             --main-jar InitiativeTracker.jar \
-            --name InitiativeTracker
+            --name InitiativeTracker \
+            --icon packaging/icon.png
 
       - name: Create App Image Directory
         run: |
@@ -96,7 +97,9 @@ jobs:
             --type exe `
             --input target `
             --main-jar InitiativeTracker.jar `
-            --name InitiativeTracker
+            --name InitiativeTracker `
+            --icon packaging/icon.ico `
+            --win-menu
 
       - uses: actions/upload-artifact@v7
         with:
