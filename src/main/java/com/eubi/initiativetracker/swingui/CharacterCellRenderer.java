@@ -32,8 +32,8 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
      * Constructs a new CharacterCellRenderer and configures subcomponents and layouts.
      */
     public CharacterCellRenderer() {
-        setLayout(new MigLayout("insets 2 2 2 2, fillx, aligny center", "[grow, push]12[]12[]12[]12[][]", "[]"));
-        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(2, 2, 2, 12), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        setLayout(new MigLayout("insets 0 2 0 2, fillx, aligny center", "[grow, push]12[]12[]12[]12[][]", "[]"));
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 
         setupLabels();
         setupDeathSavePanel();
@@ -49,12 +49,12 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         npcHealth.setFont(new Font("SansSerif", Font.PLAIN, 12));
         deathStatusLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
 
-        add(nameLabel, "growx");
-        add(initiativeLabel);
-        add(characterTypeLabel);
-        add(npcHealth);
-        add(deathStatusLabel);
-        add(deathSavePanel, "hidemode 3");
+        add(nameLabel, "growx, aligny center");
+        add(initiativeLabel, "aligny center");
+        add(characterTypeLabel, "aligny center");
+        add(npcHealth, "aligny center");
+        add(deathStatusLabel, "aligny center");
+        add(deathSavePanel, "hidemode 3, aligny center");
     }
 
     /**
