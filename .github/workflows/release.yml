@@ -33,7 +33,7 @@ jobs:
           jpackage \
             --type deb \
             --input target \
-            --main-jar InitiativeTracker.jar \
+            --main-jar InitiativeTracker*.jar \
             --name InitiativeTracker \
             --icon packaging/InitiativeTracker.png
 
@@ -42,7 +42,7 @@ jobs:
           jpackage \
             --type app-image \
             --input target \
-            --main-jar InitiativeTracker.jar \
+            --main-jar InitiativeTracker*.jar \
             --name InitiativeTracker
 
       - name: Add Desktop File
@@ -101,7 +101,7 @@ jobs:
           jpackage `
             --type exe `
             --input target `
-            --main-jar InitiativeTracker.jar `
+            --main-jar InitiativeTracker*.jar `
             --name InitiativeTracker `
             --icon packaging/InitiativeTracker.ico `
             --win-menu
