@@ -10,21 +10,22 @@ import java.awt.*;
 
 import com.eubi.initiativetracker.characters.Character;
 import com.eubi.initiativetracker.characters.NonePlayerCharacter;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * Modal dialog interface for creating and adding a new character to the initiative tracker.
  */
 public class AddCharacterMenu extends JDialog {
-    private JPanel addCharacterPane;
-    private JTextField characterName;
-    private JComboBox<String> characterTypeCombo;
-    private JSpinner initiativeSpinner;
-    private JSpinner dexteritySpinner;
-    private JButton addCharacterButton;
-    private JComboBox<String> deathStatusCombo;
-    private JSpinner maxHealthSpinner;
-    private JLabel maxHealthLabel;
-    private JLabel savedCharacterLabel;
+    private final JPanel addCharacterPane = new JPanel();
+    private final JTextField characterName = new JTextField();
+    private final JSpinner initiativeSpinner = new JSpinner();
+    private final JSpinner dexteritySpinner= new JSpinner();
+    private final JComboBox<String> characterTypeCombo = new JComboBox<>();
+    private final JSpinner maxHealthSpinner = new JSpinner();
+    private final JLabel maxHealthLabel = new JLabel("Max Health");
+    private final JComboBox<String> deathStatusCombo = new JComboBox<>();
+    private final JButton addCharacterButton = new JButton("Add character");
+    private final JLabel savedCharacterLabel = new JLabel("Character Saved!!!");
 
     private boolean confirmed = false;
     private final List<Character> characters = new ArrayList<>();
@@ -39,19 +40,11 @@ public class AddCharacterMenu extends JDialog {
     public AddCharacterMenu(Frame parent, Map<String, Character> characterMap) {
         super(parent, "Add Character", true);
         this.characterMap = characterMap;
+        setupMenu();
 
-        setContentPane(addCharacterPane);
         setTitle("Add Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        dexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
-        initiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
-        maxHealthSpinner.setModel(new SpinnerNumberModel(1, 1, 2000, 1));
-        addCharacterButton.setEnabled(false);
-        maxHealthLabel.setVisible(false);
-        maxHealthSpinner.setVisible(false);
-        savedCharacterLabel.setVisible(false);
 
         pack();
 
@@ -73,33 +66,88 @@ public class AddCharacterMenu extends JDialog {
         });
 
         characterTypeCombo.addActionListener(e -> updateForMaxHealth());
+        addCharacterButton.addActionListener(e -> saveCharacter());
+    }
 
-        addCharacterButton.addActionListener(e -> {
-            String name = characterName.getText().trim();
-            int initiative = (int) initiativeSpinner.getValue();
-            int dexterity = (int) dexteritySpinner.getValue();
-            String type = (String) characterTypeCombo.getSelectedItem();
-            String status = (String) deathStatusCombo.getSelectedItem();
+    private void saveCharacter() {
+        String name = characterName.getText().trim();
+        int initiative = (int) initiativeSpinner.getValue();
+        int dexterity = (int) dexteritySpinner.getValue();
+        String type = (String) characterTypeCombo.getSelectedItem();
+        String status = (String) deathStatusCombo.getSelectedItem();
 
-            if (name.length() > 16) {
-                name = name.substring(0, 14) + "...";
-            }
+        if (name.length() > 16) {
+            name = name.substring(0, 14) + "...";
+        }
 
-            assert type != null;
-            Character newCharacter;
-            if (!type.equalsIgnoreCase("PLAYER")) {
-                int maxHealth = (int) maxHealthSpinner.getValue();
-                newCharacter = new NonePlayerCharacter(name, initiative, dexterity, maxHealth, type, status);
-            } else {
-                newCharacter = new Character(name, initiative, dexterity, type, status);
-            }
-            confirmed = true;
-            characterMap.put(name, (Character) newCharacter);
-            characters.add(newCharacter);
-            savedCharacterLabel.setVisible(true);
-            resetWidgets();
-            pack();
-        });
+        assert type != null;
+        Character newCharacter;
+        if (!type.equalsIgnoreCase("PLAYER")) {
+            int maxHealth = (int) maxHealthSpinner.getValue();
+            newCharacter = new NonePlayerCharacter(name, initiative, dexterity, maxHealth, type, status);
+        } else {
+            newCharacter = new Character(name, initiative, dexterity, type, status);
+        }
+        confirmed = true;
+        characterMap.put(name, newCharacter);
+        characters.add(newCharacter);
+        savedCharacterLabel.setVisible(true);
+        resetWidgets();
+        pack();
+    }
+
+    private void setupMenu() {
+        Dimension windowSize = new Dimension(400,220);
+        addCharacterPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][center, grow, push][right, grow]", "[][][][][][][][]"));
+        addCharacterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        setMinimumSize(windowSize);
+
+        setContentPane(addCharacterPane);
+
+        final JLabel characterNameLabel = new JLabel("Character Name:");
+        final JLabel initiativeLabel = new JLabel("Initiative:");
+        final JLabel dexterityLabel = new JLabel("Dexterity (0-30):");
+        final JLabel characterTypeLabel = new JLabel("Character Type:");
+        final JLabel deathStatusLabel = new JLabel("Death Status");
+
+        initiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
+        dexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
+        maxHealthSpinner.setModel(new SpinnerNumberModel(1, 1, 2000, 1));
+
+        final DefaultComboBoxModel<String> characterTypeComboModel = new DefaultComboBoxModel<>();
+        characterTypeComboModel.addElement("PLAYER");
+        characterTypeComboModel.addElement("ENEMY");
+        characterTypeComboModel.addElement("ALLY");
+        characterTypeCombo.setModel(characterTypeComboModel);
+
+        final DefaultComboBoxModel<String> deathStatusComboModel = new DefaultComboBoxModel<>();
+        deathStatusComboModel.addElement("ALIVE");
+        deathStatusComboModel.addElement("DEAD");
+        deathStatusComboModel.addElement("DOWN");
+        deathStatusCombo.setModel(deathStatusComboModel);
+
+        addCharacterButton.setFocusPainted(false);
+        addCharacterButton.setEnabled(false);
+        maxHealthLabel.setVisible(false);
+        maxHealthSpinner.setVisible(false);
+        savedCharacterLabel.setVisible(false);
+
+        addCharacterPane.add(characterNameLabel, "cell 0 0");
+        addCharacterPane.add(initiativeLabel, "cell 0 1");
+        addCharacterPane.add(dexterityLabel, "Cell 0 2");
+        addCharacterPane.add(characterTypeLabel, "cell 0 3");
+        addCharacterPane.add(maxHealthLabel, "cell 0 4, hidemode 3");
+        addCharacterPane.add(deathStatusLabel, "cell 0 5");
+
+        addCharacterPane.add(characterName, "cell 1 0, span, growx");
+        addCharacterPane.add(initiativeSpinner, "cell 1 1, span, growx");
+        addCharacterPane.add(dexteritySpinner, "cell 1 2, span, growx");
+        addCharacterPane.add(characterTypeCombo, "cell 1 3, span, growx");
+        addCharacterPane.add(maxHealthSpinner, "cell 1 4, hidemode 3, span, growx");
+        addCharacterPane.add(deathStatusCombo, "cell 1 5, span, growx");
+
+        addCharacterPane.add(addCharacterButton, "cell 2 6, align right, growx");
+        addCharacterPane.add(savedCharacterLabel, "cell 0 7, span, growx, hidemode 3");
     }
 
     /**
@@ -158,183 +206,4 @@ public class AddCharacterMenu extends JDialog {
         maxHealthSpinner.setValue(1);
         deathStatusCombo.setSelectedIndex(0);
     }
-
-    {
-// GUI initializer generated by IntelliJ IDEA GUI Designer
-// >>> IMPORTANT!! <<<
-// DO NOT EDIT OR ADD ANY CODE HERE!
-        $$$setupUI$$$();
-    }
-
-    /**
-     * Method generated by IntelliJ IDEA GUI Designer
-     * >>> IMPORTANT!! <<<
-     * DO NOT edit this method OR call it in your code!
-     *
-     * @noinspection ALL
-     */
-    private void $$$setupUI$$$() {
-        addCharacterPane = new JPanel();
-        addCharacterPane.setLayout(new GridBagLayout());
-        addCharacterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        characterName = new JTextField();
-        GridBagConstraints gbc;
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(0, 0, 2, 0);
-        addCharacterPane.add(characterName, gbc);
-        characterTypeCombo = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
-        defaultComboBoxModel1.addElement("PLAYER");
-        defaultComboBoxModel1.addElement("ENEMY");
-        defaultComboBoxModel1.addElement("ALLY");
-        characterTypeCombo.setModel(defaultComboBoxModel1);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        addCharacterPane.add(characterTypeCombo, gbc);
-        final JLabel label1 = new JLabel();
-        label1.setText("Character Name");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        addCharacterPane.add(label1, gbc);
-        final JLabel label2 = new JLabel();
-        label2.setText("Initiative");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        addCharacterPane.add(label2, gbc);
-        final JLabel label3 = new JLabel();
-        label3.setText("Dexterity (0-30)");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        addCharacterPane.add(label3, gbc);
-        final JLabel label4 = new JLabel();
-        label4.setText("Character Type");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        addCharacterPane.add(label4, gbc);
-        initiativeSpinner = new JSpinner();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        addCharacterPane.add(initiativeSpinner, gbc);
-        dexteritySpinner = new JSpinner();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        addCharacterPane.add(dexteritySpinner, gbc);
-        addCharacterButton = new JButton();
-        addCharacterButton.setFocusPainted(false);
-        addCharacterButton.setOpaque(true);
-        addCharacterButton.setText("Add character");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 6;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 0, 2, 0);
-        addCharacterPane.add(addCharacterButton, gbc);
-        deathStatusCombo = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
-        defaultComboBoxModel2.addElement("ALIVE");
-        defaultComboBoxModel2.addElement("DEAD");
-        defaultComboBoxModel2.addElement("DOWN");
-        deathStatusCombo.setModel(defaultComboBoxModel2);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 5;
-        gbc.gridwidth = 2;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 0, 5, 0);
-        addCharacterPane.add(deathStatusCombo, gbc);
-        final JLabel label5 = new JLabel();
-        label5.setText("Death Status");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(2, 0, 5, 0);
-        addCharacterPane.add(label5, gbc);
-        final JPanel spacer1 = new JPanel();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        addCharacterPane.add(spacer1, gbc);
-        maxHealthLabel = new JLabel();
-        maxHealthLabel.setText("Max Health");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        addCharacterPane.add(maxHealthLabel, gbc);
-        maxHealthSpinner = new JSpinner();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(2, 0, 2, 0);
-        addCharacterPane.add(maxHealthSpinner, gbc);
-        savedCharacterLabel = new JLabel();
-        savedCharacterLabel.setText("Character Saved!!!");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 7;
-        gbc.gridwidth = 4;
-        gbc.insets = new Insets(4, 0, 2, 0);
-        addCharacterPane.add(savedCharacterLabel, gbc);
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    public JComponent $$$getRootComponent$$$() {
-        return addCharacterPane;
-    }
-
 }
