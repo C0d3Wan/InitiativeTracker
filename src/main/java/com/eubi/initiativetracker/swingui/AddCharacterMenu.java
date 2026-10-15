@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 import java.awt.*;
@@ -17,16 +16,16 @@ import net.miginfocom.swing.MigLayout;
  * Modal dialog interface for creating and adding a new character to the initiative tracker.
  */
 public class AddCharacterMenu extends JDialog {
-    private JPanel addCharacterPane = new JPanel();
-    private JTextField characterName = new JTextField();
-    private JSpinner initiativeSpinner = new JSpinner();
-    private JSpinner dexteritySpinner= new JSpinner();
-    private JComboBox<String> characterTypeCombo = new JComboBox();
-    private JSpinner maxHealthSpinner = new JSpinner();
-    private JLabel maxHealthLabel = new JLabel("Max Health");
-    private JComboBox<String> deathStatusCombo = new JComboBox();;
-    private JButton addCharacterButton = new JButton("Add character");
-    private JLabel savedCharacterLabel = new JLabel("Character Saved!!!");
+    private final JPanel addCharacterPane = new JPanel();
+    private final JTextField characterName = new JTextField();
+    private final JSpinner initiativeSpinner = new JSpinner();
+    private final JSpinner dexteritySpinner= new JSpinner();
+    private final JComboBox<String> characterTypeCombo = new JComboBox<>();
+    private final JSpinner maxHealthSpinner = new JSpinner();
+    private final JLabel maxHealthLabel = new JLabel("Max Health");
+    private final JComboBox<String> deathStatusCombo = new JComboBox<>();
+    private final JButton addCharacterButton = new JButton("Add character");
+    private final JLabel savedCharacterLabel = new JLabel("Character Saved!!!");
 
     private boolean confirmed = false;
     private final List<Character> characters = new ArrayList<>();
@@ -67,32 +66,34 @@ public class AddCharacterMenu extends JDialog {
         });
 
         characterTypeCombo.addActionListener(e -> updateForMaxHealth());
-        addCharacterButton.addActionListener(e -> {
-            String name = characterName.getText().trim();
-            int initiative = (int) initiativeSpinner.getValue();
-            int dexterity = (int) dexteritySpinner.getValue();
-            String type = (String) characterTypeCombo.getSelectedItem();
-            String status = (String) deathStatusCombo.getSelectedItem();
+        addCharacterButton.addActionListener(e -> saveCharacter());
+    }
 
-            if (name.length() > 16) {
-                name = name.substring(0, 14) + "...";
-            }
+    private void saveCharacter() {
+        String name = characterName.getText().trim();
+        int initiative = (int) initiativeSpinner.getValue();
+        int dexterity = (int) dexteritySpinner.getValue();
+        String type = (String) characterTypeCombo.getSelectedItem();
+        String status = (String) deathStatusCombo.getSelectedItem();
 
-            assert type != null;
-            Character newCharacter;
-            if (!type.equalsIgnoreCase("PLAYER")) {
-                int maxHealth = (int) maxHealthSpinner.getValue();
-                newCharacter = new NonePlayerCharacter(name, initiative, dexterity, maxHealth, type, status);
-            } else {
-                newCharacter = new Character(name, initiative, dexterity, type, status);
-            }
-            confirmed = true;
-            characterMap.put(name, (Character) newCharacter);
-            characters.add(newCharacter);
-            savedCharacterLabel.setVisible(true);
-            resetWidgets();
-            pack();
-        });
+        if (name.length() > 16) {
+            name = name.substring(0, 14) + "...";
+        }
+
+        assert type != null;
+        Character newCharacter;
+        if (!type.equalsIgnoreCase("PLAYER")) {
+            int maxHealth = (int) maxHealthSpinner.getValue();
+            newCharacter = new NonePlayerCharacter(name, initiative, dexterity, maxHealth, type, status);
+        } else {
+            newCharacter = new Character(name, initiative, dexterity, type, status);
+        }
+        confirmed = true;
+        characterMap.put(name, newCharacter);
+        characters.add(newCharacter);
+        savedCharacterLabel.setVisible(true);
+        resetWidgets();
+        pack();
     }
 
     private void setupMenu() {
