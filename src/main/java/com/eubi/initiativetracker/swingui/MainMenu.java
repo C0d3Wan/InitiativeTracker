@@ -56,8 +56,10 @@ public class MainMenu extends JFrame {
     }
 
     private void setupMainMenu() {
-        mainMenuPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[center][center][center][center]", "[center][][center][center][center]"));
+        Dimension windowSize = new Dimension(550, 300);
+        mainMenuPane.setLayout(new MigLayout("insets 2 0 2 0, fillx", "[center][center][center][center]", "[center][center][center][center][center]"));
         mainMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        setMinimumSize(windowSize);
 
         addCharacterButton.setFocusPainted(false);
         editCharacterButton.setFocusPainted(false);
