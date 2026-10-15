@@ -50,7 +50,7 @@ public class EditCharacterMenu extends JDialog {
     }
 
     private void setupMenu() {
-        Dimension windowSize = new Dimension(400, 240);
+        Dimension windowSize = new Dimension(400, 220);
         editCharacterPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][l][r, grow, push]", "[][][][][][][][]"));
         editCharacterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);

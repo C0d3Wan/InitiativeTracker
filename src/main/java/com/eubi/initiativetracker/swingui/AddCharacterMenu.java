@@ -97,7 +97,7 @@ public class AddCharacterMenu extends JDialog {
     }
 
     private void setupMenu() {
-        Dimension windowSize = new Dimension(400,237);
+        Dimension windowSize = new Dimension(400,220);
         addCharacterPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][center, grow, push][right, grow]", "[][][][][][][][]"));
         addCharacterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);
@@ -147,7 +147,7 @@ public class AddCharacterMenu extends JDialog {
         addCharacterPane.add(deathStatusCombo, "cell 1 5, span, growx");
 
         addCharacterPane.add(addCharacterButton, "cell 2 6, align right, growx");
-        addCharacterPane.add(savedCharacterLabel, "cell 0 7, span, growx");
+        addCharacterPane.add(savedCharacterLabel, "cell 0 7, span, growx, hidemode 3");
     }
 
     /**
