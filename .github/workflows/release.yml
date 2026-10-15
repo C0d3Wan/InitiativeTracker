@@ -36,7 +36,7 @@ jobs:
         run: |
           jpackage \
             --type deb \
-            --app-version "${env:VERSION}" \
+            --app-version "$VERSION" \
             --input target \
             --main-jar InitiativeTracker.jar \
             --name InitiativeTracker \
@@ -48,7 +48,7 @@ jobs:
           
           jpackage \
             --type app-image \
-            --app-version "${env:VERSION}" `
+            --app-version "$VERSION" `
             --input target \
             --main-jar InitiativeTracker.jar \
             --name InitiativeTracker
