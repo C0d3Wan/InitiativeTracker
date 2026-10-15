@@ -23,15 +23,20 @@ jobs:
       - name: Build jar
         run: mvn clean package
 
-      - name: Get Version
-        id: version
+      - name: Extract Version
+        shell: bash
         run: |
-          echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+          else
+            echo "VERSION=dev" >> $GITHUB_ENV
+          fi
 
       - name: Create deb package
         run: |
           jpackage \
             --type deb \
+            --app-version "${env:VERSION}" \
             --input target \
             --main-jar InitiativeTracker.jar \
             --name InitiativeTracker \
@@ -41,17 +46,15 @@ jobs:
         run: |
           jpackage \
             --type app-image \
+            --app-version "${env:VERSION}" `
             --input target \
             --main-jar InitiativeTracker.jar \
             --name InitiativeTracker
+            --icon packaging/InitiativeTracker.png
 
       - name: Add Desktop File
         run: |
           cp packaging/InitiativeTracker.desktop InitiativeTracker/
-
-      - name: Add Icon
-        run: |
-          cp packaging/InitiativeTracker.png InitiativeTracker/
 
       - name: Download linuxdeploy
         run: |
@@ -96,10 +99,20 @@ jobs:
       - name: Build jar
         run: mvn clean package
 
+      - name: Extract Version
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+          else
+            echo "VERSION=dev" >> $GITHUB_ENV
+          fi
+
       - name: Create EXE
         run: |
           jpackage `
             --type exe `
+            --app-version "${env:VERSION}" `
             --input target `
             --main-jar InitiativeTracker.jar `
             --name InitiativeTracker `
