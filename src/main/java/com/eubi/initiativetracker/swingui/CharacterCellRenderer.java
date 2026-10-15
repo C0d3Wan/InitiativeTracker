@@ -6,8 +6,6 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.plaf.FontUIResource;
-import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.util.*;
 
@@ -15,7 +13,7 @@ import java.util.*;
  * Custom {@link ListCellRenderer} panel responsible for rendering character summary rows
  * and their active death save indicators.
  */
-@SuppressWarnings({"SameParameterValue", "MagicConstant"})
+@SuppressWarnings({"SameParameterValue"})
 public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Character> {
     private final JLabel nameLabel = new JLabel();
     private final JLabel initiativeLabel = new JLabel();
@@ -30,14 +28,11 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
     private final JPanel deathSavePanel = new JPanel();
     private final JLabel npcHealth = new JLabel();
 
-    private final UIManager uiManager;
-
     /**
      * Constructs a new CharacterCellRenderer and configures subcomponents and layouts.
      */
-    public CharacterCellRenderer(UIManager uiManager) {
-        this.uiManager = uiManager;
-        setLayout(new MigLayout("insets 2 2 2 12, fillx, aligny center", "[grow, push][gap 8][gap 8][gap 8][gap 8][]", "[]"));
+    public CharacterCellRenderer() {
+        setLayout(new MigLayout("insets 2 2 2 2, fillx, aligny center", "[grow, push]12[]12[]12[]12[][]", "[]"));
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(2, 2, 2, 12), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 
         setupLabels();
@@ -59,9 +54,12 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         add(characterTypeLabel);
         add(npcHealth);
         add(deathStatusLabel);
-        add(deathSavePanel);
+        add(deathSavePanel, "hidemode 3");
     }
 
+    /**
+     * Configures and positions the pass and fail death save indicator radio buttons.
+     */
     private void setupDeathSavePanel() {
         deathSavePanel.setLayout(new MigLayout("insets 0, gap 2 2", "[right][][][]", "[][]"));
         deathSavePanel.setOpaque(false);
@@ -79,6 +77,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         }
 
         JLabel passLabel = new JLabel("Pass");
+        deathSavePanel.add(passLabel);
         deathSavePanel.add(deathPass1);
         deathSavePanel.add(deathPass2);
         deathSavePanel.add(deathPass3, "wrap");
@@ -157,106 +156,6 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         deathFail1.setSelected(false);
         deathFail2.setSelected(false);
         deathFail3.setSelected(false);
-    }
-
-
-
-    /**
-     * Initializes and positions the pass and fail death save indicator radio buttons.
-     */
-    private void setupRadioButtons() {
-        GridBagConstraints gbc = new GridBagConstraints();
-        deathPass1.setEnabled(true);
-        deathPass1.setOpaque(false);
-        deathPass1.setText("");
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        deathSavePanel.add(deathPass1, gbc);
-
-        deathPass2.setOpaque(false);
-        deathPass2.setText("");
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        deathSavePanel.add(deathPass2, gbc);
-
-        deathPass3.setOpaque(false);
-        deathPass3.setText("");
-        gbc.gridx = 3;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        deathSavePanel.add(deathPass3, gbc);
-
-        deathFail1.setOpaque(false);
-        deathFail1.setText("");
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        deathSavePanel.add(deathFail1, gbc);
-
-        deathFail2.setOpaque(false);
-        deathFail2.setText("");
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        deathSavePanel.add(deathFail2, gbc);
-
-        deathFail3.setOpaque(false);
-        deathFail3.setText("");
-        gbc.gridx = 3;
-        gbc.gridy = 1;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        deathSavePanel.add(deathFail3, gbc);
-
-        final JLabel label1 = new JLabel();
-        label1.setText("Fail");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 0, 0, 4);
-        deathSavePanel.add(label1, gbc);
-
-        final JLabel label2 = new JLabel();
-        label2.setText("Pass");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 0, 0, 4);
-        deathSavePanel.add(label2, gbc);
-    }
-
-    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
-        if (currentFont == null) return null;
-        String resultName;
-        if (fontName == null) {
-            resultName = currentFont.getName();
-        } else {
-            Font testFont = new Font(fontName, Font.PLAIN, 10);
-            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
-                resultName = fontName;
-            } else {
-                resultName = currentFont.getName();
-            }
-        }
-        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
-        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
-        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
-        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     /**
