@@ -16,7 +16,6 @@
     </properties>
 
     <build>
-        <finalName>InitiativeTracker</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -104,6 +103,8 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <finalName>InitiativeTracker</finalName>
     </build>
 
 </project>
