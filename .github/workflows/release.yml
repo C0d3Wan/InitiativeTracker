@@ -44,6 +44,8 @@ jobs:
 
       - name: Create App Image Directory
         run: |
+          set -x
+          
           jpackage \
             --type app-image \
             --app-version "${env:VERSION}" `
