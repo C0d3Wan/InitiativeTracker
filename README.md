@@ -64,3 +64,9 @@ go to https://github.com/EubiWan/InitiativeTracker/releases and install the late
 * Live Mid-Combat Editing
 * Batch Adding & Removal
 * Input Validation
+
+
+
+## Authors
+* [EubiWan](https://github.com/EubiWan) - UI, Semi-Backend
+* [C0d3-404](https://github.com/c0d3-404) - Backend, Bridge
