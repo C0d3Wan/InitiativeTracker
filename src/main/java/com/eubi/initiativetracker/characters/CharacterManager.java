@@ -144,6 +144,17 @@ public class CharacterManager {
                 .collect(Collectors.toList());
     }
 
+    public void setCurrentCharacterByName(String name) {
+        if (name == null) return;
+        for (Character c : characters) {
+            if (c.getCharacterData().get("Name").toString().equals(name)) {
+                currentCharacter = c;
+                break;
+            }
+        }
+        initiativeOrdered = getTurnOrder();
+    }
+
     /**
      * Retrieves the raw, unsorted list of combatants in their original insertion order.
      *
