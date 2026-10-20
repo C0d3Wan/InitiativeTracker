@@ -20,7 +20,7 @@ A desktop combat managment and inititive tracking applicvation for D&D. designed
 #### Prerequisites
 Ensure you have the following installed on your machine:
 
-* Java Development Kit (JDK): Version 17 or higher
+* Java Development Kit (JDK): Version 17 or higher (21 recommended)
  ```bash
 java -version
 ```
@@ -53,3 +53,14 @@ go to https://github.com/EubiWan/InitiativeTracker/releases and install the late
 
 
 ## Features
+* Automatic Initiative & tie-Braker Calaculation
+  * Sorts combatants in descending order using a composite floating-point score: ```baseInitiative + (dexterity / 100.0f)```
+  * Enemy comabatants automatically have the dex tie-break set to 0
+* Circular Turn Queue & active Highlighting
+  * Advances through combat rounds cyclically.
+  * 
+* Dynamic Death Saving Throws
+* NPC Health managment
+* Live Mid-Combat Editing
+* Batch Removal
+* Input Validation
