@@ -90,7 +90,7 @@ public class MainMenu extends JFrame {
         mainMenuPane.add(passButton, "cell 2 3, growx");
         mainMenuPane.add(failButton, "cell 3 3, growx");
 
-        mainMenuPane.add(scrollPane1, "cell 0 4, span, grow");
+        mainMenuPane.add(scrollPane1, "cell 0 4, span, grow, pushy");
 
         deathSaveLabel.setVisible(false);
         passButton.setVisible(false);
