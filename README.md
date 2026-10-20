@@ -7,37 +7,38 @@
 A desktop combat managment and inititive tracking applicvation for D&D. designed for DMs, it automates turn order, resolves ties, tracks NPC hit points and manages death saves.
 
 ## Table of Contents
-* Getting Started
+* Installation & Running
 * Features
-* Usage Guide
 * Project Structure
 * Authors
 
 
-## Getting Started
-### Via repo
+## Installation & Running
+### Via repository
 #### Prerequisites
 Ensure you have the following installed on your machine:
 
 * Java Development Kit (JDK): Version 17 or higher (21 recommended):
- ```java -version```
+  ```java -version```
 * Apache Maven:
-```mvn -version ```
-* Git: 
-```git --version```
-
-#### Installation & Running
-##### Via repository
+  ```mvn -version ```
+* Git:
+  ```git --version```
 1. Clone the reopository
 
-```git clone https://github.com/EubiWan/InitiativeTracker```
-
-windows:
-```cd C:/Users/YourUsername/Documents/InitiativeTracker/```
+Windows:
+``` shell
+cd C:/Users/YourUsername/Documents/
+git clone https://github.com/EubiWan/InitiativeTracker
+cd C:/Users/YourUsername/Documents/InitiativeTracker/
+```
 
 Linux:
-```cd home/YourUsername/Documents/InitiativeTracker/```
-
+``` bash
+cd home/YourUsername/Documents/
+git clone https://github.com/EubiWan/InitiativeTracker
+cd home/YourUsername/Documents//InitiativeTracker/
+```
 
 2. Comple and run using Maven
 
@@ -48,25 +49,18 @@ or
 ```mvn clean package```
 
 and run it from the target/ directory
-##### Via Releases
-go to https://github.com/EubiWan/InitiativeTracker/releases and install the latest version for your device.
+### Via Releases
+Go to [Releases](https://github.com/EubiWan/InitiativeTracker/releases) and install the latest version for your device.
 
 
 ## Features
 * Automatic Initiative & tie-Braker Calaculation
-  * Sorts combatants in descending order using a composite floating-point score: ```baseInitiative + (dexterity / 100.0f)```
-  * Enemy comabatants automatically have the dex tie-break set to 0
 * Circular Turn Queue & active Highlighting
-  * Advances through combat rounds cyclically.
-  * 
 * Dynamic Death Saving Throws
 * NPC Health managment
 * Live Mid-Combat Editing
 * Batch Adding & Removal
 * Input Validation
-
-## Usage Guide
-
 
 ## Project Structure
 
