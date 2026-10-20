@@ -8,6 +8,8 @@ import com.eubi.initiativetracker.characters.CharacterManager;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * Top-level application window hosting the main initiative tracker user interface.
@@ -41,7 +43,7 @@ public class MainMenu extends JFrame {
         setJMenuBar(menuBar);
         setContentPane(mainMenuPane);
         setTitle("Initiative Tracker");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
 
@@ -53,6 +55,12 @@ public class MainMenu extends JFrame {
 
         passButton.addActionListener(e -> uiManager.passDeathSave(true));
         failButton.addActionListener(e -> uiManager.passDeathSave(false));
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                confirmExit();
+            }
+        });
     }
 
     private void setupMainMenu() {
@@ -106,5 +114,19 @@ public class MainMenu extends JFrame {
         menuBar.add(fileMenu);
 
         menuBar.add(viewMenu);
+    }
+
+    private void confirmExit() {
+        int choice = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to exit the Tracker?",
+                "Exit Conformation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (choice == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
     }
 }
