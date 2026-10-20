@@ -11,6 +11,7 @@ package com.eubi.initiativetracker.characters;
 public class NonePlayerCharacter extends Character {
     private int health;
     private final int maxHealth;
+    private String enemyType;
 
     /**
      * Constructs a new NPC instance
@@ -59,11 +60,19 @@ public class NonePlayerCharacter extends Character {
         }
     }
 
+    public void editEnemyType(String type){
+        enemyType = type;
+    }
+
     public int getMaxHealth() {
         return maxHealth;
     }
 
     public int getHealth() {
         return health;
+    }
+
+    public String getEnemyType() {
+        return enemyType;
     }
 }
