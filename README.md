@@ -62,5 +62,5 @@ go to https://github.com/EubiWan/InitiativeTracker/releases and install the late
 * Dynamic Death Saving Throws
 * NPC Health managment
 * Live Mid-Combat Editing
-* Batch Removal
+* Batch Adding & Removal
 * Input Validation
