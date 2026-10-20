@@ -21,7 +21,7 @@ A desktop combat management and initiative tracking application for D&D. Designe
 
 #### Prerequisites
 Ensure you have the following installed on your machine:
-- **Java Development Kit (JDK):** Version 17 or higher (21 recommended): `java -version`
+- **Java Development Kit (JDK):** Version 21 or higher (21 recommended): `java -version`
 - **Apache Maven:** `mvn -version`
 - **Git:** `git --version`
 
