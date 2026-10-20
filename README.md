@@ -11,7 +11,6 @@ A desktop combat managment and inititive tracking applicvation for D&D. designed
 * Features
 * Usage Guide
 * Project Structure
-* Future Plans
 * Authors
 
 
@@ -20,33 +19,34 @@ A desktop combat managment and inititive tracking applicvation for D&D. designed
 #### Prerequisites
 Ensure you have the following installed on your machine:
 
-* Java Development Kit (JDK): Version 17 or higher (21 recommended)
- ```bash
-java -version
-```
+* Java Development Kit (JDK): Version 17 or higher (21 recommended):
+ ```java -version```
 * Apache Maven:
-```bash
-mvn -version
-```
-* Git
+```mvn -version ```
+* Git: 
+```git --version```
 
 #### Installation & Running
 ##### Via repository
 1. Clone the reopository
-```bash
-git clone https://github.com/EubiWan/InitiativeTracker
 
-cd <your-repository-folder>
+```git clone https://github.com/EubiWan/InitiativeTracker```
 
-```
+windows:
+```cd C:/Users/YourUsername/Documents/InitiativeTracker/```
+
+Linux:
+```cd home/YourUsername/Documents/InitiativeTracker/```
+
+
 2. Comple and run using Maven
-```
-mvn clean compile exec:java -Dexec.mainClass="com.eubi.initiativetracker.Main"
-```
+
+```mvn clean compile exec:java -Dexec.mainClass="com.eubi.initiativetracker.Main"```
+
 or
-```
-mvn clean package
-```
+
+```mvn clean package```
+
 and run it from the target/ directory
 ##### Via Releases
 go to https://github.com/EubiWan/InitiativeTracker/releases and install the latest version for your device.
@@ -65,8 +65,30 @@ go to https://github.com/EubiWan/InitiativeTracker/releases and install the late
 * Batch Adding & Removal
 * Input Validation
 
+## Usage Guide
 
+
+## Project Structure
+
+```
+src/main/java/com/eubi/initiativetracker/
+├── characters/
+│   ├── Character.java              # Base combatant model with composite initiative math and death saves
+│   ├── CharacterManager.java       # Roster collection, stream sorting, and circular turn rotation
+│   ├── CharacterType.java          # Enum for alignment categories (PLAYER, ENEMY, ALLY)
+│   ├── DeathStatus.java            # Enum for health states (ALIVE, DOWN, DEAD)
+│   └── NonePlayerCharacter.java    # NPC/Enemy subclass adding current/max HP and auto-death triggers
+├── swingui/
+│   ├── AddCharacterMenu.java       # Modal dialog for creating combatants with duplicate name validation
+│   ├── CharacterCellRenderer.java  # Custom JList renderer for turn highlighting and death save pips
+│   ├── EditCharacterMenu.java      # Modal dialog for updating initiative, dexterity, and status
+│   ├── EditNPCHealth.java          # Modal dialog for bounded damage/healing (-/+) adjustments
+│   ├── MainMenu.java               # Primary JFrame window hosting toolbars, buttons, and initiative list
+│   ├── RemoveCharacterMenu.java    # Modal dialog for removing single characters, NPCs, or all records
+│   └── UIManager.java              # Controller synchronizing Swing UI events with the backend manager
+└── Main.java
+```
 
 ## Authors
 * [EubiWan](https://github.com/EubiWan) - UI, Semi-Backend
-* [C0d3-404](https://github.com/c0d3-404) - Backend, Bridge
+* [C0d3-404](https://github.com/c0d3-404) - Backend, Bridge, Documentation
