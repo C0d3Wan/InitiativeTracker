@@ -46,7 +46,11 @@ public class RemoveCharacterMenu extends JDialog {
 
         updateSelectionCombo();
 
-        removeCharacterButton.addActionListener(e -> removeCharacter());
+        removeCharacterButton.addActionListener(e -> {
+            if (confirmRemove()) {
+                removeCharacter();
+            }
+        });
     }
 
     private void setupMenu() {
@@ -144,5 +148,16 @@ public class RemoveCharacterMenu extends JDialog {
         updateSelectionCombo();
         removedCharacterLabel.setVisible(true);
         pack();
+    }
+
+    private boolean confirmRemove() {
+        int choice = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to remove character(s)",
+                "Remove Confirmation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+        return choice == JOptionPane.YES_OPTION;
     }
 }
