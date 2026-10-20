@@ -27,6 +27,7 @@ public class NonePlayerCharacter extends Character {
         super(name, initiative, dex, type, status);
         this.health = maxHealth;
         this.maxHealth = maxHealth;
+        enemyType = "";
     }
 
     /**
