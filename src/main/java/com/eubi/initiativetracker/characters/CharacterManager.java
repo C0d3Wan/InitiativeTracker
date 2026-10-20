@@ -100,6 +100,12 @@ public class CharacterManager {
 
         currentCharacter = charactersOrdered.get(nextIndex);
 
+        while (currentCharacter.getDeathStatus() == DeathStatus.DEAD){
+            int currentIndex = charactersOrdered.indexOf(currentCharacter);
+            nextIndex = (currentIndex + 1) % charactersOrdered.size();
+            currentCharacter = charactersOrdered.get(nextIndex);
+        }
+
         initiativeOrdered = getTurnOrder();
     }
 
