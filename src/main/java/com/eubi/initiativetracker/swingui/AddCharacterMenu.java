@@ -20,11 +20,13 @@ public class AddCharacterMenu extends JDialog {
     private final JTextField characterName = new JTextField();
     private final JSpinner initiativeSpinner = new JSpinner();
     private final JSpinner dexteritySpinner= new JSpinner();
-    private final JComboBox<String> characterTypeCombo = new JComboBox<>();
     private final JSpinner maxHealthSpinner = new JSpinner();
-    private final JLabel maxHealthLabel = new JLabel("Max Health");
+    private final JSpinner npcAmountSpinner = new JSpinner();
     private final JComboBox<String> deathStatusCombo = new JComboBox<>();
+    private final JComboBox<String> characterTypeCombo = new JComboBox<>();
     private final JButton addCharacterButton = new JButton("Add character");
+    private final JLabel npcAmountLabel = new JLabel("NPC Amount:");
+    private final JLabel maxHealthLabel = new JLabel("Max Health:");
     private final JLabel savedCharacterLabel = new JLabel("Character Saved!!!");
 
     private boolean confirmed = false;
@@ -84,13 +86,23 @@ public class AddCharacterMenu extends JDialog {
         Character newCharacter;
         if (!type.equalsIgnoreCase("PLAYER")) {
             int maxHealth = (int) maxHealthSpinner.getValue();
-            newCharacter = new NonePlayerCharacter(name, initiative, dexterity, maxHealth, type, status);
+            int maxNPCS = (int) npcAmountSpinner.getValue();
+            for (int i = 1; i <= maxNPCS; i++) {
+                String newName = name + " " + i;
+                newCharacter = new NonePlayerCharacter(newName, initiative, dexterity, maxHealth, type, status);
+                if (maxNPCS > 1) {
+                    ((NonePlayerCharacter) newCharacter).editEnemyType(name);
+                }
+                characterMap.put(name, newCharacter);
+                characters.add(newCharacter);
+            }
         } else {
             newCharacter = new Character(name, initiative, dexterity, type, status);
+
+            characterMap.put(name, newCharacter);
+            characters.add(newCharacter);
         }
         confirmed = true;
-        characterMap.put(name, newCharacter);
-        characters.add(newCharacter);
         savedCharacterLabel.setVisible(true);
         resetWidgets();
         pack();
@@ -98,7 +110,7 @@ public class AddCharacterMenu extends JDialog {
 
     private void setupMenu() {
         Dimension windowSize = new Dimension(400,220);
-        addCharacterPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][center, grow, push][right, grow]", "[][][][][][][][]"));
+        addCharacterPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][center, grow, push][right, grow]", "[][][][][][][][][]"));
         addCharacterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);
 
@@ -113,6 +125,7 @@ public class AddCharacterMenu extends JDialog {
         initiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
         dexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
         maxHealthSpinner.setModel(new SpinnerNumberModel(1, 1, 2000, 1));
+        npcAmountSpinner.setModel(new SpinnerNumberModel(1, 1, 30, 1));
 
         final DefaultComboBoxModel<String> characterTypeComboModel = new DefaultComboBoxModel<>();
         characterTypeComboModel.addElement("PLAYER");
@@ -131,23 +144,27 @@ public class AddCharacterMenu extends JDialog {
         maxHealthLabel.setVisible(false);
         maxHealthSpinner.setVisible(false);
         savedCharacterLabel.setVisible(false);
+        npcAmountLabel.setVisible(false);
+        npcAmountSpinner.setVisible(false);
 
         addCharacterPane.add(characterNameLabel, "cell 0 0");
         addCharacterPane.add(initiativeLabel, "cell 0 1");
         addCharacterPane.add(dexterityLabel, "Cell 0 2");
         addCharacterPane.add(characterTypeLabel, "cell 0 3");
         addCharacterPane.add(maxHealthLabel, "cell 0 4, hidemode 3");
-        addCharacterPane.add(deathStatusLabel, "cell 0 5");
+        addCharacterPane.add(npcAmountLabel, "cell 0 5, hidemode 3");
+        addCharacterPane.add(deathStatusLabel, "cell 0 6");
 
         addCharacterPane.add(characterName, "cell 1 0, span, growx");
         addCharacterPane.add(initiativeSpinner, "cell 1 1, span, growx");
         addCharacterPane.add(dexteritySpinner, "cell 1 2, span, growx");
         addCharacterPane.add(characterTypeCombo, "cell 1 3, span, growx");
         addCharacterPane.add(maxHealthSpinner, "cell 1 4, hidemode 3, span, growx");
-        addCharacterPane.add(deathStatusCombo, "cell 1 5, span, growx");
+        addCharacterPane.add(npcAmountSpinner, "cell 1 5, hidemode 3, span, growx");
+        addCharacterPane.add(deathStatusCombo, "cell 1 6, span, growx");
 
-        addCharacterPane.add(addCharacterButton, "cell 2 6, align right, growx");
-        addCharacterPane.add(savedCharacterLabel, "cell 0 7, span, growx, hidemode 3");
+        addCharacterPane.add(addCharacterButton, "cell 2 7, align right, growx");
+        addCharacterPane.add(savedCharacterLabel, "cell 0 8, span, growx, hidemode 3");
     }
 
     /**
@@ -173,9 +190,13 @@ public class AddCharacterMenu extends JDialog {
         if (!selectedItem.equals("PLAYER")) {
             maxHealthLabel.setVisible(true);
             maxHealthSpinner.setVisible(true);
+            npcAmountSpinner.setVisible(true);
+            npcAmountLabel.setVisible(true);
         } else {
             maxHealthLabel.setVisible(false);
             maxHealthSpinner.setVisible(false);
+            npcAmountSpinner.setVisible(false);
+            npcAmountLabel.setVisible(false);
         }
         pack();
     }

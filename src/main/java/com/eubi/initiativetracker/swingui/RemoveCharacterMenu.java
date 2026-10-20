@@ -8,6 +8,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,13 +85,26 @@ public class RemoveCharacterMenu extends JDialog {
             characterSelectionCombo.addItem("No Characters");
             removeCharacterButton.setEnabled(false);
         } else {
+            characterSelectionCombo.addItem("All Characters");
+            characterSelectionCombo.addItem("All NPCs");
+
             removeCharacterButton.setEnabled(true);
+            Map<String, String> enemyTypes = new HashMap<>();
             for (Character character : characters) {
-                String name = character.getCharacterData().get("Name").toString();
+                Map<String, Object> characterData = character.getCharacterData();
+                String name = characterData.get("Name").toString();
+                String type = characterData.get("Type").toString();
+                if (!type.equalsIgnoreCase("PLAYER")) {
+                    String enemyType = ((NonePlayerCharacter) character).getEnemyType();
+                    if (!enemyType.isEmpty()) {
+                        enemyTypes.put(enemyType, enemyType);
+                    }
+                }
                 characterSelectionCombo.addItem(name);
             }
-            characterSelectionCombo.addItem("All NPCs");
-            characterSelectionCombo.addItem("All Characters");
+            for (String type: enemyTypes.keySet()) {
+                characterSelectionCombo.insertItemAt(("All " + type), 2);
+            }
         }
         pack();
     }
@@ -113,7 +127,16 @@ public class RemoveCharacterMenu extends JDialog {
             case "All Characters" -> characterManager.clearCharacters();
             default -> {
                 Character character = characterMap.get(name);
-                characterManager.removeCharacter(character);
+                if (character == null) {
+                    name = name.substring(4);
+                    for (NonePlayerCharacter npc: npcMap.values()) {
+                        if (npc.getEnemyType().equals(name)) {
+                            characterManager.removeCharacter(npc);
+                        }
+                    }
+                } else {
+                    characterManager.removeCharacter(character);
+                }
                 characterManager.sortCharacters();
             }
         }

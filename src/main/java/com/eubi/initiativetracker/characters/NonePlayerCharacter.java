@@ -58,6 +58,8 @@ public class NonePlayerCharacter extends Character {
         if (health <= 0){
             health = 0;
             editDeathStatus(DeathStatus.DEAD);
+        } else {
+            editDeathStatus(DeathStatus.ALIVE);
         }
     }
 
