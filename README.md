@@ -9,6 +9,7 @@ A desktop combat managment and inititive tracking applicvation for D&D. designed
 ## Table of Contents
 * Installation & Running
 * Features
+* Usage Guide
 * Project Structure
 * Authors
 
@@ -61,6 +62,24 @@ Go to [Releases](https://github.com/EubiWan/InitiativeTracker/releases) and inst
 * Live Mid-Combat Editing
 * Batch Adding & Removal
 * Input Validation
+
+## Usage Guide
+
+![EmptyMainMenu.png](Images/EmptyMainMenu.png)
+
+![AddCharacter.png](Images/AddCharacter.png)
+
+![AddEnemy.png](Images/AddEnemy.png)
+
+![EditCharacter.png](Images/EditCharacter.png)
+
+![MainMenu.png](Images/MainMenu.png)
+
+![EditNPCHealth.png](Images/EditNPCHealth.png)
+
+![DeathSaves.png](Images/DeathSaves.png)
+
+![RemoveCharacter.png](Images/RemoveCharacter.png)
 
 ## Project Structure
 
