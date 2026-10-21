@@ -41,7 +41,8 @@ public class MainMenu extends JFrame {
      * @param characterManager The {@link CharacterManager} maintaining combat data.
      */
     public MainMenu(CharacterManager characterManager) {
-        uiManager = new UIManager(this, characterManager, initiativeList, passButton, failButton, deathSaveLabel);
+        uiManager = new UIManager(this, characterManager, initiativeList);
+        uiManager.shareDeathSaveItems(passButton, failButton, deathSaveLabel);
         setupMainMenu();
         setupMenuBar();
 
@@ -63,6 +64,7 @@ public class MainMenu extends JFrame {
 
         lightMode.addActionListener(e -> uiManager.changeColourMode("LIGHT", lightMode, darkMode));
         darkMode.addActionListener(e -> uiManager.changeColourMode("DARK", lightMode, darkMode));
+        exitItem.addActionListener(e -> confirmExit());
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {

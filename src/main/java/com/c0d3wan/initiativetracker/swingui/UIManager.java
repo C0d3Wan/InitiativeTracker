@@ -20,9 +20,15 @@ public class UIManager {
     private final Map<String, Character> characterMap = new HashMap<>();
     private final Map<String, NonePlayerCharacter> npcMap = new HashMap<>();
     private final DefaultListModel<Character> characterListModel = new DefaultListModel<>();
-    private final JButton passSaveButton;
-    private final JButton failSaveButton;
-    private final JLabel deathSaveLabel;
+
+    private JButton passSaveButton;
+    private JButton failSaveButton;
+    private JLabel deathSaveLabel;
+
+    private JMenuItem lightModeItem;
+    private JMenuItem darkModeItem;
+    private JMenuItem saveItem;
+    private JMenuItem openItem;
 
     /**
      * Constructs a new UIManager instance and attaches views and cell renderers.
@@ -30,19 +36,33 @@ public class UIManager {
      * @param parentFrame      The primary {@link JFrame} hosting the interface.
      * @param characterManager The {@link CharacterManager} providing domain logic.
      * @param initiativeList   The {@link JList} visual component displaying initiative order.
+     */
+    public UIManager(JFrame parentFrame, CharacterManager characterManager, JList<Character> initiativeList) {
+        this.characterManager = characterManager;
+        this.parentFrame = parentFrame;
+
+        setupColourMode();
+        initiativeList.setModel(characterListModel);
+        initiativeList.setCellRenderer(new CharacterCellRenderer());
+    }
+
+    /**
+     * Adds the death save items to the uiManager
      * @param passSaveButton   The {@link JButton} triggered when a death save succeeds.
      * @param failSaveButton   The {@link JButton} triggered when a death save fails.
      * @param deathSaveLabel   The {@link JLabel} displayed when death saves are applicable.
      */
-    public UIManager(JFrame parentFrame, CharacterManager characterManager, JList<Character> initiativeList, JButton passSaveButton, JButton failSaveButton, JLabel deathSaveLabel) {
-        this.characterManager = characterManager;
-        this.parentFrame = parentFrame;
+    public void shareDeathSaveItems(JButton passSaveButton, JButton failSaveButton, JLabel deathSaveLabel) {
         this.passSaveButton = passSaveButton;
         this.failSaveButton = failSaveButton;
         this.deathSaveLabel = deathSaveLabel;
+    }
 
-        initiativeList.setModel(characterListModel);
-        initiativeList.setCellRenderer(new CharacterCellRenderer());
+    public void shareToolMenuItems(JMenuItem light,JMenuItem dark,JMenuItem open,JMenuItem save) {
+        lightModeItem = light;
+        darkModeItem = dark;
+        openItem = open;
+        saveItem = save;
     }
 
     /**
@@ -193,11 +213,10 @@ public class UIManager {
                 dark.setEnabled(true);
             }
         }
-        saveCurrentColours(mode);
         FlatLaf.updateUI();
     }
 
-    public void setColourMode(JMenuItem light, JMenuItem dark) {
+    public void setupColourMode() {
 
     }
 
