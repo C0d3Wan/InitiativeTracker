@@ -30,14 +30,14 @@ Ensure you have the following installed on your machine:
 **Windows:**
 ```shell
 cd C:/Users/YourUsername/Documents/
-git clone [https://github.com/EubiWan/InitiativeTracker](https://github.com/EubiWan/InitiativeTracker)
+git clone https://github.com/C0d3Wan/InitiativeTracker
 cd C:/Users/YourUsername/Documents/InitiativeTracker/
 ```
 
 **Linux:**
 ```bash
 cd ~/Documents/
-git clone [https://github.com/EubiWan/InitiativeTracker](https://github.com/EubiWan/InitiativeTracker)
+git clone https://github.com/C0d3Wan/InitiativeTracker
 cd ./InitiativeTracker/
 ```
 
@@ -66,6 +66,7 @@ Go to [Releases](https://github.com/EubiWan/InitiativeTracker/releases) and inst
 - **Live Mid-Combat Editing** – Update initiative rolls, Dexterity scores, or life statuses on the fly.
 - **Batch Adding & Removal** – Add multiple combatants in one go, or clear out all NPCs/characters at the end of an encounter.
 - **Input Validation** – Prevents duplicate names and truncates overly long strings to keep the UI clean.
+- **Save/Load** - Ability to save and load the initiative tracker
 
 ---
 
