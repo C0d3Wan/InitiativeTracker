@@ -25,6 +25,8 @@ public class SaveLoadManager {
 
     private static final String ALGORITHM = "AES";
 
+    private static String currentFileName = null;
+
     /**
      * Initializes and retrieves the AES secret key used for encryption and decryption.
      * <p>
@@ -106,6 +108,20 @@ public class SaveLoadManager {
     }
 
     /**
+     * Saves the current combat encounter state to the currently active file.
+     * If no file is currently active (e.g. a new session), it falls back to saving with a default name.
+     *
+     * @param manager The active {@link CharacterManager} instance containing combatants.
+     */
+    public static void save(CharacterManager manager) {
+        if (currentFileName == null || currentFileName.isEmpty()) {
+            saveAs(manager, "save.json");
+        } else {
+            saveAs(manager, currentFileName);
+        }
+    }
+
+    /**
      * Saves the current combat encounter state from a {@link CharacterManager} into an encrypted file.
      *
      * @param manager  The active {@link CharacterManager} instance containing combatants.
@@ -115,6 +131,7 @@ public class SaveLoadManager {
         if (!fileName.endsWith(".json")) {
             fileName += ".json";
         }
+        currentFileName = fileName;
         File targetFile = new File(FileManager.getSaveDirectory(), fileName);
         try{
             saveToFile(manager, targetFile);
@@ -134,6 +151,7 @@ public class SaveLoadManager {
         if (!fileName.endsWith(".json")) {
             fileName += ".json";
         }
+        currentFileName = fileName;
         File targetFile = new File(FileManager.getSaveDirectory(), fileName);
         try {
             loadFromFile(manager, targetFile, clearExisting);
