@@ -16,5 +16,8 @@ What kind of change does this PR introduce?
 ## What's changed
 -
 
+## Bugs fixed
+-
+
 ## Screenshots
 N/A
