@@ -20,6 +20,5 @@ public class Main {
 
         FlatDarkLaf.setup();
         SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
-        SaveLoadManager.save(characterManager, "Hi");
     }
 }
