@@ -1,9 +1,8 @@
-package com.c0dewan.initiativetracker.SaveLoad;
+package com.c0d3wan.initiativetracker.SaveLoad;
 
-import com.c0dewan.initiativetracker.characters.CharacterManager;
-import com.c0dewan.initiativetracker.characters.NonePlayerCharacter;
-import com.c0dewan.initiativetracker.characters.*;
-import com.c0dewan.initiativetracker.characters.Character;
+import com.c0d3wan.initiativetracker.characters.CharacterManager;
+import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
+import com.c0d3wan.initiativetracker.characters.Character;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

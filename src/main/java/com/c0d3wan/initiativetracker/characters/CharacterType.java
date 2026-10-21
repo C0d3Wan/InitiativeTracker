@@ -1,4 +1,4 @@
-package com.c0dewan.initiativetracker.characters;
+package com.c0d3wan.initiativetracker.characters;
 
 /**
  * Defines the available alignment categories for a character.

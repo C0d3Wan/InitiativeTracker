@@ -45,7 +45,7 @@ cd ./InitiativeTracker/
 
 Run directly via Maven:
 ```bash
-mvn clean compile exec:java -Dexec.mainClass="com.c0dewan.initiativetracker.Main"
+mvn clean compile exec:java -Dexec.mainClass="com.c0d3wan.initiativetracker.Main"
 ```
 
 Or build the package and run it from the `target/` directory:

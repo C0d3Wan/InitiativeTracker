@@ -1,10 +1,10 @@
-package com.c0dewan.initiativetracker.swingui;
+package com.c0d3wan.initiativetracker.swingui;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import com.c0dewan.initiativetracker.characters.Character;
-import com.c0dewan.initiativetracker.characters.CharacterManager;
+import com.c0d3wan.initiativetracker.characters.Character;
+import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;

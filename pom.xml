@@ -12,7 +12,7 @@
         <java.version>21</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <main.class>com.c0dewan.initiativetracker.Main</main.class>
+        <main.class>com.c0d3wan.initiativetracker.Main</main.class>
         <save.encryption.key>${env.ENCRYPTKEY}</save.encryption.key>
     </properties>
 

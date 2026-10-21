@@ -1,6 +1,6 @@
-package com.c0dewan.initiativetracker.swingui;
+package com.c0d3wan.initiativetracker.swingui;
 
-import com.c0dewan.initiativetracker.characters.Character;
+import com.c0d3wan.initiativetracker.characters.Character;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
