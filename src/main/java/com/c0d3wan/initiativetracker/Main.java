@@ -1,4 +1,5 @@
 package com.c0d3wan.initiativetracker;
+import com.c0d3wan.initiativetracker.FileManagement.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.swingui.MainMenu;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -16,8 +17,7 @@ public class Main {
      */
     public static void main(String[] args) {
         CharacterManager characterManager = new CharacterManager();
-
-        FlatDarkLaf.setup();
+        ConfigManager.loadConfig();
         SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
     }
 }

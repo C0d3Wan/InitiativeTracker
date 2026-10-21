@@ -3,6 +3,7 @@ package com.c0d3wan.initiativetracker.swingui;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
+import com.c0d3wan.initiativetracker.FileManagement.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import net.miginfocom.swing.MigLayout;
@@ -151,6 +152,7 @@ public class MainMenu extends JFrame {
         );
 
         if (choice == JOptionPane.YES_OPTION) {
+            ConfigManager.saveConfig();
             System.exit(0);
         }
     }
