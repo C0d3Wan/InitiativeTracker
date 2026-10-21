@@ -200,18 +200,15 @@ public class UIManager {
         parentFrame.repaint();
     }
 
-    public void changeColourMode(String mode, JMenuItem light, JMenuItem dark) {
-        switch (mode) {
-            case "DARK" -> {
-                FlatDarkLaf.setup();
-                light.setEnabled(true);
-                dark.setEnabled(false);
-            }
-            case "LIGHT" -> {
-                FlatLightLaf.setup();
-                light.setEnabled(false);
-                dark.setEnabled(true);
-            }
+    public void setDarkMode(Boolean darkMode) {
+        if (darkMode) {
+            FlatDarkLaf.setup();
+            lightModeItem.setEnabled(true);
+            darkModeItem.setEnabled(false);
+        } else {
+            FlatLightLaf.setup();
+            lightModeItem.setEnabled(false);
+            darkModeItem.setEnabled(true);
         }
         FlatLaf.updateUI();
     }
