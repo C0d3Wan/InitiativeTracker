@@ -10,6 +10,12 @@ public class ConfigManager {
         boolean darkMode;
     }
 
+    public static void saveConfing(String fileName){
+
+    }
+
+
+
 
 
 
