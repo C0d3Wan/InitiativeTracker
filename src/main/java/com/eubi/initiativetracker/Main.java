@@ -1,4 +1,5 @@
 package com.eubi.initiativetracker;
+import com.eubi.initiativetracker.SaveLoad.SaveLoadManager;
 import com.eubi.initiativetracker.characters.CharacterManager;
 import com.eubi.initiativetracker.swingui.MainMenu;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -19,5 +20,6 @@ public class Main {
 
         FlatDarkLaf.setup();
         SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
+        SaveLoadManager.save(characterManager, "Hi");
     }
 }
