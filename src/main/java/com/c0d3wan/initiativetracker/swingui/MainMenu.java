@@ -27,6 +27,11 @@ public class MainMenu extends JFrame {
     private final JButton editNPCHealthButton = new JButton("Edit NPC Health");
 
     private final JMenuBar menuBar = new JMenuBar();
+    private final JMenuItem saveItem = new JMenuItem("Save");
+    private final JMenuItem exitItem = new JMenuItem("Exit");
+
+    private final JMenuItem lightMode = new JMenuItem("Light");
+    private final JMenuItem darkMode = new JMenuItem("Dark");
 
     private final UIManager uiManager;
 
@@ -55,6 +60,17 @@ public class MainMenu extends JFrame {
 
         passButton.addActionListener(e -> uiManager.passDeathSave(true));
         failButton.addActionListener(e -> uiManager.passDeathSave(false));
+
+        lightMode.addActionListener(e -> {
+            uiManager.changeColourMode("LIGHT");
+            lightMode.setEnabled(false);
+            darkMode.setEnabled(true);
+        });
+        darkMode.addActionListener(e -> {
+            uiManager.changeColourMode("DARK");
+            darkMode.setEnabled(false);
+            lightMode.setEnabled(true);
+        });
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -108,11 +124,15 @@ public class MainMenu extends JFrame {
     private void setupMenuBar() {
         JMenu fileMenu = new JMenu("File");
         JMenu viewMenu = new JMenu("View");
-        JMenuItem exitItem = new JMenuItem("Exit");
+        JMenu colourMenu = new JMenu("Colour Modes");
 
+        fileMenu.add(saveItem);
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
 
+        colourMenu.add(darkMode);
+        colourMenu.add(lightMode);
+        viewMenu.add(colourMenu);
         menuBar.add(viewMenu);
     }
 

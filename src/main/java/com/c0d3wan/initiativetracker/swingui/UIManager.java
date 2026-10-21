@@ -3,6 +3,7 @@ package com.c0d3wan.initiativetracker.swingui;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
+import com.formdev.flatlaf.*;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -177,5 +178,17 @@ public class UIManager {
 
         parentFrame.revalidate();
         parentFrame.repaint();
+    }
+
+    public void changeColourMode(String mode) {
+        switch (mode) {
+            case "DARK" -> FlatDarkLaf.setup();
+            case "LIGHT" -> FlatLightLaf.setup();
+        }
+        FlatLaf.updateUI();
+    }
+
+    public void setColourMode() {
+
     }
 }
