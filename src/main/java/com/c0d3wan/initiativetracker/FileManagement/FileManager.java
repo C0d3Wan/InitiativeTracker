@@ -24,13 +24,57 @@ public class FileManager {
         }
     }
 
+    /**
+     * Resolves and returns the appropriate platform-specific configuration/data directory.
+     * <p>
+     * - **Linux:** ~/.config/InitiativeTracker/
+     * - **Windows:** %APPDATA%/InitiativeTracker/
+     * - **Development (IntelliJ):** ./Conf
+     *
+     * @return A {@link File} representing the target save directory.
+     */
+    public static File getDirectory() {
+        File Dir;
+
+        if (isPackaged()) {
+            String os = System.getProperty("os.name").toLowerCase();
+            String userHome = System.getProperty("user.home");
+
+            if (os.contains("win")) {
+                String appData = System.getenv("APPDATA");
+                if (appData != null && !appData.isEmpty()) {
+                    Dir = new File(appData, "InitiativeTracker/");
+                } else {
+                    Dir = new File(userHome, "AppData/Roaming/InitiativeTracker/");
+                }
+            } else if (os.contains("mac")) {
+                Dir = new File(userHome, "Library/Application Support/InitiativeTracker/");
+            } else {
+                String xdgConfig = System.getenv("XDG_CONFIG_HOME");
+                if (xdgConfig != null && !xdgConfig.isEmpty()) {
+                    Dir = new File(xdgConfig, "InitiativeTracker/");
+                } else {
+                    Dir = new File(userHome, ".config/InitiativeTracker/");
+                }
+            }
+        } else {
+            Dir = new File("conf");
+        }
+
+        if (!Dir.exists() && !Dir.mkdirs()) {
+            System.err.println("Warning: Could not create directory: " + Dir.getAbsolutePath());
+        }
+
+        return Dir;
+    }
 
     /**
-     * Resolves and returns the appropriate directory for saving and loading encounter files.
+     * Resolves and returns the appropriate platform-specific configuration/data directory
+     * for saving encounters.
      * <p>
-     * Returns a local {@code "./saves"} folder when running in an IDE, or
-     * {@code "~/InitiativeTrackerSaves"} in the user's home directory when packaged as a JAR.
-     * Automatically creates the directory if it does not already exist.
+     * - **Linux:** ~/.config/InitiativeTracker/saves/
+     * - **Windows:** %APPDATA%/InitiativeTracker/saves/
+     * - **Development (IntelliJ):** ./saves/
      *
      * @return A {@link File} representing the target save directory.
      */
@@ -38,7 +82,7 @@ public class FileManager {
         File saveDir;
 
         if (isPackaged()) {
-            saveDir = new File(System.getProperty("user.home"), "InitiativeTrackerSaves");
+            saveDir = new File(getDirectory(), "/saves/");
         } else {
             saveDir = new File("saves");
         }
