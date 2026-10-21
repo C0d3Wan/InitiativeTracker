@@ -1,5 +1,6 @@
 package com.c0d3wan.initiativetracker.FileManagement;
 
+import com.c0d3wan.initiativetracker.swingui.UIManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -7,6 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import com.formdev.flatlaf.*;
 
 /**
  * Manages the serialization and deserialization of application configuration settings,
@@ -58,7 +60,7 @@ public class ConfigManager {
      */
     private static void saveToFile(File file) throws IOException {
         ConfigDTO configs = new ConfigDTO();
-        //get configs
+        configs.darkMode = FlatLaf.isLafDark();
 
         try (FileWriter writer = new FileWriter(file)) {
             GSON.toJson(configs, writer);
@@ -76,7 +78,7 @@ public class ConfigManager {
     private static void loadFromFile(File file) throws IOException {
         try (FileReader reader = new FileReader(file)) {
             ConfigDTO configs = GSON.fromJson(reader, ConfigDTO.class);
-            //apply configs
+            UIManager.setDarkMode(configs.darkMode);
         }
     }
 }
