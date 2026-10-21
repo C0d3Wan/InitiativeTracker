@@ -10,7 +10,6 @@ import java.io.*;
 import java.util.*;
 
 public class SaveLoadManager {
-
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 
@@ -96,10 +95,15 @@ public class SaveLoadManager {
      * @param manager The active CharacterManager instance.
      * @param fileName The name of the save file to load.
      */
-    public static void load(CharacterManager manager, String fileName) {
+    public static void load(CharacterManager manager, String fileName, boolean clearExisting) {
         File targetFile = new File(getSaveDirectory(), fileName);
-        loadFromFile(manager, targetFile);
+        try {
+            loadFromFile(manager, targetFile, clearExisting);
+        } catch (IOException e) {
+            System.err.println("Warning: Could not load file");
+        }
     }
+
 
     private static void saveToFile(CharacterManager manager, File file) throws IOException {
         if (!file.getName().endsWith(".json")) {
@@ -111,7 +115,7 @@ public class SaveLoadManager {
 
         List<Character> activeOrder = manager.getInitiativeOrder();
         if (!activeOrder.isEmpty()) {
-            session.activeCharacterName = activeOrder.getFirst().getCharacterData().get("name").toString();
+            session.activeCharacterName = activeOrder.getFirst().getCharacterData().get("Name").toString();
         }
 
         for (Character character : manager.getCharacterList()){
@@ -146,5 +150,62 @@ public class SaveLoadManager {
 
     }
 
-    private static void loadFromFile(CharacterManager manager, File file){}
+
+    private static void loadFromFile(CharacterManager manager, File file, boolean clearExisting) throws IOException {
+        try (FileReader reader = new FileReader(file)) {
+            CombatSessionDTO session = GSON.fromJson(reader, CombatSessionDTO.class);
+            if (session == null || session.combatants == null) {
+                System.out.println("Nothing to load");
+                return;
+            }
+            if (clearExisting) {manager.clearCharacters();}
+
+            List<String> existingNames = manager.getCharacterList().stream()
+                    .map(c -> c.getCharacterData().get("Name").toString().toLowerCase())
+                    .toList();
+
+            for (CharacterRecordDTO dto : session.combatants) {
+                if (existingNames.contains(dto.name.toLowerCase(Locale.ROOT))){
+                    continue;
+                }
+
+                Character character = getCharacter(dto);
+                manager.addCharacter(character);
+            }
+            if (clearExisting && session.activeCharacterName != null) {
+                manager.setCurrentCharacterByName(session.activeCharacterName);
+            }
+
+        }
+    }
+
+
+    private static Character getCharacter(CharacterRecordDTO dto) {
+        Character character;
+        if (dto.isNPC){
+            NonePlayerCharacter npc = new NonePlayerCharacter(
+                    dto.name,
+                    dto.initiative,
+                    dto.dexterity,
+                    dto.maxHealth,
+                    dto.type,
+                    dto.deathStatus
+            );
+            npc.setCurrentHealth(dto.currentHealth);
+            npc.editDeathStatus(dto.deathStatus); // Preserves DOWN vs ALIVE/DEAD status
+            npc.editEnemyType(dto.enemyType != null ? dto.enemyType : "");
+            character = npc;
+        } else {
+            character = new Character(
+                    dto.name,
+                    dto.initiative,
+                    dto.dexterity,
+                    dto.type,
+                    dto.deathStatus
+            );
+        }
+        character.setDeathSaves(dto.passSaves, dto.failSaves);
+
+        return character;
+    }
 }
