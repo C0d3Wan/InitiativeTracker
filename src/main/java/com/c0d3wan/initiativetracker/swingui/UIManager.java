@@ -180,15 +180,28 @@ public class UIManager {
         parentFrame.repaint();
     }
 
-    public void changeColourMode(String mode) {
+    public void changeColourMode(String mode, JMenuItem light, JMenuItem dark) {
         switch (mode) {
-            case "DARK" -> FlatDarkLaf.setup();
-            case "LIGHT" -> FlatLightLaf.setup();
+            case "DARK" -> {
+                FlatDarkLaf.setup();
+                light.setEnabled(true);
+                dark.setEnabled(false);
+            }
+            case "LIGHT" -> {
+                FlatLightLaf.setup();
+                light.setEnabled(false);
+                dark.setEnabled(true);
+            }
         }
+        saveCurrentColours(mode);
         FlatLaf.updateUI();
     }
 
-    public void setColourMode() {
+    public void setColourMode(JMenuItem light, JMenuItem dark) {
+
+    }
+
+    private void saveCurrentColours(String colour) {
 
     }
 }
