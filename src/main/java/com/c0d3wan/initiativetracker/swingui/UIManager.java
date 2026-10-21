@@ -200,15 +200,11 @@ public class UIManager {
         parentFrame.repaint();
     }
 
-    public void setDarkMode(Boolean darkMode) {
+    public static void setDarkMode(Boolean darkMode) {
         if (darkMode) {
             FlatDarkLaf.setup();
-            lightModeItem.setEnabled(true);
-            darkModeItem.setEnabled(false);
         } else {
             FlatLightLaf.setup();
-            lightModeItem.setEnabled(false);
-            darkModeItem.setEnabled(true);
         }
         FlatLaf.updateUI();
     }

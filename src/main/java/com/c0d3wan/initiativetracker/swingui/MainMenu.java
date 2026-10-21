@@ -64,8 +64,16 @@ public class MainMenu extends JFrame {
         passButton.addActionListener(e -> uiManager.passDeathSave(true));
         failButton.addActionListener(e -> uiManager.passDeathSave(false));
 
-        lightMode.addActionListener(e -> uiManager.setDarkMode(false));
-        darkMode.addActionListener(e -> uiManager.setDarkMode(true));
+        lightMode.addActionListener(e -> {
+            UIManager.setDarkMode(false);
+            lightMode.setEnabled(false);
+            darkMode.setEnabled(true);
+        });
+        darkMode.addActionListener(e -> {
+            UIManager.setDarkMode(true);
+            lightMode.setEnabled(true);
+            darkMode.setEnabled(false);
+        });
         exitItem.addActionListener(e -> confirmExit());
         addWindowListener(new WindowAdapter() {
             @Override
