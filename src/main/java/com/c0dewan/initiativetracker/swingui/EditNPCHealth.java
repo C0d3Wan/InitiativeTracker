@@ -1,11 +1,11 @@
-package com.eubi.initiativetracker.swingui;
+package com.c0dewan.initiativetracker.swingui;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.*;
-import com.eubi.initiativetracker.characters.Character;
-import com.eubi.initiativetracker.characters.NonePlayerCharacter;
+import com.c0dewan.initiativetracker.characters.Character;
+import com.c0dewan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
 
 public class EditNPCHealth extends JDialog {

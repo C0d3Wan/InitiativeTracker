@@ -1,4 +1,4 @@
-package com.eubi.initiativetracker.characters;
+package com.c0dewan.initiativetracker.characters;
 
 /**
  * Represents a non-player combatant entity within the initiative tracking system.

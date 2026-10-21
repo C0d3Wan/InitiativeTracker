@@ -1,4 +1,4 @@
-package com.eubi.initiativetracker.swingui;
+package com.c0dewan.initiativetracker.swingui;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.awt.*;
 
-import com.eubi.initiativetracker.characters.Character;
-import com.eubi.initiativetracker.characters.NonePlayerCharacter;
+import com.c0dewan.initiativetracker.characters.Character;
+import com.c0dewan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
 
 /**

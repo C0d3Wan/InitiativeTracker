@@ -1,7 +1,7 @@
-package com.eubi.initiativetracker.swingui;
+package com.c0dewan.initiativetracker.swingui;
 
-import com.eubi.initiativetracker.characters.Character;
-import com.eubi.initiativetracker.characters.NonePlayerCharacter;
+import com.c0dewan.initiativetracker.characters.Character;
+import com.c0dewan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

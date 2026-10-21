@@ -1,4 +1,4 @@
-package com.eubi.initiativetracker.characters;
+package com.c0dewan.initiativetracker.characters;
 import java.util.*;
 import java.util.stream.Collectors;
 
