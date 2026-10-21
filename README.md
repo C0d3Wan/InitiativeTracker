@@ -12,6 +12,7 @@ A desktop combat management and initiative tracking application for D&D. Designe
 - [Usage Guide](#usage-guide)
 - [Project Structure](#project-structure)
 - [Authors](#authors)
+- [License](#license)
 
 ---
 
@@ -124,3 +125,8 @@ src/main/java/com/eubi/initiativetracker/
 ## Authors
 - **[EubiWan](https://github.com/EubiWan)** – UI, Semi-Backend
 - **[C0d3-404](https://github.com/c0d3-404)** – Backend, Bridge, Documentation
+
+---
+
+## License
+This project is licensed under the **GNU General Public License v3.0** - see the [LICENSE](LICENSE) file for details.
