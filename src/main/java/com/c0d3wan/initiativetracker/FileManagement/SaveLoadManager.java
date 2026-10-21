@@ -158,7 +158,7 @@ public class SaveLoadManager {
      * @param manager  The active {@link CharacterManager} instance containing combatants.
      * @param fileName The name of the target save file (the {@code .json} extension is appended automatically if omitted).
      */
-    public static void save(CharacterManager manager, String fileName) {
+    public static void saveAs(CharacterManager manager, String fileName) {
         if (!fileName.endsWith(".json")) {
             fileName += ".json";
         }
