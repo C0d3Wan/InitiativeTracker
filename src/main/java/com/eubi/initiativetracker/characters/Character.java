@@ -187,6 +187,11 @@ public class Character {
         recalculateInitiative();
     }
 
+    public void setDeathSaves(int passes, int fails) {
+        deathSaves.put("Pass", passes);
+        deathSaves.put("Fail", fails);
+    }
+
     /**
      * Registers a single death saving throw result for a downed combatant.
      * <p>

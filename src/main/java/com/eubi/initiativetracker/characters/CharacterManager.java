@@ -100,10 +100,12 @@ public class CharacterManager {
 
         currentCharacter = charactersOrdered.get(nextIndex);
 
-        while (currentCharacter.getDeathStatus() == DeathStatus.DEAD){
+        int checked = 0;
+        while (currentCharacter.getDeathStatus() == DeathStatus.DEAD && checked < charactersOrdered.size()) {
             int currentIndex = charactersOrdered.indexOf(currentCharacter);
             nextIndex = (currentIndex + 1) % charactersOrdered.size();
             currentCharacter = charactersOrdered.get(nextIndex);
+            checked++;
         }
 
         initiativeOrdered = getTurnOrder();
@@ -142,6 +144,17 @@ public class CharacterManager {
         charactersOrdered = characters.stream()
                 .sorted(Comparator.comparingDouble(Character::getInitiativeValue).reversed())
                 .collect(Collectors.toList());
+    }
+
+    public void setCurrentCharacterByName(String name) {
+        if (name == null) return;
+        for (Character c : characters) {
+            if (c.getCharacterData().get("Name").toString().equals(name)) {
+                currentCharacter = c;
+                break;
+            }
+        }
+        initiativeOrdered = getTurnOrder();
     }
 
     /**

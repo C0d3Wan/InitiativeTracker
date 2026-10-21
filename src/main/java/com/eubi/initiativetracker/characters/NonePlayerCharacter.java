@@ -67,6 +67,13 @@ public class NonePlayerCharacter extends Character {
         enemyType = type;
     }
 
+    public void setCurrentHealth(int currentHealth) {
+        this.health = Math.clamp(currentHealth, 0, maxHealth);
+        if (this.health == 0) {
+            editDeathStatus(DeathStatus.DEAD);
+        }
+    }
+
     public int getMaxHealth() {
         return maxHealth;
     }
