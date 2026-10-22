@@ -201,8 +201,16 @@ public class UIManager {
         SaveLoadManager.save(characterManager);
     }
 
+    public void saveListAs() {
+        SaveAsMenu saveAsMenu = new SaveAsMenu(parentFrame);
+        saveAsMenu.setVisible(true);
+    }
+
     public void loadList() {
-        SaveLoadManager.load(characterManager, "save.json", true);
+        LoadFileMenu loadMenu = new LoadFileMenu(parentFrame);
+        loadMenu.setVisible(true);
+        String fileToLoad = loadMenu.getLoadedFile();
+        SaveLoadManager.load(characterManager, fileToLoad, true);
         updateInitiativeList();
     }
 }

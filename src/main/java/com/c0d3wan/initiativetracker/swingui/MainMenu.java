@@ -29,6 +29,7 @@ public class MainMenu extends JFrame {
 
     private final JMenuBar menuBar = new JMenuBar();
     private final JMenuItem openItem = new JMenuItem("Open");
+    private final JMenuItem saveAsItem = new JMenuItem("Save As");
     private final JMenuItem saveItem = new JMenuItem("Save");
     private final JMenuItem exitItem = new JMenuItem("Exit");
 
@@ -76,6 +77,7 @@ public class MainMenu extends JFrame {
         });
         openItem.addActionListener(e -> uiManager.loadList());
         saveItem.addActionListener(e -> uiManager.saveList());
+        saveAsItem.addActionListener(e -> uiManager.saveListAs());
         exitItem.addActionListener(e -> confirmExit());
         addWindowListener(new WindowAdapter() {
             @Override
@@ -134,6 +136,7 @@ public class MainMenu extends JFrame {
 
         fileMenu.add(openItem);
         fileMenu.add(saveItem);
+        fileMenu.add(saveAsItem);
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
 
