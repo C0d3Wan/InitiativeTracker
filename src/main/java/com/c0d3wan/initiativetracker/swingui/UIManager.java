@@ -204,6 +204,11 @@ public class UIManager {
     public void saveListAs() {
         SaveAsMenu saveAsMenu = new SaveAsMenu(parentFrame);
         saveAsMenu.setVisible(true);
+
+        if (saveAsMenu.isConfirmed()) {
+            String saveFile = saveAsMenu.getSavefile();
+            SaveLoadManager.saveAs(characterManager, saveFile);
+        }
     }
 
     public void loadList() {
