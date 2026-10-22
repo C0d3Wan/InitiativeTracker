@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import com.c0d3wan.initiativetracker.FileManagement.ConfigManager;
+import com.c0d3wan.initiativetracker.FileManagement.SaveLoadManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import net.miginfocom.swing.MigLayout;
@@ -45,7 +46,6 @@ public class MainMenu extends JFrame {
     public MainMenu(CharacterManager characterManager) {
         uiManager = new UIManager(this, characterManager, initiativeList);
         uiManager.shareDeathSaveItems(passButton, failButton, deathSaveLabel);
-        uiManager.shareToolMenuItems(lightMode, darkMode, openItem,saveItem);
         setupMainMenu();
         setupMenuBar();
 
@@ -75,6 +75,10 @@ public class MainMenu extends JFrame {
             lightMode.setEnabled(true);
             darkMode.setEnabled(false);
         });
+        openItem.addActionListener(e -> {
+            uiManager.loadList();
+        });
+        saveItem.addActionListener(e -> uiManager.saveList());
         exitItem.addActionListener(e -> confirmExit());
         addWindowListener(new WindowAdapter() {
             @Override

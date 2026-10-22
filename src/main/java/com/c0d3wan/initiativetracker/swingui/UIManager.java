@@ -1,5 +1,7 @@
 package com.c0d3wan.initiativetracker.swingui;
 
+import com.c0d3wan.initiativetracker.FileManagement.ConfigManager;
+import com.c0d3wan.initiativetracker.FileManagement.SaveLoadManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
@@ -25,8 +27,6 @@ public class UIManager {
     private JButton failSaveButton;
     private JLabel deathSaveLabel;
 
-    private JMenuItem lightModeItem;
-    private JMenuItem darkModeItem;
     private JMenuItem saveItem;
     private JMenuItem openItem;
 
@@ -41,7 +41,6 @@ public class UIManager {
         this.characterManager = characterManager;
         this.parentFrame = parentFrame;
 
-        setupColourMode();
         initiativeList.setModel(characterListModel);
         initiativeList.setCellRenderer(new CharacterCellRenderer());
     }
@@ -56,13 +55,6 @@ public class UIManager {
         this.passSaveButton = passSaveButton;
         this.failSaveButton = failSaveButton;
         this.deathSaveLabel = deathSaveLabel;
-    }
-
-    public void shareToolMenuItems(JMenuItem light,JMenuItem dark,JMenuItem open,JMenuItem save) {
-        lightModeItem = light;
-        darkModeItem = dark;
-        openItem = open;
-        saveItem = save;
     }
 
     /**
@@ -209,11 +201,12 @@ public class UIManager {
         FlatLaf.updateUI();
     }
 
-    public void setupColourMode() {
-
+    public void saveList() {
+        SaveLoadManager.save(characterManager);
     }
 
-    private void saveCurrentColours(String colour) {
-
+    public void loadList() {
+        SaveLoadManager.load(characterManager, "save.json", true);
+        updateInitiativeList();
     }
 }
