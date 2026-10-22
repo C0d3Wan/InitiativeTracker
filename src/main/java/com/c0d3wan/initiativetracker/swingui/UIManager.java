@@ -1,6 +1,5 @@
 package com.c0d3wan.initiativetracker.swingui;
 
-import com.c0d3wan.initiativetracker.FileManagement.ConfigManager;
 import com.c0d3wan.initiativetracker.FileManagement.SaveLoadManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.characters.Character;
@@ -26,9 +25,6 @@ public class UIManager {
     private JButton passSaveButton;
     private JButton failSaveButton;
     private JLabel deathSaveLabel;
-
-    private JMenuItem saveItem;
-    private JMenuItem openItem;
 
     /**
      * Constructs a new UIManager instance and attaches views and cell renderers.
