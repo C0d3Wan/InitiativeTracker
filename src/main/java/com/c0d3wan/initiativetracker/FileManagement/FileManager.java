@@ -1,6 +1,8 @@
 package com.c0d3wan.initiativetracker.FileManagement;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class FileManager {
 
@@ -92,6 +94,16 @@ public class FileManager {
         }
 
         return saveDir;
+    }
+
+    public static List<File> getFiles() {
+        File dir = getSaveDirectory();
+        File[] files = dir.listFiles();
+        if (files != null) {
+            return Arrays.asList(files);
+        } else {
+            return null;
+        }
     }
 
 }
