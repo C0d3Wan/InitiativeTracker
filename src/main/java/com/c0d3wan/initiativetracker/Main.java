@@ -2,7 +2,6 @@ package com.c0d3wan.initiativetracker;
 import com.c0d3wan.initiativetracker.FileManagement.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.swingui.MainMenu;
-import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.swing.*;
 
