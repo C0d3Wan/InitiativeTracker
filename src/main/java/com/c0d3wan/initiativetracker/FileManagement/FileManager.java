@@ -2,8 +2,13 @@ package com.c0d3wan.initiativetracker.FileManagement;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+/**
+ * Manages platform-specific directory routing, file paths, and file discovery
+ * for configuration and save data across Linux, Windows, and development environments.
+ */
 public class FileManager {
 
     /**
@@ -96,14 +101,36 @@ public class FileManager {
         return saveDir;
     }
 
+    /**
+     * Retrieves a list of all files located within the save directory.
+     *
+     * @return A list of files, or an empty list if none are found.
+     */
     public static List<File> getFiles() {
+        return getFiles(null);
+    }
+
+    /**
+     * Retrieves a list of files located within the save directory, filtered by an optional file extension.
+     *
+     * @param extension Optional file extension filter (e.g. {@code ".json"}), or {@code null} to return all files.
+     * @return A list of matching files, or an empty list if none are found.
+     */
+    public static List<File> getFiles(String extension) {
         File dir = getSaveDirectory();
-        File[] files = dir.listFiles();
-        if (files != null) {
-            return Arrays.asList(files);
-        } else {
-            return null;
+        if (!dir.exists() || !dir.isDirectory()) {
+            return Collections.emptyList();
         }
+
+        File[] files;
+        if (extension != null && !extension.isEmpty()) {
+            final String ext = extension.toLowerCase();
+            files = dir.listFiles((d, name) -> name.toLowerCase().endsWith(ext) && new File(d, name).isFile());
+        } else {
+            files = dir.listFiles(File::isFile);
+        }
+
+        return files != null ? Arrays.asList(files) : Collections.emptyList();
     }
 
 }
