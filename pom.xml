@@ -107,7 +107,7 @@
 
                 <configuration>
                     <name>InitiativeTracker</name>
-                    <mainJar>InitiativeTracker-${version}.jar</mainJar>
+                    <mainJar>InitiativeTracker-${project.version}.jar</mainJar>
                     <destination>dist</destination>
                 </configuration>
             </plugin>
