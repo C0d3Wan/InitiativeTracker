@@ -19,7 +19,7 @@ public class SaveAsMenu extends JDialog {
     private final JTextField saveFileText = new JTextField();
 
     private final JButton savedToFileButton = new JButton("Save to File");
-    private final JLabel savedLabel = new JLabel("Saved to file");
+    private final JLabel savedLabel = new JLabel("Saved to file!");
 
     private boolean confirmed = false;
     private String saveFile;
@@ -73,7 +73,7 @@ public class SaveAsMenu extends JDialog {
         saveMenuPane.add(saveToFileLabel, "cell 0 0");
         saveMenuPane.add(saveFileText, "cell 1 0, growx, push");
         saveMenuPane.add(savedToFileButton, "cell 1 1, growx, push");
-        saveMenuPane.add(savedLabel, "cell 0 2, span, growx, push, hidemode 3");
+        saveMenuPane.add(savedLabel, "cell 0 2, span, hidemode 3, align center");
 
 
     }
@@ -95,8 +95,10 @@ public class SaveAsMenu extends JDialog {
 
     private void saveList() {
         saveFile = saveFileText.getText().trim();
+        saveFileText.setText("");
         confirmed = true;
         savedLabel.setVisible(true);
+        savedToFileButton.setEnabled(false);
         pack();
     }
 

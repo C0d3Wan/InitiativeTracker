@@ -71,7 +71,7 @@ public class RemoveCharacterMenu extends JDialog {
 
         removeCharacterPane.add(selectLabel, "cell 0 0");
         removeCharacterPane.add(separator1, "cell 0 1, span, growx");
-        removeCharacterPane.add(removedCharacterLabel, "cell 0 3, span, growx, hidemode 3");
+        removeCharacterPane.add(removedCharacterLabel, "cell 0 3, span, hidemode 3, alin center");
 
         removeCharacterPane.add(characterSelectionCombo, "cell 1 0, growx");
         removeCharacterPane.add(removeCharacterButton, "cell 1 2, growx");

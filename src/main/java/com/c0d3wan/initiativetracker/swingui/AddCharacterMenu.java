@@ -164,7 +164,7 @@ public class AddCharacterMenu extends JDialog {
         addCharacterPane.add(deathStatusCombo, "cell 1 6, span, growx");
 
         addCharacterPane.add(addCharacterButton, "cell 2 7, align right, growx");
-        addCharacterPane.add(savedCharacterLabel, "cell 0 8, span, growx, hidemode 3");
+        addCharacterPane.add(savedCharacterLabel, "cell 0 8, span, hidemode 3, align center");
     }
 
     /**

@@ -214,8 +214,10 @@ public class UIManager {
     public void loadList() {
         LoadFileMenu loadMenu = new LoadFileMenu(parentFrame);
         loadMenu.setVisible(true);
-        String fileToLoad = loadMenu.getLoadedFile();
-        SaveLoadManager.load(characterManager, fileToLoad, true);
-        updateInitiativeList();
+        if (loadMenu.isItemSelected()) {
+            String fileToLoad = loadMenu.getFileToLoad();
+            SaveLoadManager.load(characterManager, fileToLoad, true);
+            updateInitiativeList();
+        }
     }
 }

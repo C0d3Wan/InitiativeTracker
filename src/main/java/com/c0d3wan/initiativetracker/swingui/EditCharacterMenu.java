@@ -85,7 +85,7 @@ public class EditCharacterMenu extends JDialog {
         editCharacterPane.add(initiativeLabel, "cell 0 3");
         editCharacterPane.add(dexterityLabel, "cell 0 4");
         editCharacterPane.add(deathStatusLabel, "cell 0 5");
-        editCharacterPane.add(savedCharacterLabel, "cell 0 7, span, growx, hidemode 3");
+        editCharacterPane.add(savedCharacterLabel, "cell 0 7, span, hidemode 3, align center");
 
         editCharacterPane.add(characterNameLabel, "cell 1 2");
         editCharacterPane.add(oldInitiativeLabel, "cell 1 3");

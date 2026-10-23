@@ -68,7 +68,7 @@ public class EditNPCHealth extends JDialog {
         editNPCHealth.add(characterNameLabel, "cell 0 2");
         editNPCHealth.add(currentHealthLabel, "cell 0 3");
         editNPCHealth.add(changeLabel, "cell 0 4");
-        editNPCHealth.add(saveEditLabel, "cell 0 6, span, growx, hidemode 3");
+        editNPCHealth.add(saveEditLabel, "cell 0 6, span, hidemode 3, align center");
 
         editNPCHealth.add(plusButton, "cell 1 4, split 2");
         editNPCHealth.add(minusButton, "cell 1 4");
