@@ -8,6 +8,9 @@ import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
 
+/**
+ * Modal {@link JDialog} interface for editing the health of an existing NPC
+ */
 public class EditNPCHealth extends JDialog {
 
     private final JPanel editNPCHealth = new JPanel();
@@ -22,6 +25,12 @@ public class EditNPCHealth extends JDialog {
 
     private final Map<String, NonePlayerCharacter> npcMap = new HashMap<>();
 
+    /**
+     * Constructs a modal dialog for editing health of existing NPCs
+     *
+     * @param parent        The parent {@link Frame} window binding this dialog.
+     * @param characterMap  Lookup map containing all registered characters keyed by name.
+     */
     public EditNPCHealth(Frame parent, Map<String, Character> characterMap) {
         super(parent, "Edit NPC Health", true);
         setupMenu();
@@ -43,6 +52,9 @@ public class EditNPCHealth extends JDialog {
         saveEditButton.addActionListener(e -> saveNPCHealth());
     }
 
+    /**
+     * Sets up the Layout manager, layout, widgets and border for the {@link Frame}
+     */
     private void setupMenu() {
         Dimension windowSize = new Dimension(300, 183);
         editNPCHealth.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][l][r, grow, push]", "[][][][][][][]"));
@@ -80,6 +92,9 @@ public class EditNPCHealth extends JDialog {
         editNPCHealth.add(saveEditButton, "cell 2 5, growx");
     }
 
+    /**
+     * Populates the {@link JComboBox} to hold the NPC names or "No Characters"
+     */
     private void setCharacterDetails() {
         saveEditLabel.setVisible(false);
 
@@ -100,6 +115,9 @@ public class EditNPCHealth extends JDialog {
         pack();
     }
 
+    /**
+     * Refreshes the {@link JLabel}s to hold the NPC's details
+     */
     private void updateCharactersDetails() {
         saveEditLabel.setVisible(false);
 
@@ -109,6 +127,9 @@ public class EditNPCHealth extends JDialog {
         }
     }
 
+    /**
+     * Populates the {@link JLabel} and {@link JSpinner} with NPC current values
+     */
     private void displayCurrentData() {
         NonePlayerCharacter currentCharacter = getCurrentCharacter();
         assert currentCharacter != null;
@@ -128,6 +149,10 @@ public class EditNPCHealth extends JDialog {
         pack();
     }
 
+    /**
+     * Gets the current {@link NonePlayerCharacter} from the {@link JComboBox}
+     * @return the currently selected {@link NonePlayerCharacter}
+     */
     private NonePlayerCharacter getCurrentCharacter() {
         if (characterCombo.getSelectedItem() == null) {
             if (!npcMap.isEmpty()) {
@@ -139,6 +164,9 @@ public class EditNPCHealth extends JDialog {
         return npcMap.get(name);
     }
 
+    /**
+     * Saves the edited NPC health to the current {@link NonePlayerCharacter}
+     */
     private void saveNPCHealth() {
         NonePlayerCharacter currentCharacter = getCurrentCharacter();
         int health;

@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.*;
 
 /**
- * Modal dialog interface for editing statistics (initiative, dexterity, life status)
+ * Modal {@link JDialog} interface for editing statistics (initiative, dexterity, life status)
  * of an existing character.
  */
 public class EditCharacterMenu extends JDialog {
@@ -49,6 +49,9 @@ public class EditCharacterMenu extends JDialog {
         saveEditButton.addActionListener(e -> saveEditedCharacter());
     }
 
+    /**
+     * Sets up the Layout manager, layout, widgets and border for the {@link Frame}
+     */
     private void setupMenu() {
         Dimension windowSize = new Dimension(400, 220);
         editCharacterPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][l][r, grow, push]", "[][][][][][][][]"));
@@ -132,7 +135,7 @@ public class EditCharacterMenu extends JDialog {
     }
 
     /**
-     * Populates the character selection dropdown with registered characters
+     * Populates the character selection {@link JComboBox} with registered characters
      * and initializes selection state.
      */
     private void updateCharactersCombo() {

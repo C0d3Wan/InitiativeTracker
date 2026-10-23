@@ -87,6 +87,9 @@ public class MainMenu extends JFrame {
         });
     }
 
+    /**
+     * Sets up the layout, layout manager, widgets and border for the Window
+     */
     private void setupMainMenu() {
         Dimension windowSize = new Dimension(550, 300);
         mainMenuPane.setLayout(new MigLayout("insets 2 0 2 0, fillx", "[center][center][center][center]", "[center][center][center][center][center]"));
@@ -129,6 +132,9 @@ public class MainMenu extends JFrame {
         failButton.setVisible(false);
     }
 
+    /**
+     * Sets up the menu bar for the main menu
+     */
     private void setupMenuBar() {
         JMenu fileMenu = new JMenu("File");
         JMenu viewMenu = new JMenu("View");
@@ -146,6 +152,9 @@ public class MainMenu extends JFrame {
         menuBar.add(viewMenu);
     }
 
+    /**
+     * prompts the user to ensure they want to exit the application
+     */
     private void confirmExit() {
         int choice = JOptionPane.showConfirmDialog(
                 this,

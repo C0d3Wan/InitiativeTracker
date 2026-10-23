@@ -9,6 +9,9 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 
+/**
+ * Modal {@link JDialog} interface for loading Inistiative list from file
+ */
 public class LoadFileMenu extends JDialog {
     private final JPanel loadMenuPane = new JPanel();
     private final JComboBox<String> fileSelection = new JComboBox<>();
@@ -18,6 +21,10 @@ public class LoadFileMenu extends JDialog {
     private boolean itemSelected = false;
     private String selectedFile;
 
+    /**
+     * Constructs a modal dialog to load character list from a file
+     * @param parent The parent {@link Frame} window binding this dialog.
+     */
     public LoadFileMenu(Frame parent) {
         super(parent, "Load File", true);
         setupMenu();
@@ -31,6 +38,9 @@ public class LoadFileMenu extends JDialog {
         loadButton.addActionListener(e -> loadFile());
     }
 
+    /**
+     * Sets up the Layout manager, layout, widgets and border for the {@link Frame}
+     */
     private void setupMenu() {
         Dimension windowSize = new Dimension(250, 107);
         loadMenuPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][r, grow, push]", "[][][]"));
@@ -52,6 +62,9 @@ public class LoadFileMenu extends JDialog {
         loadMenuPane.add(fileLoadedLabel, "cell 0 2, span, hidemode 3, align center");
     }
 
+    /**
+     * Populates the {@link JComboBox} to contain all the save file names
+     */
     private void setupCombo() {
         List<File> files = FileManager.getFiles();
         if (files == null || files.isEmpty()) {
@@ -65,18 +78,31 @@ public class LoadFileMenu extends JDialog {
         pack();
     }
 
+    /**
+     * Saves the file name to be returned later
+     */
     private void loadFile() {
         itemSelected = true;
-        selectedFile = fileSelection.getSelectedItem().toString();
+        Object selectedItem = fileSelection.getSelectedItem();
+        assert selectedItem != null;
+        selectedFile = selectedItem.toString();
         fileLoadedLabel.setVisible(true);
         loadButton.setEnabled(false);
         pack();
     }
 
+    /**
+     * Gets the selected file name
+     * @return {@code true} if confirmed; {@code false} if canceled or closed.
+     */
     public String getFileToLoad() {
         return selectedFile;
     }
 
+    /**
+     * Checks to see if a file was selected
+     * @return {@link itemSelected}
+     */
     public boolean isItemSelected() {
         return itemSelected;
     }

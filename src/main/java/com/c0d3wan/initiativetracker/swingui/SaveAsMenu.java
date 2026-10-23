@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * A front end menu for creating a save file for the current Initiative list
+ * A {@link JDialog} for creating a save file for the current Initiative list
  */
 public class SaveAsMenu extends JDialog {
     private final JPanel saveMenuPane = new JPanel();
@@ -26,7 +26,8 @@ public class SaveAsMenu extends JDialog {
 
     /**
      * Constructs a new menu for saving the current initiative list to a new file
-     * @param parent The parent frame for creating a modal pop up
+     *
+     * @param parent The parent {@link Frame} window binding this dialog.
      */
     public SaveAsMenu(Frame parent) {
         super(parent, "Save As", true);
@@ -55,6 +56,9 @@ public class SaveAsMenu extends JDialog {
         savedToFileButton.addActionListener(e -> saveList());
     }
 
+    /**
+     * Sets up the Layout manager, layout, widgets and border for the {@link Frame}
+     */
     private void setupMenu() {
         Dimension windowSize = new Dimension(250, 107);
         saveMenuPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][r]", "[][][]"));
@@ -78,6 +82,10 @@ public class SaveAsMenu extends JDialog {
 
     }
 
+    /**
+     * Validates if there is a file name in the {@link JTextField}.
+     * Enabes the {@link savedToFileButton}
+     */
     private void validateFileName() {
         String name = saveFileText.getText().trim();
         List<File> files = FileManager.getFiles();
@@ -93,6 +101,9 @@ public class SaveAsMenu extends JDialog {
         savedToFileButton.setEnabled(isValid);
     }
 
+    /**
+     * Saves the inputed file name to be returned later
+     */
     private void saveList() {
         saveFile = saveFileText.getText().trim();
         saveFileText.setText("");
@@ -102,10 +113,18 @@ public class SaveAsMenu extends JDialog {
         pack();
     }
 
+    /**
+     * Checks if the file name was successfully inputted
+     * @return {@code true} if confirmed; {@code false} if canceled or closed.
+     */
     public boolean isConfirmed() {
         return confirmed;
     }
 
+    /**
+     * Returns the saved file name
+     * @return {@link saveFile}
+     */
     public String getSavefile() {
         return saveFile;
     }

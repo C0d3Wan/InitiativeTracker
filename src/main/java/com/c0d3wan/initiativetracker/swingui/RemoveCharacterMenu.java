@@ -52,7 +52,9 @@ public class RemoveCharacterMenu extends JDialog {
             }
         });
     }
-
+    /**
+     * Sets up the Layout manager, layout, widgets and border for the {@link Frame}
+     */
     private void setupMenu() {
         Dimension windowSize = new Dimension(275, 111);
         removeCharacterPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][r, grow, push]", "[][][][]"));
@@ -150,6 +152,10 @@ public class RemoveCharacterMenu extends JDialog {
         pack();
     }
 
+    /**
+     * Confirms if a user wants to remove the selected character
+     * @return {@link Boolean}
+     */
     private boolean confirmRemove() {
         int choice = JOptionPane.showConfirmDialog(
                 this,

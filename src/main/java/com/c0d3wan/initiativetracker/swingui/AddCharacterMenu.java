@@ -13,7 +13,7 @@ import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Modal dialog interface for creating and adding a new character to the initiative tracker.
+ * Modal {@link JDialog} interface for creating and adding a new character to the initiative tracker.
  */
 public class AddCharacterMenu extends JDialog {
     private final JPanel addCharacterPane = new JPanel();
@@ -71,6 +71,11 @@ public class AddCharacterMenu extends JDialog {
         addCharacterButton.addActionListener(e -> saveCharacter());
     }
 
+    /**
+     * Forms a new {@link Character} or {@link NonePlayerCharacter} using inputs from the user
+     * <p>
+     * If it is a {@link NonePlayerCharacter}, adds it to a group of similar NPCs
+     */
     private void saveCharacter() {
         String name = characterName.getText().trim();
         int initiative = (int) initiativeSpinner.getValue();
@@ -79,7 +84,7 @@ public class AddCharacterMenu extends JDialog {
         String status = (String) deathStatusCombo.getSelectedItem();
 
         if (name.length() > 16) {
-            name = name.substring(0, 14) + "...";
+            name = name.substring(0, 16) + "...";
         }
 
         assert type != null;
@@ -108,6 +113,9 @@ public class AddCharacterMenu extends JDialog {
         pack();
     }
 
+    /**
+     * Sets up the layout manager, layout, widgets and border of the {@link Frame}
+     */
     private void setupMenu() {
         Dimension windowSize = new Dimension(400,220);
         addCharacterPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][center, grow, push][right, grow]", "[][][][][][][][][]"));
@@ -169,6 +177,7 @@ public class AddCharacterMenu extends JDialog {
 
     /**
      * Checks that the entered name is non-empty and case-insensitively unique against existing characters.
+     * <p>
      * Enables or disables the submit button accordingly.
      */
     private void validateName() {
@@ -184,6 +193,9 @@ public class AddCharacterMenu extends JDialog {
         addCharacterButton.setEnabled(isValid);
     }
 
+    /**
+     * Updates the {@link Frame} to show the NPC settings
+     */
     private void updateForMaxHealth() {
         Object selectedItem = characterTypeCombo.getSelectedItem();
         assert selectedItem != null;
