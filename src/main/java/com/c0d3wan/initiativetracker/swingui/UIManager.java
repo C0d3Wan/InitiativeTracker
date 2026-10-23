@@ -188,6 +188,11 @@ public class UIManager {
         parentFrame.repaint();
     }
 
+    /**
+     * Changes the colour mode of the ui (Light/Dark)
+     *
+     * @param darkMode boolean {@code true} for dark mode, {@code false} for light mode
+     */
     public static void setDarkMode(Boolean darkMode) {
         if (darkMode) {
             FlatDarkLaf.setup();
@@ -197,20 +202,36 @@ public class UIManager {
         FlatLaf.updateUI();
     }
 
+    /**
+     * Calls the {@link SaveLoadManager} to save the current Initiative list
+     */
     public void saveList() {
         SaveLoadManager.save(characterManager);
     }
 
+    /**
+     * Opens a {@link SaveAsMenu} to save the current list to a new file
+     */
     public void saveListAs() {
         SaveAsMenu saveAsMenu = new SaveAsMenu(parentFrame);
         saveAsMenu.setVisible(true);
+
+        if (saveAsMenu.isConfirmed()) {
+            String saveFile = saveAsMenu.getSavefile();
+            SaveLoadManager.saveAs(characterManager, saveFile);
+        }
     }
 
+    /**
+     * Opens a {@link LoadFileMenu} to load a list from an existing file
+     */
     public void loadList() {
         LoadFileMenu loadMenu = new LoadFileMenu(parentFrame);
         loadMenu.setVisible(true);
-        String fileToLoad = loadMenu.getLoadedFile();
-        SaveLoadManager.load(characterManager, fileToLoad, true);
-        updateInitiativeList();
+        if (loadMenu.isItemSelected()) {
+            String fileToLoad = loadMenu.getFileToLoad();
+            SaveLoadManager.load(characterManager, fileToLoad, true);
+            updateInitiativeList();
+        }
     }
 }
