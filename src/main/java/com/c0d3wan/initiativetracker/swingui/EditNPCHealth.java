@@ -157,7 +157,8 @@ public class EditNPCHealth extends JDialog {
         changeValueSpinner.setModel(spinnerConstraints);
         currentHealth.setText(health +"/"+ maxHealth);
 
-        pack();
+        revalidate();
+        repaint();
     }
 
     /**
@@ -180,11 +181,9 @@ public class EditNPCHealth extends JDialog {
      */
     private void saveNPCHealth() {
         NonePlayerCharacter currentCharacter = getCurrentCharacter();
-        int health;
+        int health = (int) changeValueSpinner.getValue();
         if (minusButton.isSelected()) {
-            health = -(int) changeValueSpinner.getValue();
-        } else {
-            health = (int) changeValueSpinner.getValue();
+            health = -health;
         }
 
         if (currentCharacter == null) {
