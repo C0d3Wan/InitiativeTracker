@@ -12,7 +12,7 @@ public class NonePlayerCharacter extends Character {
     private int health;
     private final int maxHealth;
     private String enemyType;
-    private transient Horde horde;
+    private Horde horde;
 
     /**
      * Constructs a new NPC instance
@@ -69,11 +69,13 @@ public class NonePlayerCharacter extends Character {
         enemyType = type;
     }
 
-    public void setCurrentHealth(int currentHealth) {
+    public void setCurrentHealth(int currentHealth, boolean cheakDeath) {
         this.health = Math.clamp(currentHealth, 0, maxHealth);
         if (this.health == 0) {
             editDeathStatus(DeathStatus.DEAD);
-            horde.checkDead();
+            if (cheakDeath) {
+                horde.checkDead();
+            }
         }
     }
 

@@ -104,11 +104,59 @@ public class SaveLoadManager {
         int failSaves;
         boolean isNPC;
         boolean isHorde;
-        List<NonePlayerCharacter> npcs;
+        List<NPCRecordDTO> npcs = new ArrayList<>();
         int currentHealth;
         int maxHealth;
         String enemyType;
     }
+
+    private static class NPCRecordDTO {
+        String name;
+        int initiative;
+        int dexterity;
+        String type;
+        String deathStatus;
+
+        int currentHealth;
+        int maxHealth;
+        String enemyType;
+    }
+
+    private static NPCRecordDTO toNPCDTO(NonePlayerCharacter npc) {
+        NPCRecordDTO dto = new NPCRecordDTO();
+
+        Map<String, Object> data = npc.getCharacterData();
+
+        dto.name = data.get("Name").toString();
+        dto.initiative = (int) data.get("Initiative");
+        dto.dexterity = (int) data.get("Dexterity");
+        dto.type = data.get("Type").toString();
+        dto.deathStatus = data.get("DeathStatus").toString();
+
+        dto.currentHealth = npc.getHealth();
+        dto.maxHealth = npc.getMaxHealth();
+        dto.enemyType = npc.getEnemyType();
+
+        return dto;
+    }
+
+    private static NonePlayerCharacter fromNPCDTO(NPCRecordDTO dto) {
+        NonePlayerCharacter npc =
+                new NonePlayerCharacter(
+                        dto.name,
+                        dto.initiative,
+                        dto.dexterity,
+                        dto.maxHealth,
+                        dto.type,
+                        dto.deathStatus
+                );
+
+        npc.setCurrentHealth(dto.currentHealth, false);
+        npc.editDeathStatus(dto.deathStatus);
+        npc.editEnemyType(dto.enemyType != null ? dto.enemyType : "");
+        return npc;
+    }
+
 
     /**
      * Saves the current combat encounter state to the currently active file.
@@ -199,9 +247,11 @@ public class SaveLoadManager {
                 dto.currentHealth = npc.getHealth();
                 dto.maxHealth = npc.getMaxHealth();
                 dto.enemyType = npc.getEnemyType();
-                if (character instanceof Horde){
+                if (character instanceof Horde horde){
                     dto.isHorde = true;
-                    dto.npcs = ((Horde)npc).getNPCs();
+                    for (NonePlayerCharacter member: horde.getNPCs()){
+                        dto.npcs.add(toNPCDTO(member));
+                    }
                 }
             } else {
                 dto.isNPC = false;
@@ -212,11 +262,9 @@ public class SaveLoadManager {
         }
 
         try {
-            System.out.println("TRY");
             String jsonString = GSON.toJson(session);
-            System.out.println(jsonString);
-            //String encryptedString = encrypt(jsonString);
-            Files.writeString(file.toPath(), jsonString, StandardCharsets.UTF_8);
+            String encryptedString = encrypt(jsonString);
+            Files.writeString(file.toPath(), encryptedString, StandardCharsets.UTF_8);
             System.out.println("Saved " + file.getAbsolutePath());
         } catch (Exception e) {
             throw new IOException("Failed to encrypt and save file", e);
@@ -261,7 +309,7 @@ public class SaveLoadManager {
             }
 
         } catch (Exception e) {
-            throw new IOException("Failed to decrypt and load file", e);
+            throw new IOException("Failed to load file", e);
         }
     }
 
@@ -284,8 +332,17 @@ public class SaveLoadManager {
                         dto.deathStatus,
                         dto.maxHealth
                 );
-                ((Horde) npc).editNPCs(dto.npcs);
+                npc.setCurrentHealth(dto.currentHealth, false);
+
+                List<NonePlayerCharacter> members = new ArrayList<>();
+
+                for (NPCRecordDTO memberDTO: dto.npcs){
+                    members.add(fromNPCDTO(memberDTO));
+                }
+                ((Horde) npc).editNPCs(members);
+                ((Horde) npc).relinkNPCs();
                 ((Horde) npc).checkDead();
+
             }else {
                 npc = new NonePlayerCharacter(
                         dto.name,
@@ -295,7 +352,7 @@ public class SaveLoadManager {
                         dto.type,
                         dto.deathStatus
                 );
-                npc.setCurrentHealth(dto.currentHealth);
+                npc.setCurrentHealth(dto.currentHealth, false);
                 npc.editDeathStatus(dto.deathStatus);
                 npc.editEnemyType(dto.enemyType != null ? dto.enemyType : "");
             }

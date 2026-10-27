@@ -29,7 +29,13 @@ public class Horde extends NonePlayerCharacter{
                 dead++;
             }
         }
-        setCurrentHealth(getMaxHealth()-dead);
+        setCurrentHealth(getMaxHealth()-dead, true);
+    }
+
+    public void relinkNPCs(){
+        for (NonePlayerCharacter npc: NPCs){
+            npc.addHorde(this);
+        }
     }
 
     public List<NonePlayerCharacter> getNPCs(){
