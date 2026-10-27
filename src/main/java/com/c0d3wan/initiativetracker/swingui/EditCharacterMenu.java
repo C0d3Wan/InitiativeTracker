@@ -1,6 +1,7 @@
 package com.c0d3wan.initiativetracker.swingui;
 
 import com.c0d3wan.initiativetracker.characters.Character;
+import com.c0d3wan.initiativetracker.characters.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -20,7 +21,7 @@ public class EditCharacterMenu extends JDialog {
     private final JLabel oldDexterityLabel = new JLabel();
     private final JLabel oldDeathStatusLabel = new JLabel();
     private final JSpinner newDexteritySpinner = new JSpinner();
-    private final JComboBox<String> newDeathStatusCombo = new JComboBox<>();
+    private final JComboBox<DeathStatus> newDeathStatusCombo = new JComboBox<>();
     private final JComboBox<String> charactersCombo = new JComboBox<>();
     private final JButton saveEditButton = new JButton("Save Edit");
     private final JLabel savedCharacterLabel = new JLabel("Character Saved!!");
@@ -73,10 +74,10 @@ public class EditCharacterMenu extends JDialog {
         newDexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
         newInitiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
 
-        final DefaultComboBoxModel<String> deathStatusComboModel = new DefaultComboBoxModel<>();
-        deathStatusComboModel.addElement("ALIVE");
-        deathStatusComboModel.addElement("DEAD");
-        deathStatusComboModel.addElement("DOWN");
+        final DefaultComboBoxModel<DeathStatus> deathStatusComboModel = new DefaultComboBoxModel<>();
+        deathStatusComboModel.addElement(DeathStatus.ALIVE);
+        deathStatusComboModel.addElement(DeathStatus.DEAD);
+        deathStatusComboModel.addElement(DeathStatus.DOWN);
         newDeathStatusCombo.setModel(deathStatusComboModel);
 
         saveEditButton.setFocusPainted(false);
@@ -123,13 +124,12 @@ public class EditCharacterMenu extends JDialog {
         if (newInitiative != (int) currentCharacterData.get("Initiative")) {
             currentCharacter.editInitiativeNum(newInitiative);
         }
-        assert newDeathStatus != null;
+        if (newDeathStatus == null) {return;}
         if (!newDeathStatus.equals(currentCharacterData.get("DeathStatus"))) {
             currentCharacter.editDeathStatus(newDeathStatus);
         }
         updateDetails();
         savedCharacterLabel.setVisible(true);
-        pack();
 
         //this.dispose();
     }
@@ -152,12 +152,12 @@ public class EditCharacterMenu extends JDialog {
         } else {
             saveEditButton.setEnabled(true);
             for (String characterName : characterMap.keySet()) {
+                charactersCombo.removeAllItems();
                 charactersCombo.addItem(characterName);
             }
 
             displayCurrentCharacterData();
         }
-        pack();
     }
 
     /**
@@ -166,9 +166,8 @@ public class EditCharacterMenu extends JDialog {
     private void updateDetails() {
         savedCharacterLabel.setVisible(false);
 
-        if (!this.characterMap.isEmpty()) {
+        if (!characterMap.isEmpty()) {
             displayCurrentCharacterData();
-            pack();
         }
     }
 
@@ -177,16 +176,16 @@ public class EditCharacterMenu extends JDialog {
      */
     private void displayCurrentCharacterData() {
         Character currentCharacter = getCurrentCharacter();
-        assert currentCharacter != null;
+        if (currentCharacter == null) {return;}
         Map<String, Object> currentCharacterData = currentCharacter.getCharacterData();
-        characterNameLabel.setText(currentCharacterData.get("Name").toString());
+        characterNameLabel.setText(currentCharacter.getName());
         oldInitiativeLabel.setText(currentCharacterData.get("Initiative").toString());
         oldDexterityLabel.setText(currentCharacterData.get("Dexterity").toString());
-        oldDeathStatusLabel.setText(currentCharacterData.get("DeathStatus").toString());
+        oldDeathStatusLabel.setText(currentCharacter.getDeathStatus().toString());
 
         newInitiativeSpinner.setValue(currentCharacterData.get("Initiative"));
         newDexteritySpinner.setValue(currentCharacterData.get("Dexterity"));
-        newDeathStatusCombo.setSelectedItem(currentCharacterData.get("DeathStatus"));
+        newDeathStatusCombo.setSelectedItem(currentCharacter.getDeathStatus());
     }
 
     /**
