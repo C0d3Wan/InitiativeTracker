@@ -6,7 +6,7 @@ public class Horde extends NonePlayerCharacter{
     private final List<NonePlayerCharacter> NPCs = new ArrayList<>();
 
     public Horde(String name, int initiative, int dex, int maxHealth, CharacterType type, DeathStatus status, int amount){
-        super(name, initiative, dex, amount, type, status);
+        super(name, initiative, dex, amount, CharacterType.HORDE, status);
         for (int i = 1; i <= amount; i++){
             NonePlayerCharacter npc = new NonePlayerCharacter(name+i,initiative, dex, maxHealth, type, status);
             npc.editEnemyType(name);
