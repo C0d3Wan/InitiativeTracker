@@ -6,8 +6,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import com.c0d3wan.initiativetracker.characters.Horde;
-import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
+import com.c0d3wan.initiativetracker.characters.*;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -35,13 +34,13 @@ public class EditNPCHealth extends JDialog {
      */
     public EditNPCHealth(Frame parent, Map<String, NonePlayerCharacter> characterMap) {
         super(parent, "Edit NPC Health", true);
-        npcMap = characterMap;
+        npcMap = new HashMap<>(characterMap);
         setupMenu();
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         pack();
+        setMinimumSize(getSize());
         setLocationRelativeTo(null);
-
 
         setCharacterDetails();
 
@@ -53,10 +52,8 @@ public class EditNPCHealth extends JDialog {
      * Sets up the Layout manager, layout, widgets and border for the {@link Frame}
      */
     private void setupMenu() {
-        Dimension windowSize = new Dimension(300, 183);
         editNPCHealth.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][l][r, grow, push]", "[][][][][][][]"));
         editNPCHealth.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        setMinimumSize(windowSize);
 
         setContentPane(editNPCHealth);
 
@@ -103,23 +100,30 @@ public class EditNPCHealth extends JDialog {
             saveEditButton.setEnabled(false);
         } else {
             saveEditButton.setEnabled(true);
-            for (String characterName : npcMap.keySet()) {
-                NonePlayerCharacter npc = npcMap.get(characterName);
-                if (npc.getCharacterType().toString().equals("HORDE")) {
-                    npcMap.remove(characterName);
+            List<String> charactersToCombo = new ArrayList<>();
+            List<String> hordesToRemove = new ArrayList<>();
+            Map<String, NonePlayerCharacter> npcsToHash = new HashMap<>();
+            for (Map.Entry<String, NonePlayerCharacter> entry : npcMap.entrySet()) {
+                String characterName = entry.getKey();
+                NonePlayerCharacter npc = entry.getValue();
+
+                if (npc.getCharacterType() == CharacterType.HORDE) {
+                    hordesToRemove.add(characterName);
                     List<NonePlayerCharacter> npcs =  ((Horde) npc).getNPCs();
                     for (NonePlayerCharacter enemy: npcs) {
-                        characterCombo.addItem(enemy.getCharacterData().get("Name").toString());
-                        npcMap.put(enemy.getCharacterData().get("Name").toString(), enemy);
+                        charactersToCombo.add(enemy.getName());
+                        npcsToHash.put(enemy.getName(), enemy);
                     }
                 } else {
-                    characterCombo.addItem(characterName);
+                    charactersToCombo.add(characterName);
                 }
             }
+            hordesToRemove.forEach(npcMap::remove);
+            npcMap.putAll(npcsToHash);
+            charactersToCombo.forEach(characterCombo::addItem);
 
             displayCurrentData();
         }
-        pack();
     }
 
     /**
@@ -130,7 +134,6 @@ public class EditNPCHealth extends JDialog {
 
         if (!npcMap.isEmpty()) {
             displayCurrentData();
-            pack();
         }
     }
 
@@ -139,8 +142,9 @@ public class EditNPCHealth extends JDialog {
      */
     private void displayCurrentData() {
         NonePlayerCharacter currentCharacter = getCurrentCharacter();
-        assert currentCharacter != null;
-        Map<String, Object> currentCharacterData = currentCharacter.getCharacterData();
+        if (currentCharacter == null) {
+            return;
+        }
 
         int health = currentCharacter.getHealth();
         int maxHealth = currentCharacter.getMaxHealth();
@@ -149,7 +153,7 @@ public class EditNPCHealth extends JDialog {
 
         minusButton.setSelected(false);
         plusButton.setSelected(true);
-        nameLabel.setText(currentCharacterData.get("Name").toString());
+        nameLabel.setText(currentCharacter.getName());
         changeValueSpinner.setModel(spinnerConstraints);
         currentHealth.setText(health +"/"+ maxHealth);
 
@@ -183,11 +187,12 @@ public class EditNPCHealth extends JDialog {
             health = (int) changeValueSpinner.getValue();
         }
 
-        assert currentCharacter != null;
+        if (currentCharacter == null) {
+            return;
+        }
         currentCharacter.editHealth(health);
 
         saveEditLabel.setVisible(true);
-        pack();
         updateCharactersDetails();
     }
 }
