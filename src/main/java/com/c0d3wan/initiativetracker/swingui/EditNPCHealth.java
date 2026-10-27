@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.*;
-import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
 
@@ -23,7 +22,7 @@ public class EditNPCHealth extends JDialog {
     private final JRadioButton plusButton = new JRadioButton("+");
     private final JRadioButton minusButton = new JRadioButton("-");
 
-    private final Map<String, NonePlayerCharacter> npcMap = new HashMap<>();
+    private final Map<String, NonePlayerCharacter> npcMap;
 
     /**
      * Constructs a modal dialog for editing health of existing NPCs
@@ -31,20 +30,15 @@ public class EditNPCHealth extends JDialog {
      * @param parent        The parent {@link Frame} window binding this dialog.
      * @param characterMap  Lookup map containing all registered characters keyed by name.
      */
-    public EditNPCHealth(Frame parent, Map<String, Character> characterMap) {
+    public EditNPCHealth(Frame parent, Map<String, NonePlayerCharacter> characterMap) {
         super(parent, "Edit NPC Health", true);
+        npcMap = characterMap;
         setupMenu();
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
 
-        for (Character character : characterMap.values()) {
-            Map<String, Object> characterData = character.getCharacterData();
-            if (!characterData.get("Type").toString().equals("PLAYER")) {
-                npcMap.put(characterData.get("Name").toString(), (NonePlayerCharacter) character);
-            }
-        }
 
         setCharacterDetails();
 
