@@ -10,25 +10,13 @@ import java.util.stream.Collectors;
 public class CharacterManager {
     private final List<Character> characters;
     private List<Character> charactersOrdered;
-    private List<Character> initiativeOrdered;
     private Character currentCharacter;
 
-    /**
-     * Constructs a new, empty CharacterManager instance.
-     */
     public CharacterManager() {
         characters = new ArrayList<>();
         charactersOrdered = new ArrayList<>();
-        initiativeOrdered = new ArrayList<>();
     }
 
-    /**
-     * Registers a new character into combat, resorts the roster, and recalculates turn order.
-     * <p>
-     * If no turn is currently underway, this method automatically starts the first turn.
-     *
-     * @param character The {@link Character} instance to append to combat.
-     */
     public void addCharacter(Character character) {
         characters.add(character);
         sortCharacters();
@@ -36,7 +24,6 @@ public class CharacterManager {
         if (currentCharacter == null) {
             newTurn();
         }
-        initiativeOrdered = getTurnOrder();
 
     }
 
@@ -47,7 +34,6 @@ public class CharacterManager {
      */
     public void updateCharacters() {
         sortCharacters();
-        initiativeOrdered = getTurnOrder();
     }
 
     /**
@@ -68,7 +54,6 @@ public class CharacterManager {
 
 
         if (!wasCurrent) {
-            initiativeOrdered = getTurnOrder();
             return;
         }
 
@@ -76,16 +61,9 @@ public class CharacterManager {
         if (!charactersOrdered.isEmpty()) {
             currentCharacter = charactersOrdered.get(index % charactersOrdered.size());
         }
-        initiativeOrdered = getTurnOrder();
 
     }
 
-    /**
-     * Advances combat to the next character's turn.
-     * <p>
-     * Rotates cyclically to the beginning of the initiative list once the end of
-     * the round is reached. Marks the prior combatant inactive and the new combatant active.
-     */
     public void newTurn() {
         sortCharacters();
         if (charactersOrdered.isEmpty()) {
@@ -109,17 +87,10 @@ public class CharacterManager {
             checked++;
         }
 
-        initiativeOrdered = getTurnOrder();
+
     }
 
-    /**
-     * Generates a circular rotation of the sorted initiative list positioned so that the
-     * active character is at index 0.
-     *
-     * @return A newly allocated {@link List} containing all combatants in current turn sequence.
-     */
     public List<Character> getTurnOrder() {
-        sortCharacters();
         int i = charactersOrdered.indexOf(currentCharacter);
         if (i <= 0) return new ArrayList<>(charactersOrdered);
 
@@ -128,19 +99,12 @@ public class CharacterManager {
         return rotated;
     }
 
-    /**
-     * Clears all combatants from the manager and resets active turn state to empty.
-     */
     public void clearCharacters() {
         characters.clear();
         charactersOrdered.clear();
         currentCharacter = null;
-        initiativeOrdered = getTurnOrder();
     }
 
-    /**
-     * Sorts the underlying character roster by descending composite initiative score.
-     */
     public void sortCharacters() {
         charactersOrdered = characters.stream()
                 .sorted(Comparator.comparingDouble(Character::getInitiativeValue).reversed())
@@ -150,26 +114,22 @@ public class CharacterManager {
     public void setCurrentCharacterByName(String name) {
         if (name == null) return;
         for (Character c : characters) {
-            if (c.getCharacterData().get("Name").toString().equals(name)) {
+            if (c.getName().equals(name)) {
                 currentCharacter = c;
                 break;
             }
         }
-        initiativeOrdered = getTurnOrder();
     }
 
-    /**
-     * Retrieves the raw, unsorted list of combatants in their original insertion order.
-     *
-     * @return The mutable master {@link List} of all added characters.
-     */
-    public List<Character> getCharacterList() {return characters;}
+    public List<Character> getCharacterList() {
+        return Collections.unmodifiableList(characters);
+    }
 
-    /**
-     * Retrieves the combat-ready list of characters rotated to the current turn order.
-     *
-     * @return The {@link List} of characters starting with the active combatant at index 0.
-     */
-    public List<Character> getInitiativeOrder() {return initiativeOrdered;}
+    public List<Character> getInitiativeOrder() {
+        return getTurnOrder();
+    }
 
+    public Character getCurrentCharacter() {
+        return currentCharacter;
+    }
 }

@@ -16,17 +16,10 @@ import com.formdev.flatlaf.*;
 public class ConfigManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    /**
-     * Data Transfer Object (DTO) representing persistent application configuration settings.
-     */
     private static class ConfigDTO {
         boolean darkMode;
     }
 
-    /**
-     * Saves the current application configuration states to disk as {@code Config.json}
-     * within the designated configuration directory.
-     */
     public static void saveConfig() {
         File targetFile = new File(FileManager.getDirectory(), "Config.json");
         try {
@@ -36,27 +29,19 @@ public class ConfigManager {
         }
     }
 
-    /**
-     * Loads application configuration states from {@code Config.json} located
-     * within the designated configuration directory and applies them.
-     */
     public static void loadConfig() {
         File targetFile = new File(FileManager.getDirectory(), "Config.json");
+        if (!targetFile.exists()) {
+            return;
+        }
+
         try {
             loadFromFile(targetFile);
-        } catch (IOException e) {
+        } catch (IOException | JsonSyntaxException e) {
             System.err.println("Warning: Could not load Config.json");
         }
     }
 
-
-    /**
-     * Internal helper method to build the configuration DTO, serialize it to JSON,
-     * and write it to the target file.
-     *
-     * @param file The destination {@link File} for the configuration data.
-     * @throws IOException if writing to the file fails.
-     */
     private static void saveToFile(File file) throws IOException {
         ConfigDTO configs = new ConfigDTO();
         configs.darkMode = FlatLaf.isLafDark();
@@ -67,17 +52,13 @@ public class ConfigManager {
     }
 
 
-    /**
-     * Internal helper method to read the configuration JSON file from disk,
-     * parse it into a {@link ConfigDTO}, and apply the settings.
-     *
-     * @param file The source {@link File} containing configuration data.
-     * @throws IOException if reading or parsing the file fails.
-     */
     private static void loadFromFile(File file) throws IOException {
         try (FileReader reader = new FileReader(file)) {
             ConfigDTO configs = GSON.fromJson(reader, ConfigDTO.class);
-            UIManager.setDarkMode(configs.darkMode);
+
+            if (configs != null) {
+                UIManager.setDarkMode(configs.darkMode);
+            }
         }
     }
 }

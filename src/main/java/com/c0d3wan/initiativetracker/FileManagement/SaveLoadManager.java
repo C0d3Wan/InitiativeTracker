@@ -10,6 +10,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Handles serializing, deserializing, encrypting, and decrypting combat encounters
@@ -25,15 +26,6 @@ public class SaveLoadManager {
 
     private static String currentFileName = null;
 
-    /**
-     * Initializes and retrieves the AES secret key used for encryption and decryption.
-     * <p>
-     * Attempts to read a build-time property injected via Maven,
-     * falling back to a default key if running locally within an IDE.
-     *
-     * @return A {@link SecretKeySpec} configured for AES encryption.
-     * @throws RuntimeException if key decoding fails.
-     */
     private static SecretKeySpec getSecretKey() {
         try {
             String buildKey = System.getProperty("save.encryption.key");
@@ -48,13 +40,6 @@ public class SaveLoadManager {
         }
     }
 
-    /**
-     * Encrypts a plain-text JSON string using AES and encodes the result into a Base64 string.
-     *
-     * @param data The plain-text JSON string to encrypt.
-     * @return The Base64-encoded encrypted ciphertext.
-     * @throws Exception if encryption fails.
-     */
     private static String encrypt(String data) throws Exception {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, getSecretKey());
@@ -62,13 +47,6 @@ public class SaveLoadManager {
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-    /**
-     * Decodes a Base64-encoded ciphertext string and decrypts it back to plain-text JSON using AES.
-     *
-     * @param encryptedData The Base64-encoded encrypted string.
-     * @return The decrypted plain-text JSON string.
-     * @throws Exception if decryption fails.
-     */
     private static String decrypt(String encryptedData) throws Exception {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, getSecretKey());
@@ -77,20 +55,11 @@ public class SaveLoadManager {
         return new String(decryptedBytes, StandardCharsets.UTF_8);
     }
 
-
-    /**
-     * Data Transfer Object (DTO) representing the entire saved combat session state,
-     * including active turn ownership and the collection of combatants.
-     */
     private static class CombatSessionDTO {
         String activeCharacterName;
         List<CharacterRecordDTO> combatants = new ArrayList<>();
     }
 
-    /**
-     * Flat Data Transfer Object (DTO) representing individual character or NPC attributes
-     * for serialization into JSON format.
-     */
     private static class CharacterRecordDTO {
         String name;
         int initiative;
@@ -122,13 +91,13 @@ public class SaveLoadManager {
     private static NPCRecordDTO toNPCDTO(NonePlayerCharacter npc) {
         NPCRecordDTO dto = new NPCRecordDTO();
 
-        Map<String, Object> data = npc.getCharacterData();
+        CharacterData data = npc.getCharacterData();
 
-        dto.name = data.get("Name").toString();
-        dto.initiative = (int) data.get("Initiative");
-        dto.dexterity = (int) data.get("Dexterity");
-        dto.type = data.get("Type").toString();
-        dto.deathStatus = data.get("DeathStatus").toString();
+        dto.name = data.name();
+        dto.initiative = data.initiative();
+        dto.dexterity = data.dexterity();
+        dto.type = data.type().name();
+        dto.deathStatus = data.deathStatus().name();
 
         dto.currentHealth = npc.getHealth();
         dto.maxHealth = npc.getMaxHealth();
@@ -149,18 +118,11 @@ public class SaveLoadManager {
                 );
 
         npc.setCurrentHealth(dto.currentHealth, false);
-        npc.editDeathStatus(dto.deathStatus);
-        npc.editEnemyType(dto.enemyType != null ? dto.enemyType : "");
+        npc.setDeathStatus(dto.deathStatus);
+        npc.setEnemyType(dto.enemyType != null ? dto.enemyType : "");
         return npc;
     }
 
-
-    /**
-     * Saves the current combat encounter state to the currently active file.
-     * If no file is currently active (e.g. a new session), it falls back to saving with a default name.
-     *
-     * @param manager The active {@link CharacterManager} instance containing combatants.
-     */
     public static void save(CharacterManager manager) {
         if (currentFileName == null || currentFileName.isEmpty()) {
             saveAs(manager, "save.json");
@@ -169,12 +131,6 @@ public class SaveLoadManager {
         }
     }
 
-    /**
-     * Saves the current combat encounter state from a {@link CharacterManager} into an encrypted file.
-     *
-     * @param manager  The active {@link CharacterManager} instance containing combatants.
-     * @param fileName The name of the target save file (the {@code .json} extension is appended automatically if omitted).
-     */
     public static void saveAs(CharacterManager manager, String fileName) {
         if (!fileName.endsWith(".json")) {
             fileName += ".json";
@@ -188,13 +144,6 @@ public class SaveLoadManager {
         }
     }
 
-    /**
-     * Loads a combat encounter state from an encrypted file into a {@link CharacterManager}.
-     *
-     * @param manager       The active {@link CharacterManager} instance to populate.
-     * @param fileName      The name of the save file to load from.
-     * @param clearExisting If {@code true}, clears existing combatants before loading; if {@code false}, merges records.
-     */
     public static void load(CharacterManager manager, String fileName, boolean clearExisting) {
         if (!fileName.endsWith(".json")) {
             fileName += ".json";
@@ -208,14 +157,6 @@ public class SaveLoadManager {
         }
     }
 
-
-    /**
-     * Internal helper to serialize combat state into DTOs, encrypt the JSON payload, and write it to disk.
-     *
-     * @param manager The active {@link CharacterManager} instance.
-     * @param file    The destination {@link File} target.
-     * @throws IOException if writing or encryption fails.
-     */
     private static void saveToFile(CharacterManager manager, File file) throws IOException {
         System.out.println("Saving " + file.getAbsolutePath());
 
@@ -223,19 +164,20 @@ public class SaveLoadManager {
 
         List<Character> activeOrder = manager.getInitiativeOrder();
         if (!activeOrder.isEmpty()) {
-            session.activeCharacterName = activeOrder.getFirst().getCharacterData().get("Name").toString();
+            session.activeCharacterName = activeOrder.getFirst().getCharacterData().name();
         }
 
         for (Character character : manager.getCharacterList()){
-            Map<String, Object> data = character.getCharacterData();
+            CharacterData data = character.getCharacterData();
             Map<String, Integer> saves = character.getDeathSaves();
 
             CharacterRecordDTO dto = new CharacterRecordDTO();
-            dto.name = data.get("Name").toString();
-            dto.initiative = (int) data.get("Initiative");
-            dto.dexterity = (int) data.get("Dexterity");
-            dto.type = data.get("Type").toString();
-            dto.deathStatus = data.get("DeathStatus").toString();
+            dto.name = data.name();
+            dto.initiative = data.initiative();
+            dto.dexterity = data.dexterity();
+            dto.type = data.type().name();
+            dto.deathStatus = data.deathStatus().name();
+
             dto.passSaves = saves.getOrDefault("Pass", 0);
             dto.failSaves = saves.getOrDefault("Fail", 0);
 
@@ -246,7 +188,7 @@ public class SaveLoadManager {
                 dto.enemyType = npc.getEnemyType();
                 if (character instanceof Horde horde){
                     dto.isHorde = true;
-                    for (NonePlayerCharacter member: horde.getNPCs()){
+                    for (NonePlayerCharacter member: horde.getNpcs()){
                         dto.npcs.add(toNPCDTO(member));
                     }
                 }
@@ -268,16 +210,6 @@ public class SaveLoadManager {
         }
     }
 
-
-    /**
-     * Internal helper to read an encrypted save file from disk, decrypt it, parse the JSON,
-     * and populate the {@link CharacterManager}.
-     *
-     * @param manager       The active {@link CharacterManager} instance to populate.
-     * @param file          The source {@link File} to read from.
-     * @param clearExisting If {@code true}, clears existing combatants prior to loading.
-     * @throws IOException if reading or decryption fails.
-     */
     private static void loadFromFile(CharacterManager manager, File file, boolean clearExisting) throws IOException {
         try {
             String encryptedString = Files.readString(file.toPath(), StandardCharsets.UTF_8);
@@ -289,9 +221,9 @@ public class SaveLoadManager {
             }
             if (clearExisting) { manager.clearCharacters(); }
 
-            List<String> existingNames = manager.getCharacterList().stream()
-                    .map(c -> c.getCharacterData().get("Name").toString().toLowerCase())
-                    .toList();
+            Set<String> existingNames = manager.getCharacterList().stream()
+                    .map(c -> c.getCharacterData().name().toLowerCase())
+                    .collect(Collectors.toSet());;
 
             for (CharacterRecordDTO dto : session.combatants) {
                 if (existingNames.contains(dto.name.toLowerCase(Locale.ROOT))){
@@ -310,12 +242,6 @@ public class SaveLoadManager {
         }
     }
 
-    /**
-     * Reconstructs a full {@link Character} or {@link NonePlayerCharacter} instance from a loaded record DTO.
-     *
-     * @param dto The {@link CharacterRecordDTO} containing serialized attributes.
-     * @return The instantiated and populated {@link Character} object.
-     */
     private static Character getCharacter(CharacterRecordDTO dto) {
         Character character;
         if (dto.isNPC){
@@ -350,8 +276,8 @@ public class SaveLoadManager {
                         dto.deathStatus
                 );
                 npc.setCurrentHealth(dto.currentHealth, false);
-                npc.editDeathStatus(dto.deathStatus);
-                npc.editEnemyType(dto.enemyType != null ? dto.enemyType : "");
+                npc.setDeathStatus(dto.deathStatus);
+                npc.setEnemyType(dto.enemyType != null ? dto.enemyType : "");
             }
             character = npc;
         } else {

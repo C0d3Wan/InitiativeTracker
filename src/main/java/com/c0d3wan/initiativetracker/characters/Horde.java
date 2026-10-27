@@ -3,15 +3,15 @@ package com.c0d3wan.initiativetracker.characters;
 import java.util.*;
 
 public class Horde extends NonePlayerCharacter{
-    private List<NonePlayerCharacter> NPCs = new ArrayList<>();
+    private final List<NonePlayerCharacter> npcs = new ArrayList<>();
 
     public Horde(String name, int initiative, int dex, int maxHealth, DeathStatus status, int amount){
         super(name, initiative, dex, amount, CharacterType.HORDE, status);
         for (int i = 1; i <= amount; i++){
             NonePlayerCharacter npc = new NonePlayerCharacter(name+i,initiative, dex, maxHealth, CharacterType.ENEMY, status);
-            npc.editEnemyType(name);
+            npc.setEnemyType(name);
             npc.addHorde(this);
-            NPCs.add(npc);
+            npcs.add(npc);
         }
     }
 
@@ -20,11 +20,13 @@ public class Horde extends NonePlayerCharacter{
     }
 
     public void editNPCs(List<NonePlayerCharacter> newList){
-        NPCs = newList;
+        npcs.clear();
+        npcs.addAll(newList);
+        relinkNPCs();
     }
     public void checkDead(){
         int dead = 0;
-        for (NonePlayerCharacter npc: NPCs){
+        for (NonePlayerCharacter npc: npcs){
             if (npc.getHealth() == 0){
                 dead++;
             }
@@ -33,12 +35,12 @@ public class Horde extends NonePlayerCharacter{
     }
 
     public void relinkNPCs(){
-        for (NonePlayerCharacter npc: NPCs){
+        for (NonePlayerCharacter npc: npcs){
             npc.addHorde(this);
         }
     }
 
-    public List<NonePlayerCharacter> getNPCs(){
-        return NPCs;
+    public List<NonePlayerCharacter> getNpcs(){
+        return Collections.unmodifiableList(npcs);
     }
 }
