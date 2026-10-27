@@ -10,6 +10,7 @@ public class Horde extends NonePlayerCharacter{
         for (int i = 1; i <= amount; i++){
             NonePlayerCharacter npc = new NonePlayerCharacter(name+i,initiative, dex, maxHealth, CharacterType.ENEMY, status);
             npc.editEnemyType(name);
+            npc.addHorde(this);
             NPCs.add(npc);
         }
     }
@@ -19,11 +20,13 @@ public class Horde extends NonePlayerCharacter{
     }
 
     public void checkDead(){
+        int dead = 0;
         for (NonePlayerCharacter npc: NPCs){
             if (npc.getHealth() == 0){
-                editHealth(-1);
+                dead++;
             }
         }
+        setCurrentHealth(getMaxHealth()-dead);
     }
 
     public List<NonePlayerCharacter> getNPCs(){

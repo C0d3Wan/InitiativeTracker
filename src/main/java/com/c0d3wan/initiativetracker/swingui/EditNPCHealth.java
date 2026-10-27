@@ -4,6 +4,9 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
+
+import com.c0d3wan.initiativetracker.characters.Horde;
 import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
 
@@ -101,7 +104,17 @@ public class EditNPCHealth extends JDialog {
         } else {
             saveEditButton.setEnabled(true);
             for (String characterName : npcMap.keySet()) {
-                characterCombo.addItem(characterName);
+                NonePlayerCharacter npc = npcMap.get(characterName);
+                if (npc.getCharacterType().toString().equals("HORDE")) {
+                    npcMap.remove(characterName);
+                    List<NonePlayerCharacter> npcs =  ((Horde) npc).getNPCs();
+                    for (NonePlayerCharacter enemy: npcs) {
+                        characterCombo.addItem(enemy.getCharacterData().get("Name").toString());
+                        npcMap.put(enemy.getCharacterData().get("Name").toString(), enemy);
+                    }
+                } else {
+                    characterCombo.addItem(characterName);
+                }
             }
 
             displayCurrentData();

@@ -12,6 +12,7 @@ public class NonePlayerCharacter extends Character {
     private int health;
     private final int maxHealth;
     private String enemyType;
+    private Horde horde;
 
     /**
      * Constructs a new NPC instance
@@ -58,6 +59,7 @@ public class NonePlayerCharacter extends Character {
         if (health <= 0){
             health = 0;
             editDeathStatus(DeathStatus.DEAD);
+            horde.checkDead();
         } else {
             editDeathStatus(DeathStatus.ALIVE);
         }
@@ -71,6 +73,7 @@ public class NonePlayerCharacter extends Character {
         this.health = Math.clamp(currentHealth, 0, maxHealth);
         if (this.health == 0) {
             editDeathStatus(DeathStatus.DEAD);
+            horde.checkDead();
         }
     }
 
@@ -84,5 +87,9 @@ public class NonePlayerCharacter extends Character {
 
     public String getEnemyType() {
         return enemyType;
+    }
+
+    public void addHorde(Horde hordeClass) {
+        horde = hordeClass;
     }
 }
