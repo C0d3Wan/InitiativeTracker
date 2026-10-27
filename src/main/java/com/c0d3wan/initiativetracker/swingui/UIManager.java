@@ -93,7 +93,7 @@ public class UIManager {
     public void openEditNPCHealthMenu() {
         updateCharacterMap();
 
-        EditNPCHealth editNPCHealthMenu = new EditNPCHealth(parentFrame, characterMap);
+        EditNPCHealth editNPCHealthMenu = new EditNPCHealth(parentFrame, npcMap);
         editNPCHealthMenu.setVisible(true);
 
         characterManager.updateCharacters();
