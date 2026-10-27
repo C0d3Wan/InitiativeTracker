@@ -2,15 +2,15 @@ package com.c0d3wan.initiativetracker.swingui;
 
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
+import com.c0d3wan.initiativetracker.characters.CharacterType;
 import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Modal dialog interface for selecting and removing single or all characters from tracking.
@@ -34,15 +34,15 @@ public class RemoveCharacterMenu extends JDialog {
     public RemoveCharacterMenu(Frame parent, CharacterManager characterManager, Map<String, Character> characterMap, Map<String, NonePlayerCharacter> npcMap) {
         super(parent, "Remove Character", true);
         this.characterManager = characterManager;
-        this.characterMap= characterMap;
-        this.npcMap = npcMap;
+        this.characterMap = new HashMap<>(characterMap);
+        this.npcMap = new HashMap<>(npcMap);
 
         setupMenu();
 
         setTitle("Remove Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
 
         updateSelectionCombo();
 
@@ -95,24 +95,22 @@ public class RemoveCharacterMenu extends JDialog {
             characterSelectionCombo.addItem("All NPCs");
 
             removeCharacterButton.setEnabled(true);
-            Map<String, String> enemyTypes = new HashMap<>();
+            Set<String> enemyTypes = new HashSet<>();
             for (Character character : characters) {
-                Map<String, Object> characterData = character.getCharacterData();
-                String name = characterData.get("Name").toString();
-                String type = characterData.get("Type").toString();
-                if (!type.equalsIgnoreCase("PLAYER")) {
+                String name = character.getName();
+                CharacterType type = character.getCharacterType();
+                if (type != CharacterType.PLAYER) {
                     String enemyType = ((NonePlayerCharacter) character).getEnemyType();
                     if (!enemyType.isEmpty()) {
-                        enemyTypes.put(enemyType, enemyType);
+                        enemyTypes.add(enemyType);
                     }
                 }
                 characterSelectionCombo.addItem(name);
             }
-            for (String type: enemyTypes.keySet()) {
+            for (String type: enemyTypes) {
                 characterSelectionCombo.insertItemAt(("All " + type), 2);
             }
         }
-        pack();
     }
 
     /**
@@ -121,35 +119,42 @@ public class RemoveCharacterMenu extends JDialog {
      */
     private void removeCharacter() {
         Object selectedItem = characterSelectionCombo.getSelectedItem();
-        assert selectedItem != null;
-        String name = selectedItem.toString();
-        switch (name) {
-            case "All NPCs" -> {
-                for (NonePlayerCharacter npc: npcMap.values()) {
+        if (selectedItem == null) {
+            return;
+        }
+        String selection = selectedItem.toString();
+
+        if (selection.equals("All Characters")) {
+            characterManager.clearCharacters();
+        } else if (selection.equals("All NPCs")) {
+            for (NonePlayerCharacter npc: npcMap.values()) {
+                characterManager.removeCharacter(npc);
+            }
+        } else if (selection.startsWith("All ")) {
+            String enemyType = selection.substring("All ".length());
+
+            for (NonePlayerCharacter npc: npcMap.values()) {
+                if (enemyType.equals(npc.getEnemyType())) {
                     characterManager.removeCharacter(npc);
-                    characterManager.sortCharacters();
                 }
             }
-            case "All Characters" -> characterManager.clearCharacters();
-            default -> {
-                Character character = characterMap.get(name);
-                if (character == null) {
-                    name = name.substring(4);
-                    for (NonePlayerCharacter npc: npcMap.values()) {
-                        if (npc.getEnemyType().equals(name)) {
-                            characterManager.removeCharacter(npc);
-                        }
-                    }
-                } else {
-                    characterManager.removeCharacter(character);
+        } else {
+            Character character = characterMap.get(selection);
+
+            if (character != null) {
+                characterManager.removeCharacter(character);
+            } else {
+                NonePlayerCharacter npc = npcMap.get(selection);
+
+                if (npc != null) {
+                    characterManager.removeCharacter(npc);
                 }
-                characterManager.sortCharacters();
             }
         }
 
+        characterManager.sortCharacters();
         updateSelectionCombo();
         removedCharacterLabel.setVisible(true);
-        pack();
     }
 
     /**
