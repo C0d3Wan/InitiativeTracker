@@ -1,7 +1,5 @@
 package com.c0d3wan.initiativetracker.characters;
 
-import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
-
 import java.util.*;
 
 public class Horde extends Character{
