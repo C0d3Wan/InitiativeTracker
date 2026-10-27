@@ -40,7 +40,7 @@ public class EditNPCHealth extends JDialog {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         pack();
         setMinimumSize(getSize());
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
 
         setCharacterDetails();
 

@@ -9,8 +9,7 @@ import java.util.Map;
 import java.awt.*;
 
 import com.c0d3wan.initiativetracker.characters.Character;
-import com.c0d3wan.initiativetracker.characters.Horde;
-import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
+import com.c0d3wan.initiativetracker.characters.*;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -23,8 +22,8 @@ public class AddCharacterMenu extends JDialog {
     private final JSpinner dexteritySpinner= new JSpinner();
     private final JSpinner maxHealthSpinner = new JSpinner();
     private final JSpinner npcAmountSpinner = new JSpinner();
-    private final JComboBox<String> deathStatusCombo = new JComboBox<>();
-    private final JComboBox<String> characterTypeCombo = new JComboBox<>();
+    private final JComboBox<DeathStatus> deathStatusCombo = new JComboBox<>();
+    private final JComboBox<CharacterType> characterTypeCombo = new JComboBox<>();
     private final JButton addCharacterButton = new JButton("Add character");
     private final JLabel npcAmountLabel = new JLabel("Horde Amount:");
     private final JLabel maxHealthLabel = new JLabel("Max Health:");
@@ -47,7 +46,7 @@ public class AddCharacterMenu extends JDialog {
 
         setTitle("Add Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
 
         pack();
 
@@ -81,18 +80,18 @@ public class AddCharacterMenu extends JDialog {
         String name = characterName.getText().trim();
         int initiative = (int) initiativeSpinner.getValue();
         int dexterity = (int) dexteritySpinner.getValue();
-        String type = (String) characterTypeCombo.getSelectedItem();
-        String status = (String) deathStatusCombo.getSelectedItem();
+        CharacterType type = (CharacterType) characterTypeCombo.getSelectedItem();
+        DeathStatus status = (DeathStatus) deathStatusCombo.getSelectedItem();
 
         if (name.length() > 16) {
             name = name.substring(0, 16) + "...";
         }
 
-        assert type != null;
+        if (type == null) {return;}
         Character newCharacter;
-        if (!type.equalsIgnoreCase("PLAYER")) {
+        if (type != CharacterType.PLAYER) {
             int maxHealth = (int) maxHealthSpinner.getValue();
-            if (type.equals("HORDE")) {
+            if (type == CharacterType.HORDE) {
                 int maxNPCS = (int) npcAmountSpinner.getValue();
                 newCharacter = new Horde(name, initiative, dexterity, maxHealth, status, maxNPCS);
             } else {
@@ -136,17 +135,17 @@ public class AddCharacterMenu extends JDialog {
         maxHealthSpinner.setModel(new SpinnerNumberModel(1, 1, 2000, 1));
         npcAmountSpinner.setModel(new SpinnerNumberModel(1, 1, 100, 1));
 
-        final DefaultComboBoxModel<String> characterTypeComboModel = new DefaultComboBoxModel<>();
-        characterTypeComboModel.addElement("PLAYER");
-        characterTypeComboModel.addElement("ENEMY");
-        characterTypeComboModel.addElement("ALLY");
-        characterTypeComboModel.addElement("HORDE");
+        final DefaultComboBoxModel<CharacterType> characterTypeComboModel = new DefaultComboBoxModel<>();
+        characterTypeComboModel.addElement(CharacterType.PLAYER);
+        characterTypeComboModel.addElement(CharacterType.ENEMY);
+        characterTypeComboModel.addElement(CharacterType.ALLY);
+        characterTypeComboModel.addElement(CharacterType.HORDE);
         characterTypeCombo.setModel(characterTypeComboModel);
 
-        final DefaultComboBoxModel<String> deathStatusComboModel = new DefaultComboBoxModel<>();
-        deathStatusComboModel.addElement("ALIVE");
-        deathStatusComboModel.addElement("DEAD");
-        deathStatusComboModel.addElement("DOWN");
+        final DefaultComboBoxModel<DeathStatus> deathStatusComboModel = new DefaultComboBoxModel<>();
+        deathStatusComboModel.addElement(DeathStatus.ALIVE);
+        deathStatusComboModel.addElement(DeathStatus.DEAD);
+        deathStatusComboModel.addElement(DeathStatus.DOWN);
         deathStatusCombo.setModel(deathStatusComboModel);
 
         addCharacterButton.setFocusPainted(false);
@@ -184,7 +183,7 @@ public class AddCharacterMenu extends JDialog {
      */
     private void validateName() {
         String name = characterName.getText().trim();
-        boolean isValid = !name.isEmpty();
+        boolean isValid = name.matches("[A-Za-z0-9 _'-]+");
         for (String characterName : characterMap.keySet()) {
             if (name.equalsIgnoreCase(characterName)) {
                 isValid = false;
@@ -200,7 +199,7 @@ public class AddCharacterMenu extends JDialog {
      */
     private void updateForMaxHealth() {
         Object selectedItem = characterTypeCombo.getSelectedItem();
-        assert selectedItem != null;
+        if (selectedItem == null) {return;}
         if (!selectedItem.equals("PLAYER")) {
             maxHealthLabel.setVisible(true);
             maxHealthSpinner.setVisible(true);
@@ -245,5 +244,6 @@ public class AddCharacterMenu extends JDialog {
         characterTypeCombo.setSelectedIndex(0);
         maxHealthSpinner.setValue(1);
         deathStatusCombo.setSelectedIndex(0);
+        npcAmountSpinner.setValue(1);
     }
 }
