@@ -237,6 +237,9 @@ public class Character {
                 ". DeathStatus: " + deathStatus;
     }
 
+    public String getName() {
+        return characterName;
+    }
 
     public CharacterType getCharacterType() {
         return characterType;
