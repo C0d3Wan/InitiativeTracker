@@ -12,7 +12,7 @@ public class NonePlayerCharacter extends Character {
     private int health;
     private final int maxHealth;
     private String enemyType;
-    private Horde horde;
+    private transient Horde horde;
 
     /**
      * Constructs a new NPC instance

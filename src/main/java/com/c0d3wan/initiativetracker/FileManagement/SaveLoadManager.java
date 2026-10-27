@@ -212,9 +212,11 @@ public class SaveLoadManager {
         }
 
         try {
+            System.out.println("TRY");
             String jsonString = GSON.toJson(session);
-            String encryptedString = encrypt(jsonString);
-            Files.writeString(file.toPath(), encryptedString, StandardCharsets.UTF_8);
+            System.out.println(jsonString);
+            //String encryptedString = encrypt(jsonString);
+            Files.writeString(file.toPath(), jsonString, StandardCharsets.UTF_8);
             System.out.println("Saved " + file.getAbsolutePath());
         } catch (Exception e) {
             throw new IOException("Failed to encrypt and save file", e);
