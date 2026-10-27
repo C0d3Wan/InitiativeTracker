@@ -237,6 +237,11 @@ public class Character {
                 ". DeathStatus: " + deathStatus;
     }
 
+
+    public CharacterType getCharacterType() {
+        return characterType;
+    }
+
     /**
      * Retrieves the character's current life status.
      *
