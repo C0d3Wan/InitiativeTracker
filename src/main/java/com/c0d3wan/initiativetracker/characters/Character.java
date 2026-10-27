@@ -224,19 +224,6 @@ public class Character {
         return initiativeValue;
     }
 
-    /**
-     * Generates a descriptive string containing name, initiative, type, and status.
-     *
-     * @return A formatted text representation of this character.
-     */
-    @Override
-    public String toString(){
-        return "name: " + characterName +
-                ". Initiative: " + initiativeValue +
-                ". Type: " + characterType +
-                ". DeathStatus: " + deathStatus;
-    }
-
     public String getName() {
         return characterName;
     }
