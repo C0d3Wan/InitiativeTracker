@@ -134,7 +134,7 @@ public class AddCharacterMenu extends JDialog {
         initiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
         dexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
         maxHealthSpinner.setModel(new SpinnerNumberModel(1, 1, 2000, 1));
-        npcAmountSpinner.setModel(new SpinnerNumberModel(1, 1, 30, 1));
+        npcAmountSpinner.setModel(new SpinnerNumberModel(1, 1, 100, 1));
 
         final DefaultComboBoxModel<String> characterTypeComboModel = new DefaultComboBoxModel<>();
         characterTypeComboModel.addElement("PLAYER");
