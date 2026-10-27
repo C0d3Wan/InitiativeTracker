@@ -1,8 +1,7 @@
 package com.c0d3wan.initiativetracker.FileManagement;
 
 import com.c0d3wan.initiativetracker.swingui.UIManager;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 
 import java.io.File;
 import java.io.FileReader;

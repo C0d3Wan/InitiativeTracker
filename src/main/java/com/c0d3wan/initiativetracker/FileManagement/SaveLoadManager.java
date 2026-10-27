@@ -1,11 +1,8 @@
 package com.c0d3wan.initiativetracker.FileManagement;
 
-import com.c0d3wan.initiativetracker.characters.CharacterManager;
-import com.c0d3wan.initiativetracker.characters.Horde;
-import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
+import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.Character;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
