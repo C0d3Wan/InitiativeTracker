@@ -1,6 +1,7 @@
 package com.c0d3wan.initiativetracker.FileManagement;
 
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
+import com.c0d3wan.initiativetracker.characters.Horde;
 import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.google.gson.Gson;
@@ -102,6 +103,8 @@ public class SaveLoadManager {
         int passSaves;
         int failSaves;
         boolean isNPC;
+        boolean isHorde;
+        List<NonePlayerCharacter> npcs;
         int currentHealth;
         int maxHealth;
         String enemyType;
@@ -196,6 +199,10 @@ public class SaveLoadManager {
                 dto.currentHealth = npc.getHealth();
                 dto.maxHealth = npc.getMaxHealth();
                 dto.enemyType = npc.getEnemyType();
+                if (character instanceof Horde){
+                    dto.isHorde = true;
+                    dto.npcs = ((Horde)npc).getNPCs();
+                }
             } else {
                 dto.isNPC = false;
                 dto.enemyType = "";
@@ -265,17 +272,31 @@ public class SaveLoadManager {
     private static Character getCharacter(CharacterRecordDTO dto) {
         Character character;
         if (dto.isNPC){
-            NonePlayerCharacter npc = new NonePlayerCharacter(
-                    dto.name,
-                    dto.initiative,
-                    dto.dexterity,
-                    dto.maxHealth,
-                    dto.type,
-                    dto.deathStatus
-            );
-            npc.setCurrentHealth(dto.currentHealth);
-            npc.editDeathStatus(dto.deathStatus);
-            npc.editEnemyType(dto.enemyType != null ? dto.enemyType : "");
+            NonePlayerCharacter npc;
+            if (dto.isHorde){
+                npc = new Horde(
+                        dto.name,
+                        dto.initiative,
+                        dto.dexterity,
+                        dto.maxHealth,
+                        dto.deathStatus,
+                        dto.maxHealth
+                );
+                ((Horde) npc).editNPCs(dto.npcs);
+                ((Horde) npc).checkDead();
+            }else {
+                npc = new NonePlayerCharacter(
+                        dto.name,
+                        dto.initiative,
+                        dto.dexterity,
+                        dto.maxHealth,
+                        dto.type,
+                        dto.deathStatus
+                );
+                npc.setCurrentHealth(dto.currentHealth);
+                npc.editDeathStatus(dto.deathStatus);
+                npc.editEnemyType(dto.enemyType != null ? dto.enemyType : "");
+            }
             character = npc;
         } else {
             character = new Character(

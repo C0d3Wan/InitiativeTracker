@@ -3,7 +3,7 @@ package com.c0d3wan.initiativetracker.characters;
 import java.util.*;
 
 public class Horde extends NonePlayerCharacter{
-    private final List<NonePlayerCharacter> NPCs = new ArrayList<>();
+    private List<NonePlayerCharacter> NPCs = new ArrayList<>();
 
     public Horde(String name, int initiative, int dex, int maxHealth, DeathStatus status, int amount){
         super(name, initiative, dex, amount, CharacterType.HORDE, status);
@@ -19,6 +19,9 @@ public class Horde extends NonePlayerCharacter{
         this(name, initiative, dex, maxHealth, NonePlayerCharacter.deathFromString(deathID), amount);
     }
 
+    public void editNPCs(List<NonePlayerCharacter> newList){
+        NPCs = newList;
+    }
     public void checkDead(){
         int dead = 0;
         for (NonePlayerCharacter npc: NPCs){
