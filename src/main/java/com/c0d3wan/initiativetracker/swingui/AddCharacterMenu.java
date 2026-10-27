@@ -94,7 +94,7 @@ public class AddCharacterMenu extends JDialog {
             int maxHealth = (int) maxHealthSpinner.getValue();
             if (type.equals("HORDE")) {
                 int maxNPCS = (int) npcAmountSpinner.getValue();
-                newCharacter = new Horde(name, initiative, dexterity, maxHealth, type, status, maxNPCS);
+                newCharacter = new Horde(name, initiative, dexterity, maxHealth, status, maxNPCS);
             } else {
                 newCharacter = new NonePlayerCharacter(name, initiative, dexterity, maxHealth, type, status);
             }
