@@ -34,9 +34,9 @@ public class AddCharacterMenu extends JDialog {
     private final Map<String, Character> characterMap;
 
     /**
-     * Constructs a new modal dialog to create a character.
+     * Constructs a new modal dialogue to create a character.
      *
-     * @param parent       The parent {@link Frame} window binding this dialog.
+     * @param parent       The parent {@link Frame} window binding this dialogue.
      * @param characterMap The existing map of characters used to prevent duplicate names.
      */
     public AddCharacterMenu(Frame parent, Map<String, Character> characterMap) {
@@ -99,14 +99,12 @@ public class AddCharacterMenu extends JDialog {
             }
 
 
-            characterMap.put(name, newCharacter);
-            characters.add(newCharacter);
         } else {
             newCharacter = new Character(name, initiative, dexterity, type, status);
 
-            characterMap.put(name, newCharacter);
-            characters.add(newCharacter);
         }
+        characterMap.put(name, newCharacter);
+        characters.add(newCharacter);
         confirmed = true;
         savedCharacterLabel.setVisible(true);
         resetWidgets();
@@ -222,7 +220,7 @@ public class AddCharacterMenu extends JDialog {
     /**
      * Checks if the creation form was submitted successfully.
      *
-     * @return {@code true} if confirmed; {@code false} if canceled or closed.
+     * @return {@code true} if confirmed; {@code false} if cancelled or closed.
      */
     public boolean isConfirmed() {
         return confirmed;

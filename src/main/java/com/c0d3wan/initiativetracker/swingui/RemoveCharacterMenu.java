@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Modal dialog interface for selecting and removing single or all characters from tracking.
+ * Modal dialogue interface for selecting and removing single or all characters from tracking.
  */
 public class RemoveCharacterMenu extends JDialog {
     private final JPanel removeCharacterPane = new JPanel();
@@ -26,7 +26,7 @@ public class RemoveCharacterMenu extends JDialog {
     private final CharacterManager characterManager;
 
     /**
-     * Constructs a modal dialog to remove characters from the initiative tracker.
+     * Constructs a modal dialogue to remove characters from the initiative tracker.
      *
      * @param parent           The parent {@link Frame} window.
      * @param characterManager The {@link CharacterManager} maintaining combatants.

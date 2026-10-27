@@ -26,7 +26,7 @@ public class SaveAsMenu extends JDialog {
     /**
      * Constructs a new menu for saving the current initiative list to a new file
      *
-     * @param parent The parent {@link Frame} window binding this dialog.
+     * @param parent The parent {@link Frame} window binding this dialogue.
      */
     public SaveAsMenu(Frame parent) {
         super(parent, "Save As", true);
@@ -34,7 +34,7 @@ public class SaveAsMenu extends JDialog {
 
         setTitle("Save To File");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
 
         pack();
         setMinimumSize(new Dimension(250, 107));
@@ -110,7 +110,7 @@ public class SaveAsMenu extends JDialog {
 
     /**
      * Checks if the file name was successfully inputted
-     * @return {@code true} if confirmed; {@code false} if canceled or closed.
+     * @return {@code true} if confirmed; {@code false} if cancelled or closed.
      */
     public boolean isConfirmed() {
         return confirmed;

@@ -40,7 +40,7 @@ public class MainMenu extends JFrame {
     private final UIManager uiManager;
 
     /**
-     * Constructs and initializes the main application window.
+     * Constructs and initialises the main application window.
      *
      * @param characterManager The {@link CharacterManager} maintaining combat data.
      */

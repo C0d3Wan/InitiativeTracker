@@ -29,9 +29,9 @@ public class EditCharacterMenu extends JDialog {
     private final Map<String, Character> characterMap;
 
     /**
-     * Constructs a modal dialog to modify attributes of existing characters.
+     * Constructs a modal dialogue to modify attributes of existing characters.
      *
-     * @param parent       The parent {@link Frame} window binding this dialog.
+     * @param parent       The parent {@link Frame} window binding this dialogue.
      * @param characterMap Lookup map containing all registered characters keyed by name.
      */
     public EditCharacterMenu(Frame parent, Map<String, Character> characterMap) {
@@ -42,7 +42,7 @@ public class EditCharacterMenu extends JDialog {
         setTitle("Edit Character");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
 
         updateCharactersCombo();
 
@@ -136,7 +136,7 @@ public class EditCharacterMenu extends JDialog {
 
     /**
      * Populates the character selection {@link JComboBox} with registered characters
-     * and initializes selection state.
+     * and initialises selection state.
      */
     private void updateCharactersCombo() {
 

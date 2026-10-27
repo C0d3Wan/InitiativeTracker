@@ -21,8 +21,8 @@ public class LoadFileMenu extends JDialog {
     private String selectedFile;
 
     /**
-     * Constructs a modal dialog to load character list from a file
-     * @param parent The parent {@link Frame} window binding this dialog.
+     * Constructs a modal dialogue to load character list from a file
+     * @param parent The parent {@link Frame} window binding this dialogue.
      */
     public LoadFileMenu(Frame parent) {
         super(parent, "Load File", true);
@@ -90,7 +90,7 @@ public class LoadFileMenu extends JDialog {
 
     /**
      * Gets the selected file name
-     * @return {@code true} if confirmed; {@code false} if canceled or closed.
+     * @return {@code true} if confirmed; {@code false} if cancelled or closed.
      */
     public String getFileToLoad() {
         return selectedFile;

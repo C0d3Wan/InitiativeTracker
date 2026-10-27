@@ -53,7 +53,7 @@ public class UIManager {
     }
 
     /**
-     * Opens the modal dialog to create and add a new character.
+     * Opens the modal dialogue to create and add a new character.
      * Refreshes the initiative list if the user confirms creation.
      */
     public void openAddCharacterMenu() {
@@ -73,7 +73,7 @@ public class UIManager {
     }
 
     /**
-     * Opens the modal dialog to modify attributes of an existing character.
+     * Opens the modal dialogue to modify attributes of an existing character.
      * Refreshes the initiative queue when changes are saved.
      */
     public void openEditCharacterMenu() {
@@ -87,7 +87,7 @@ public class UIManager {
     }
 
     /**
-     * Opens the modal dialog to modify existing NPC health values.
+     * Opens the modal dialogue to modify existing NPC health values.
      */
     public void openEditNPCHealthMenu() {
         updateCharacterMap();
@@ -100,7 +100,7 @@ public class UIManager {
     }
 
     /**
-     * Opens the modal dialog to remove selected or all characters from the combat session.
+     * Opens the modal dialogue to remove selected or all characters from the combat session.
      */
     public void openRemoveCharacterMenu() {
         updateCharacterMap();
@@ -111,7 +111,7 @@ public class UIManager {
     }
 
     /**
-     * Synchronizes the internal name-to-character lookup table with the character manager.
+     * Synchronises the internal name-to-character lookup table with the character manager.
      */
     private void updateCharacterMap() {
         characterMap.clear();

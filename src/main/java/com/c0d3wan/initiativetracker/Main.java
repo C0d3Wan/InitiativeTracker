@@ -10,7 +10,7 @@ import javax.swing.*;
  */
 public class Main {
     /**
-     * Starts the application by initializing core managers and launching the GUI.
+     * Starts the application by initialising core managers and launching the GUI.
      *
      * @param args Command-line arguments passed during startup (unused).
      */

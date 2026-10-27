@@ -27,9 +27,9 @@ public class EditNPCHealth extends JDialog {
     private final Map<String, NonePlayerCharacter> npcMap;
 
     /**
-     * Constructs a modal dialog for editing health of existing NPCs
+     * Constructs a modal dialogue for editing health of existing NPCs
      *
-     * @param parent        The parent {@link Frame} window binding this dialog.
+     * @param parent        The parent {@link Frame} window binding this dialogue.
      * @param characterMap  Lookup map containing all registered characters keyed by name.
      */
     public EditNPCHealth(Frame parent, Map<String, NonePlayerCharacter> characterMap) {
