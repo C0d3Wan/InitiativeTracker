@@ -45,18 +45,6 @@ public class Character {
         deathSaves.put("Fail", 0);
     }
 
-    /**
-     * Constructs a new Character instance using numeric identifiers for type and status.
-     *
-     * @param name       The unique display name of the character.
-     * @param initiative The base integer initiative roll.
-     * @param dex        The dexterity attribute score used for tie-breaking.
-     * @param typeID     The integer ID representing the {@link CharacterType} (0: PLAYER, 1: ENEMY, 2: ALLY).
-     * @param deathID    The integer ID representing the {@link DeathStatus} (0: DEAD, 1: ALIVE, 2: DOWN).
-     */
-    public Character(String name, int initiative, int dex, int typeID, int deathID) {
-        this(name, initiative, dex, typeFromId(typeID), deathFromId(deathID));
-    }
 
     /**
      * Constructs a new Character instance using string representations for type and status.
@@ -72,36 +60,6 @@ public class Character {
     }
 
     /**
-     * Maps an integer identifier to its corresponding {@link CharacterType}.
-     *
-     * @param id The numeric identifier to parse.
-     * @return The matching {@link CharacterType}, or {@link CharacterType#UNKNOWN} if unrecognized.
-     */
-    private static CharacterType typeFromId(int id) {
-        return switch (id) {
-            case 0 -> CharacterType.PLAYER;
-            case 1 -> CharacterType.ENEMY;
-            case 2 -> CharacterType.ALLY;
-            default -> CharacterType.UNKNOWN;
-        };
-    }
-
-    /**
-     * Maps an integer identifier to its corresponding {@link DeathStatus}.
-     *
-     * @param id The numeric identifier to parse.
-     * @return The matching {@link DeathStatus}, or {@link DeathStatus#UNKNOWN} if unrecognized.
-     */
-    private static DeathStatus deathFromId(int id) {
-        return switch (id) {
-            case 0 -> DeathStatus.DEAD;
-            case 1 -> DeathStatus.ALIVE;
-            case 2 -> DeathStatus.DOWN;
-            default -> DeathStatus.UNKNOWN;
-        };
-    }
-
-    /**
      * Maps a case-sensitive string identifier to its corresponding {@link CharacterType}.
      *
      * @param id The name string of the character type.
@@ -112,6 +70,7 @@ public class Character {
             case "PLAYER" -> CharacterType.PLAYER;
             case "ENEMY" -> CharacterType.ENEMY;
             case "ALLY" -> CharacterType.ALLY;
+            case "HORDE" -> CharacterType.HORDE;
             default -> CharacterType.UNKNOWN;
         };
     }

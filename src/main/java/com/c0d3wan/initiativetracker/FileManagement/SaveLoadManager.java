@@ -208,6 +208,7 @@ public class SaveLoadManager {
             String jsonString = GSON.toJson(session);
             String encryptedString = encrypt(jsonString);
             Files.writeString(file.toPath(), encryptedString, StandardCharsets.UTF_8);
+            System.out.println("Saved " + file.getAbsolutePath());
         } catch (Exception e) {
             throw new IOException("Failed to encrypt and save file", e);
         }
@@ -273,7 +274,7 @@ public class SaveLoadManager {
                     dto.deathStatus
             );
             npc.setCurrentHealth(dto.currentHealth);
-            npc.editDeathStatus(dto.deathStatus); // Preserves DOWN vs ALIVE/DEAD status
+            npc.editDeathStatus(dto.deathStatus);
             npc.editEnemyType(dto.enemyType != null ? dto.enemyType : "");
             character = npc;
         } else {
