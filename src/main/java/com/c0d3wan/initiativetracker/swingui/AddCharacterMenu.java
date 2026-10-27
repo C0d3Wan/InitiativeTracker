@@ -9,6 +9,7 @@ import java.util.Map;
 import java.awt.*;
 
 import com.c0d3wan.initiativetracker.characters.Character;
+import com.c0d3wan.initiativetracker.characters.Horde;
 import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
 
@@ -25,7 +26,7 @@ public class AddCharacterMenu extends JDialog {
     private final JComboBox<String> deathStatusCombo = new JComboBox<>();
     private final JComboBox<String> characterTypeCombo = new JComboBox<>();
     private final JButton addCharacterButton = new JButton("Add character");
-    private final JLabel npcAmountLabel = new JLabel("NPC Amount:");
+    private final JLabel npcAmountLabel = new JLabel("Horde Amount:");
     private final JLabel maxHealthLabel = new JLabel("Max Health:");
     private final JLabel savedCharacterLabel = new JLabel("Character Saved!!!");
 
@@ -91,16 +92,16 @@ public class AddCharacterMenu extends JDialog {
         Character newCharacter;
         if (!type.equalsIgnoreCase("PLAYER")) {
             int maxHealth = (int) maxHealthSpinner.getValue();
-            int maxNPCS = (int) npcAmountSpinner.getValue();
-            for (int i = 1; i <= maxNPCS; i++) {
-                String newName = name + " " + i;
-                newCharacter = new NonePlayerCharacter(newName, initiative, dexterity, maxHealth, type, status);
-                if (maxNPCS > 1) {
-                    ((NonePlayerCharacter) newCharacter).editEnemyType(name);
-                }
-                characterMap.put(name, newCharacter);
-                characters.add(newCharacter);
+            if (type.equals("HORDE")) {
+                int maxNPCS = (int) npcAmountSpinner.getValue();
+                newCharacter = new Horde(name, initiative, dexterity, maxHealth, type, status, maxNPCS);
+            } else {
+                newCharacter = new NonePlayerCharacter(name, initiative, dexterity, maxHealth, type, status);
             }
+
+
+            characterMap.put(name, newCharacter);
+            characters.add(newCharacter);
         } else {
             newCharacter = new Character(name, initiative, dexterity, type, status);
 
@@ -139,6 +140,7 @@ public class AddCharacterMenu extends JDialog {
         characterTypeComboModel.addElement("PLAYER");
         characterTypeComboModel.addElement("ENEMY");
         characterTypeComboModel.addElement("ALLY");
+        characterTypeComboModel.addElement("HORDE");
         characterTypeCombo.setModel(characterTypeComboModel);
 
         final DefaultComboBoxModel<String> deathStatusComboModel = new DefaultComboBoxModel<>();
@@ -202,8 +204,13 @@ public class AddCharacterMenu extends JDialog {
         if (!selectedItem.equals("PLAYER")) {
             maxHealthLabel.setVisible(true);
             maxHealthSpinner.setVisible(true);
-            npcAmountSpinner.setVisible(true);
-            npcAmountLabel.setVisible(true);
+            if (selectedItem.equals("HORDE")) {
+                npcAmountSpinner.setVisible(true);
+                npcAmountLabel.setVisible(true);
+            } else {
+                npcAmountSpinner.setVisible(false);
+                npcAmountLabel.setVisible(false);
+            }
         } else {
             maxHealthLabel.setVisible(false);
             maxHealthSpinner.setVisible(false);

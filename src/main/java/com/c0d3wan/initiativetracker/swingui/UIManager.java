@@ -118,9 +118,10 @@ public class UIManager {
         if  (!characterMap.isEmpty()) {characterMap.clear();}
         for (Character character : characterManager.getCharacterList()) {
             Map<String, Object> characterData = character.getCharacterData();
-            characterMap.put(characterData.get("Name").toString(), character);
             if (!characterData.get("Type").equals("PLAYER")) {
                 npcMap.put(characterData.get("Name").toString(), (NonePlayerCharacter) character);
+            } else {
+                characterMap.put(characterData.get("Name").toString(), character);
             }
         }
     }
