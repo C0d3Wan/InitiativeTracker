@@ -33,7 +33,9 @@ public class NonePlayerCharacter extends Character {
         if (health <= 0){
             health = 0;
             setDeathStatus(DeathStatus.DEAD);
-            horde.checkDead();
+            if (horde != null) {
+                horde.checkDead();
+            }
         } else {
             setDeathStatus(DeathStatus.ALIVE);
         }

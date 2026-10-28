@@ -116,7 +116,7 @@ public class EditCharacterMenu extends JDialog {
         CharacterData currentCharacterData = currentCharacter.getCharacterData();
         int newDexterity = (int) newDexteritySpinner.getValue();
         int newInitiative = (int) newInitiativeSpinner.getValue();
-        String newDeathStatus = (String) newDeathStatusCombo.getSelectedItem();
+        String newDeathStatus = newDeathStatusCombo.getSelectedItem().toString();
 
         if (newDexterity != currentCharacterData.dexterity()) {
             currentCharacter.setDexterity(newDexterity);
