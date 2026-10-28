@@ -113,20 +113,20 @@ public class EditCharacterMenu extends JDialog {
             return;
         }
 
-        Map<String, Object> currentCharacterData = currentCharacter.getCharacterData();
+        CharacterData currentCharacterData = currentCharacter.getCharacterData();
         int newDexterity = (int) newDexteritySpinner.getValue();
         int newInitiative = (int) newInitiativeSpinner.getValue();
         String newDeathStatus = (String) newDeathStatusCombo.getSelectedItem();
 
-        if (newDexterity != (int) currentCharacterData.get("Dexterity")) {
-            currentCharacter.editDexValue(newDexterity);
+        if (newDexterity != currentCharacterData.dexterity()) {
+            currentCharacter.setDexterity(newDexterity);
         }
-        if (newInitiative != (int) currentCharacterData.get("Initiative")) {
-            currentCharacter.editInitiativeNum(newInitiative);
+        if (newInitiative != currentCharacterData.initiative()) {
+            currentCharacter.setInitiative(newInitiative);
         }
         if (newDeathStatus == null) {return;}
-        if (!newDeathStatus.equals(currentCharacterData.get("DeathStatus"))) {
-            currentCharacter.editDeathStatus(newDeathStatus);
+        if (!newDeathStatus.equals(currentCharacterData.deathStatus().toString())) {
+            currentCharacter.setDeathStatus(newDeathStatus);
         }
         updateDetails();
         savedCharacterLabel.setVisible(true);
@@ -177,14 +177,14 @@ public class EditCharacterMenu extends JDialog {
     private void displayCurrentCharacterData() {
         Character currentCharacter = getCurrentCharacter();
         if (currentCharacter == null) {return;}
-        Map<String, Object> currentCharacterData = currentCharacter.getCharacterData();
+        CharacterData currentCharacterData = currentCharacter.getCharacterData();
         characterNameLabel.setText(currentCharacter.getName());
-        oldInitiativeLabel.setText(currentCharacterData.get("Initiative").toString());
-        oldDexterityLabel.setText(currentCharacterData.get("Dexterity").toString());
+        oldInitiativeLabel.setText(String.valueOf(currentCharacterData.initiative()));
+        oldDexterityLabel.setText(String.valueOf(currentCharacterData.dexterity()));
         oldDeathStatusLabel.setText(currentCharacter.getDeathStatus().toString());
 
-        newInitiativeSpinner.setValue(currentCharacterData.get("Initiative"));
-        newDexteritySpinner.setValue(currentCharacterData.get("Dexterity"));
+        newInitiativeSpinner.setValue(currentCharacterData.initiative());
+        newDexteritySpinner.setValue(currentCharacterData.dexterity());
         newDeathStatusCombo.setSelectedItem(currentCharacter.getDeathStatus());
     }
 

@@ -109,7 +109,7 @@ public class EditNPCHealth extends JDialog {
 
                 if (npc.getCharacterType() == CharacterType.HORDE) {
                     hordesToRemove.add(characterName);
-                    List<NonePlayerCharacter> npcs =  ((Horde) npc).getNPCs();
+                    List<NonePlayerCharacter> npcs =  ((Horde) npc).getNpcs();
                     for (NonePlayerCharacter enemy: npcs) {
                         charactersToCombo.add(enemy.getName());
                         npcsToHash.put(enemy.getName(), enemy);

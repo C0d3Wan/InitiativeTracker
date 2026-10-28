@@ -1,6 +1,7 @@
 package com.c0d3wan.initiativetracker.swingui;
 
 import com.c0d3wan.initiativetracker.characters.Character;
+import com.c0d3wan.initiativetracker.characters.CharacterData;
 import com.c0d3wan.initiativetracker.characters.DeathStatus;
 import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
@@ -109,7 +110,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
             int index,
             boolean isSelected,
             boolean cellHasFocus) {
-        Map<String, Object> characterData = character.getCharacterData();
+        CharacterData characterData = character.getCharacterData();
         nameLabel.setText(character.getName());
         initiativeLabel.setText(String.valueOf(character.getInitiativeValue()));
         characterTypeLabel.setText(character.getCharacterType().toString());
@@ -149,8 +150,8 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         return this;
     }
 
-    private boolean isPlayer(Map<String, Object> characterData) {
-        return "PLAYER".equals(characterData.get("Type"));
+    private boolean isPlayer(CharacterData characterData) {
+        return "PLAYER".equals(characterData.type().toString());
     }
 
     /**
