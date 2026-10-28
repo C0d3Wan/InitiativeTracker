@@ -198,10 +198,10 @@ public class AddCharacterMenu extends JDialog {
     private void updateForMaxHealth() {
         Object selectedItem = characterTypeCombo.getSelectedItem();
         if (selectedItem == null) {return;}
-        if (!selectedItem.equals("PLAYER")) {
+        if (selectedItem != CharacterType.PLAYER) {
             maxHealthLabel.setVisible(true);
             maxHealthSpinner.setVisible(true);
-            if (selectedItem.equals("HORDE")) {
+            if (selectedItem == CharacterType.HORDE) {
                 npcAmountSpinner.setVisible(true);
                 npcAmountLabel.setVisible(true);
             } else {
