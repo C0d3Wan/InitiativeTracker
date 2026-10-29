@@ -11,6 +11,11 @@ public class FileManager {
 
     private static final boolean PACKAGED = detectPackaged();
 
+    /**
+     * Determines whether the application is running from a packaged JAR file or directly in an IDE/class path.
+     *
+     * @return {@code true} if running inside a JAR archive; {@code false} otherwise.
+     */
     public static boolean detectPackaged() {
         try {
             String path = FileManager.class
@@ -25,6 +30,15 @@ public class FileManager {
         }
     }
 
+    /**
+     * Resolves and creates the platform-dependent base configuration directory.
+     * <p>
+     * When packaged as a JAR, uses standard OS conventions (%APPDATA% on Windows,
+     * {@code ~/Library/Application Support} on macOS, and {@code $XDG_CONFIG_HOME} or {@code ~/.config} on Linux).
+     * In development mode, falls back to a local {@code conf} folder.
+     *
+     * @return The canonical {@link File} directory for configuration files.
+     */
     public static File getDirectory() {
         File directory;
 
@@ -60,6 +74,11 @@ public class FileManager {
         return directory;
     }
 
+    /**
+     * Resolves and creates the directory designated for combat save files.
+     *
+     * @return The {@link File} representing the saves directory.
+     */
     public static File getSaveDirectory() {
         File saveDir;
 
@@ -76,10 +95,21 @@ public class FileManager {
         return saveDir;
     }
 
+    /**
+     * Lists all files located in the save directory.
+     *
+     * @return A {@link List} of all files found in the saves folder.
+     */
     public static List<File> getFiles() {
         return getFiles(null);
     }
 
+    /**
+     * Lists files located in the save directory filtered by file extension.
+     *
+     * @param extension The required file suffix (e.g., {@code ".json"}), or {@code null} to return all files.
+     * @return A {@link List} of matching {@link File} objects.
+     */
     public static List<File> getFiles(String extension) {
         File dir = getSaveDirectory();
         if (!dir.exists() || !dir.isDirectory()) {
