@@ -16,14 +16,13 @@ public class LoadFileMenu extends JDialog {
     private final JPanel loadMenuPane = new JPanel();
     private final JComboBox<String> fileSelection = new JComboBox<>();
     private final JButton loadButton = new JButton("Load File");
-    private final JLabel fileLoadedLabel = new JLabel("File Loaded!!");
 
     private boolean itemSelected = false;
     private String selectedFile;
 
     /**
-     * Constructs a modal dialog to load character list from a file
-     * @param parent The parent {@link Frame} window binding this dialog.
+     * Constructs a modal dialogue to load character list from a file
+     * @param parent The parent {@link Frame} window binding this dialogue.
      */
     public LoadFileMenu(Frame parent) {
         super(parent, "Load File", true);
@@ -31,9 +30,12 @@ public class LoadFileMenu extends JDialog {
 
         setTitle("Load File");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
 
         setupCombo();
+
+        pack();
+        setMinimumSize(new Dimension(250, 107));
 
         loadButton.addActionListener(e -> loadFile());
     }
@@ -42,24 +44,19 @@ public class LoadFileMenu extends JDialog {
      * Sets up the Layout manager, layout, widgets and border for the {@link Frame}
      */
     private void setupMenu() {
-        Dimension windowSize = new Dimension(250, 107);
         loadMenuPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][r, grow, push]", "[][][]"));
         loadMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        setMinimumSize(windowSize);
-        setSize(windowSize);
 
         setContentPane(loadMenuPane);
 
         final JLabel fileToLoadLabel = new JLabel("Choose File to Load");
 
-        fileLoadedLabel.setVisible(false);
         loadButton.setEnabled(false);
         loadButton.setFocusPainted(false);
 
         loadMenuPane.add(fileToLoadLabel, "cell 0 0");
         loadMenuPane.add(fileSelection, "cell 1 0, growx, push");
         loadMenuPane.add(loadButton, "cell 1 1, growx, push");
-        loadMenuPane.add(fileLoadedLabel, "cell 0 2, span, hidemode 3, align center");
     }
 
     /**
@@ -70,12 +67,11 @@ public class LoadFileMenu extends JDialog {
         if (files == null || files.isEmpty()) {
             fileSelection.addItem("No files");
         } else {
+            loadButton.setEnabled(true);
             for (File file: files) {
                 fileSelection.addItem(file.getName());
-                loadButton.setEnabled(true);
             }
         }
-        pack();
     }
 
     /**
@@ -84,16 +80,17 @@ public class LoadFileMenu extends JDialog {
     private void loadFile() {
         itemSelected = true;
         Object selectedItem = fileSelection.getSelectedItem();
-        assert selectedItem != null;
+        if (selectedItem == null) {
+            return;
+        }
         selectedFile = selectedItem.toString();
-        fileLoadedLabel.setVisible(true);
-        loadButton.setEnabled(false);
-        pack();
+
+        dispose();
     }
 
     /**
      * Gets the selected file name
-     * @return {@code true} if confirmed; {@code false} if canceled or closed.
+     * @return {@code true} if confirmed; {@code false} if cancelled or closed.
      */
     public String getFileToLoad() {
         return selectedFile;

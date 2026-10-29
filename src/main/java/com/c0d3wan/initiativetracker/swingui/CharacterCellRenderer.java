@@ -1,6 +1,8 @@
 package com.c0d3wan.initiativetracker.swingui;
 
 import com.c0d3wan.initiativetracker.characters.Character;
+import com.c0d3wan.initiativetracker.characters.CharacterData;
+import com.c0d3wan.initiativetracker.characters.DeathStatus;
 import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
 
@@ -28,6 +30,8 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
     private final JPanel deathSavePanel = new JPanel();
     private final JLabel npcHealth = new JLabel();
 
+    private static final Color ACTIVE_TURN_COLOR = new Color(38, 162, 105);
+
     /**
      * Constructs a new CharacterCellRenderer and configures subcomponents and layouts.
      */
@@ -43,11 +47,11 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
      * Instantiates and arranges the character information labels on the renderer panel.
      */
     private void setupLabels() {
-        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 20));
-        initiativeLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        characterTypeLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        npcHealth.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        deathStatusLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        nameLabel.setFont(nameLabel.getFont().deriveFont(Font.BOLD, 20f));
+        initiativeLabel.setFont(initiativeLabel.getFont().deriveFont(Font.PLAIN, 14));
+        characterTypeLabel.setFont(characterTypeLabel.getFont().deriveFont(Font.PLAIN, 14f));
+        npcHealth.setFont(npcHealth.getFont().deriveFont(Font.PLAIN, 12f));
+        deathStatusLabel.setFont(deathStatusLabel.getFont().deriveFont(Font.PLAIN, 14f));
 
         add(nameLabel, "growx, aligny center");
         add(initiativeLabel, "aligny center");
@@ -106,11 +110,11 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
             int index,
             boolean isSelected,
             boolean cellHasFocus) {
-        Map<String, Object> characterData = character.getCharacterData();
-        nameLabel.setText(characterData.get("Name").toString());
-        initiativeLabel.setText(characterData.get("TotalInitiative").toString());
-        characterTypeLabel.setText(characterData.get("Type").toString());
-        deathStatusLabel.setText(characterData.get("DeathStatus").toString());
+        CharacterData characterData = character.getCharacterData();
+        nameLabel.setText(character.getName());
+        initiativeLabel.setText(String.valueOf(character.getInitiativeValue()));
+        characterTypeLabel.setText(character.getCharacterType().toString());
+        deathStatusLabel.setText(character.getDeathStatus().toString());
 
         setOpaque(true);
 
@@ -122,8 +126,9 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         }
 
         if (index == 0) {
-            setBackground(new Color(38, 162, 105));
-            if ("DOWN".equals(characterData.get("DeathStatus").toString())) {
+            setBackground(ACTIVE_TURN_COLOR);
+            setForeground(list.getForeground());
+            if (character.getDeathStatus() == DeathStatus.DOWN) {
                 deathSavePanel.setVisible(true);
                 updateDeathSaves(character);
             } else {
@@ -145,8 +150,8 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         return this;
     }
 
-    private boolean isPlayer(Map<String, Object> characterData) {
-        return characterData.get("Type").toString().equals("PLAYER");
+    private boolean isPlayer(CharacterData characterData) {
+        return "PLAYER".equals(characterData.type().toString());
     }
 
     /**

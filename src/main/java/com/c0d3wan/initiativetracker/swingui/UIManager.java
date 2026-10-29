@@ -1,9 +1,8 @@
 package com.c0d3wan.initiativetracker.swingui;
 
 import com.c0d3wan.initiativetracker.FileManagement.SaveLoadManager;
-import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.characters.Character;
-import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
+import com.c0d3wan.initiativetracker.characters.*;
 import com.formdev.flatlaf.*;
 
 import javax.swing.*;
@@ -54,7 +53,7 @@ public class UIManager {
     }
 
     /**
-     * Opens the modal dialog to create and add a new character.
+     * Opens the modal dialogue to create and add a new character.
      * Refreshes the initiative list if the user confirms creation.
      */
     public void openAddCharacterMenu() {
@@ -74,7 +73,7 @@ public class UIManager {
     }
 
     /**
-     * Opens the modal dialog to modify attributes of an existing character.
+     * Opens the modal dialogue to modify attributes of an existing character.
      * Refreshes the initiative queue when changes are saved.
      */
     public void openEditCharacterMenu() {
@@ -88,12 +87,12 @@ public class UIManager {
     }
 
     /**
-     * Opens the modal dialog to modify existing NPC health values.
+     * Opens the modal dialogue to modify existing NPC health values.
      */
     public void openEditNPCHealthMenu() {
         updateCharacterMap();
 
-        EditNPCHealth editNPCHealthMenu = new EditNPCHealth(parentFrame, characterMap);
+        EditNPCHealth editNPCHealthMenu = new EditNPCHealth(parentFrame, npcMap);
         editNPCHealthMenu.setVisible(true);
 
         characterManager.updateCharacters();
@@ -101,7 +100,7 @@ public class UIManager {
     }
 
     /**
-     * Opens the modal dialog to remove selected or all characters from the combat session.
+     * Opens the modal dialogue to remove selected or all characters from the combat session.
      */
     public void openRemoveCharacterMenu() {
         updateCharacterMap();
@@ -112,15 +111,16 @@ public class UIManager {
     }
 
     /**
-     * Synchronizes the internal name-to-character lookup table with the character manager.
+     * Synchronises the internal name-to-character lookup table with the character manager.
      */
     private void updateCharacterMap() {
-        if  (!characterMap.isEmpty()) {characterMap.clear();}
+        characterMap.clear();
+        npcMap.clear();
         for (Character character : characterManager.getCharacterList()) {
-            Map<String, Object> characterData = character.getCharacterData();
-            characterMap.put(characterData.get("Name").toString(), character);
-            if (!characterData.get("Type").equals("PLAYER")) {
-                npcMap.put(characterData.get("Name").toString(), (NonePlayerCharacter) character);
+        if (character.getCharacterType() != CharacterType.PLAYER) {
+                npcMap.put(character.getName(), (NonePlayerCharacter) character);
+            } else {
+                characterMap.put(character.getName(), character);
             }
         }
     }
@@ -131,9 +131,7 @@ public class UIManager {
      */
     private void updateInitiativeList() {
         characterListModel.clear();
-        for (Character character : characterManager.getInitiativeOrder()) {
-            characterListModel.addElement(character);
-        }
+        characterManager.getInitiativeOrder().forEach(characterListModel::addElement);
 
         updateDeathSaveButtons();
     }
@@ -166,6 +164,11 @@ public class UIManager {
      * the active character at the top of the initiative order is downed.
      */
     private void updateDeathSaveButtons() {
+        if (passSaveButton == null ||
+                failSaveButton == null ||
+                deathSaveLabel == null) {
+            return;
+        }
         passSaveButton.setVisible(false);
         failSaveButton.setVisible(false);
         deathSaveLabel.setVisible(false);
@@ -178,7 +181,7 @@ public class UIManager {
 
         Character currentCharacter = characterListModel.get(0);
 
-        if (currentCharacter.getDeathStatus().toString().equals("DOWN")) {
+        if (currentCharacter.getDeathStatus() == DeathStatus.DOWN) {
             passSaveButton.setVisible(true);
             failSaveButton.setVisible(true);
             deathSaveLabel.setVisible(true);
@@ -193,7 +196,7 @@ public class UIManager {
      *
      * @param darkMode boolean {@code true} for dark mode, {@code false} for light mode
      */
-    public static void setDarkMode(Boolean darkMode) {
+    public static void setDarkMode(boolean darkMode) {
         if (darkMode) {
             FlatDarkLaf.setup();
         } else {

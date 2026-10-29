@@ -6,6 +6,7 @@ import javax.swing.border.TitledBorder;
 import com.c0d3wan.initiativetracker.FileManagement.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
+import com.formdev.flatlaf.FlatLaf;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
@@ -39,7 +40,7 @@ public class MainMenu extends JFrame {
     private final UIManager uiManager;
 
     /**
-     * Constructs and initializes the main application window.
+     * Constructs and initialises the main application window.
      *
      * @param characterManager The {@link CharacterManager} maintaining combat data.
      */
@@ -95,6 +96,12 @@ public class MainMenu extends JFrame {
         mainMenuPane.setLayout(new MigLayout("insets 2 0 2 0, fillx", "[center][center][center][center]", "[center][center][center][center][center]"));
         mainMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);
+
+        if (FlatLaf.isLafDark()) {
+            darkMode.setEnabled(false);
+        } else {
+            lightMode.setEnabled(false);
+        }
 
         addCharacterButton.setFocusPainted(false);
         editCharacterButton.setFocusPainted(false);
@@ -159,7 +166,7 @@ public class MainMenu extends JFrame {
         int choice = JOptionPane.showConfirmDialog(
                 this,
                 "Are you sure you want to exit the Tracker?",
-                "Exit Conformation",
+                "Exit Confirmation",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE
         );

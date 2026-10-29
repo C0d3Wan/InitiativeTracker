@@ -11,45 +11,20 @@ package com.c0d3wan.initiativetracker.characters;
 public class NonePlayerCharacter extends Character {
     private int health;
     private final int maxHealth;
-    private String enemyType;
+    private String enemyType = "";
+    private Horde horde;
 
-    /**
-     * Constructs a new NPC instance
-     *
-     * @param name       The unique display name of the character.
-     * @param initiative The base integer initiative roll.
-     * @param dex        The dexterity attribute score (typically 0–30) used for tie-breakers.
-     * @param maxHealth  The max health of the character.
-     * @param type       The {@link CharacterType} classification of this character.
-     * @param status     The initial {@link DeathStatus} of this character.
-     */
+
     public NonePlayerCharacter(String name, int initiative, int dex, int maxHealth, CharacterType type, DeathStatus status) {
         super(name, initiative, dex, type, status);
         this.health = maxHealth;
         this.maxHealth = maxHealth;
-        enemyType = "";
     }
 
-    /**
-     * Constructs a new NPC instance
-     *
-     * @param name       The unique display name of the character.
-     * @param initiative The base integer initiative roll.
-     * @param dex        The dexterity attribute score (typically 0–30) used for tie-breakers.
-     * @param maxHealth  The max health of the character.
-     * @param typeID     The integer ID representing the {@link CharacterType} (0: PLAYER, 1: ENEMY, 2: ALLY).
-     * @param deathID    The integer ID representing the {@link DeathStatus} (0: DEAD, 1: ALIVE, 2: DOWN).
-     */
     public NonePlayerCharacter(String name, int initiative, int dex,  int maxHealth, String typeID, String deathID) {
         this(name, initiative, dex, maxHealth, typeFromString(typeID), deathFromString(deathID));
     }
 
-    /**
-     * Edits the health of the character
-     * <p>
-     * Kills them if the run out of health
-     * @param amount amount to edit health (+/-)
-     */
     public void editHealth(int amount){
         health += amount;
         if (health > maxHealth) {
@@ -57,20 +32,28 @@ public class NonePlayerCharacter extends Character {
         }
         if (health <= 0){
             health = 0;
-            editDeathStatus(DeathStatus.DEAD);
+            setDeathStatus(DeathStatus.DEAD);
+            if (horde != null) {
+                horde.checkDead();
+            }
         } else {
-            editDeathStatus(DeathStatus.ALIVE);
+            setDeathStatus(DeathStatus.ALIVE);
         }
     }
 
-    public void editEnemyType(String type){
+    public void setEnemyType(String type){
         enemyType = type;
     }
 
-    public void setCurrentHealth(int currentHealth) {
+    public void setCurrentHealth(int currentHealth, boolean checkDeath) {
         this.health = Math.clamp(currentHealth, 0, maxHealth);
         if (this.health == 0) {
-            editDeathStatus(DeathStatus.DEAD);
+            setDeathStatus(DeathStatus.DEAD);
+            if (checkDeath && horde != null) {
+                horde.checkDead();
+            }
+        } else {
+            setDeathStatus(DeathStatus.ALIVE);
         }
     }
 
@@ -84,5 +67,9 @@ public class NonePlayerCharacter extends Character {
 
     public String getEnemyType() {
         return enemyType;
+    }
+
+    public void addHorde(Horde hordeClass) {
+        horde = hordeClass;
     }
 }

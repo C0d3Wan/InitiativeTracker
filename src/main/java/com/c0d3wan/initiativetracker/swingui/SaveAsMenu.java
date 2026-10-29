@@ -19,7 +19,6 @@ public class SaveAsMenu extends JDialog {
     private final JTextField saveFileText = new JTextField();
 
     private final JButton savedToFileButton = new JButton("Save to File");
-    private final JLabel savedLabel = new JLabel("Saved to file!");
 
     private boolean confirmed = false;
     private String saveFile;
@@ -27,7 +26,7 @@ public class SaveAsMenu extends JDialog {
     /**
      * Constructs a new menu for saving the current initiative list to a new file
      *
-     * @param parent The parent {@link Frame} window binding this dialog.
+     * @param parent The parent {@link Frame} window binding this dialogue.
      */
     public SaveAsMenu(Frame parent) {
         super(parent, "Save As", true);
@@ -35,7 +34,10 @@ public class SaveAsMenu extends JDialog {
 
         setTitle("Save To File");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
+
+        pack();
+        setMinimumSize(new Dimension(250, 107));
 
         saveFileText.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -60,26 +62,19 @@ public class SaveAsMenu extends JDialog {
      * Sets up the Layout manager, layout, widgets and border for the {@link Frame}
      */
     private void setupMenu() {
-        Dimension windowSize = new Dimension(250, 107);
         saveMenuPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][r]", "[][][]"));
         saveMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        setMinimumSize(windowSize);
-        setSize(windowSize);
 
         setContentPane(saveMenuPane);
 
         final JLabel saveToFileLabel = new JLabel("File to save to:");
 
-        savedLabel.setVisible(false);
         savedToFileButton.setEnabled(false);
         savedToFileButton.setFocusPainted(false);
 
         saveMenuPane.add(saveToFileLabel, "cell 0 0");
         saveMenuPane.add(saveFileText, "cell 1 0, growx, push");
         saveMenuPane.add(savedToFileButton, "cell 1 1, growx, push");
-        saveMenuPane.add(savedLabel, "cell 0 2, span, hidemode 3, align center");
-
-
     }
 
     /**
@@ -108,14 +103,14 @@ public class SaveAsMenu extends JDialog {
         saveFile = saveFileText.getText().trim();
         saveFileText.setText("");
         confirmed = true;
-        savedLabel.setVisible(true);
         savedToFileButton.setEnabled(false);
-        pack();
+
+        dispose();
     }
 
     /**
      * Checks if the file name was successfully inputted
-     * @return {@code true} if confirmed; {@code false} if canceled or closed.
+     * @return {@code true} if confirmed; {@code false} if cancelled or closed.
      */
     public boolean isConfirmed() {
         return confirmed;
