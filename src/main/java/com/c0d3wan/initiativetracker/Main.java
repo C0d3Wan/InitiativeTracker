@@ -6,11 +6,15 @@ import com.c0d3wan.initiativetracker.swingui.MainMenu;
 import javax.swing.*;
 
 /**
- * Entry point for launching the D&D Initiative Tracker application.
+ * Entry point for the Initiative Tracker application.
+ * <p>
+ * Initializes core state management, loads persistent configuration settings,
+ * and launches the Swing graphical user interface on the Event Dispatch Thread (EDT).
  */
 public class Main {
+
     /**
-     * Starts the application by initialising core managers and launching the GUI.
+     * Application bootstrapper.
      *
      * @param args Command-line arguments passed during startup (unused).
      */
