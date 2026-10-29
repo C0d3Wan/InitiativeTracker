@@ -16,10 +16,16 @@ import com.formdev.flatlaf.*;
 public class ConfigManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    /**
+     * Data transfer object representing the persistent configuration options.
+     */
     private static class ConfigDTO {
         boolean darkMode;
     }
 
+    /**
+     * Saves the current application settings to {@code Config.json} in the configuration directory.
+     */
     public static void saveConfig() {
         File targetFile = new File(FileManager.getDirectory(), "Config.json");
         try {
@@ -29,6 +35,10 @@ public class ConfigManager {
         }
     }
 
+    /**
+     * Loads application settings from {@code Config.json} in the configuration directory
+     * and applies them to the user interface.
+     */
     public static void loadConfig() {
         File targetFile = new File(FileManager.getDirectory(), "Config.json");
         if (!targetFile.exists()) {
@@ -42,6 +52,12 @@ public class ConfigManager {
         }
     }
 
+    /**
+     * Serializes current UI settings into JSON and writes them to the specified file.
+     *
+     * @param file The destination file.
+     * @throws IOException If writing to the file fails.
+     */
     private static void saveToFile(File file) throws IOException {
         ConfigDTO configs = new ConfigDTO();
         configs.darkMode = FlatLaf.isLafDark();
@@ -51,7 +67,12 @@ public class ConfigManager {
         }
     }
 
-
+    /**
+     * Reads and parses configuration JSON from disk and applies theme settings.
+     *
+     * @param file The configuration file to read.
+     * @throws IOException If reading the file fails.
+     */
     private static void loadFromFile(File file) throws IOException {
         try (FileReader reader = new FileReader(file)) {
             ConfigDTO configs = GSON.fromJson(reader, ConfigDTO.class);
