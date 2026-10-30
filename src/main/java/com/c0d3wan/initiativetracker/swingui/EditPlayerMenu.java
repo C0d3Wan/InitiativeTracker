@@ -13,8 +13,8 @@ import java.util.*;
  * Modal {@link JDialog} interface for editing statistics (initiative, dexterity, life status)
  * of an existing character.
  */
-public class EditCharacterMenu extends JDialog {
-    private final JPanel editCharacterPane = new JPanel();
+public class EditPlayerMenu extends JDialog {
+    private final JPanel editPlayerPane = new JPanel();
     private final JLabel characterNameLabel = new JLabel();
     private final JSpinner newInitiativeSpinner = new JSpinner();
     private final JLabel oldInitiativeLabel = new JLabel();
@@ -24,19 +24,19 @@ public class EditCharacterMenu extends JDialog {
     private final JComboBox<DeathStatus> newDeathStatusCombo = new JComboBox<>();
     private final JComboBox<String> charactersCombo = new JComboBox<>();
     private final JButton saveEditButton = new JButton("Save Edit");
-    private final JLabel savedCharacterLabel = new JLabel("Character Saved!!");
+    private final JLabel savedPlayerLabel = new JLabel("Player Saved!!");
 
-    private final Map<String, Character> characterMap;
+    private final Map<String, Character> playerMap;
 
     /**
-     * Constructs a modal dialogue to modify attributes of existing characters.
+     * Constructs a modal dialogue to modify attributes of existing players.
      *
      * @param parent       The parent {@link Frame} window binding this dialogue.
      * @param characterMap Lookup map containing all registered characters keyed by name.
      */
-    public EditCharacterMenu(Frame parent, Map<String, Character> characterMap) {
+    public EditPlayerMenu(Frame parent, Map<String, Character> characterMap) {
         super(parent, "Edit Character", true);
-        this.characterMap = characterMap;
+        this.playerMap = characterMap;
         setupMenu();
 
         setTitle("Edit Character");
@@ -47,7 +47,7 @@ public class EditCharacterMenu extends JDialog {
         updateCharactersCombo();
 
         charactersCombo.addActionListener(e -> updateDetails());
-        saveEditButton.addActionListener(e -> saveEditedCharacter());
+        saveEditButton.addActionListener(e -> saveEditedPlayer());
     }
 
     /**
@@ -55,11 +55,11 @@ public class EditCharacterMenu extends JDialog {
      */
     private void setupMenu() {
         Dimension windowSize = new Dimension(400, 220);
-        editCharacterPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][l][r, grow, push]", "[][][][][][][][]"));
-        editCharacterPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        editPlayerPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][l][r, grow, push]", "[][][][][][][][]"));
+        editPlayerPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);
 
-        setContentPane(editCharacterPane);
+        setContentPane(editPlayerPane);
 
         final DefaultComboBoxModel<String> charactersComboModel = new DefaultComboBoxModel<>();
         charactersCombo.setModel(charactersComboModel);
@@ -81,33 +81,33 @@ public class EditCharacterMenu extends JDialog {
         newDeathStatusCombo.setModel(deathStatusComboModel);
 
         saveEditButton.setFocusPainted(false);
-        savedCharacterLabel.setVisible(false);
+        savedPlayerLabel.setVisible(false);
 
-        editCharacterPane.add(characterEditLabel, "cell 0 0, span, growx");
-        editCharacterPane.add(separator1, "cell 0 1, span, growx");
-        editCharacterPane.add(nameLabel, "cell 0 2, span, growx");
-        editCharacterPane.add(initiativeLabel, "cell 0 3");
-        editCharacterPane.add(dexterityLabel, "cell 0 4");
-        editCharacterPane.add(deathStatusLabel, "cell 0 5");
-        editCharacterPane.add(savedCharacterLabel, "cell 0 7, span, hidemode 3, align center");
+        editPlayerPane.add(characterEditLabel, "cell 0 0, span, growx");
+        editPlayerPane.add(separator1, "cell 0 1, span, growx");
+        editPlayerPane.add(nameLabel, "cell 0 2, span, growx");
+        editPlayerPane.add(initiativeLabel, "cell 0 3");
+        editPlayerPane.add(dexterityLabel, "cell 0 4");
+        editPlayerPane.add(deathStatusLabel, "cell 0 5");
+        editPlayerPane.add(savedPlayerLabel, "cell 0 7, span, hidemode 3, align center");
 
-        editCharacterPane.add(characterNameLabel, "cell 1 2");
-        editCharacterPane.add(oldInitiativeLabel, "cell 1 3");
-        editCharacterPane.add(oldDexterityLabel, "cell 1 4");
-        editCharacterPane.add(oldDeathStatusLabel, "cell 1 5");
+        editPlayerPane.add(characterNameLabel, "cell 1 2");
+        editPlayerPane.add(oldInitiativeLabel, "cell 1 3");
+        editPlayerPane.add(oldDexterityLabel, "cell 1 4");
+        editPlayerPane.add(oldDeathStatusLabel, "cell 1 5");
 
-        editCharacterPane.add(charactersCombo, "cell 2 0, growx");
-        editCharacterPane.add(newInitiativeSpinner, "cell 2 3, growx");
-        editCharacterPane.add(newDexteritySpinner, "cell 2 4, growx");
-        editCharacterPane.add(newDeathStatusCombo, "cell 2 5, growx");
-        editCharacterPane.add(saveEditButton, "cell 2 6, growx");
+        editPlayerPane.add(charactersCombo, "cell 2 0, growx");
+        editPlayerPane.add(newInitiativeSpinner, "cell 2 3, growx");
+        editPlayerPane.add(newDexteritySpinner, "cell 2 4, growx");
+        editPlayerPane.add(newDeathStatusCombo, "cell 2 5, growx");
+        editPlayerPane.add(saveEditButton, "cell 2 6, growx");
     }
 
     /**
      * Reads form fields and commits modified initiative, dexterity, and death status
      * back to the selected character instance.
      */
-    private void saveEditedCharacter() {
+    private void saveEditedPlayer() {
         Character currentCharacter = getCurrentCharacter();
         if (currentCharacter == null) {
             return;
@@ -116,7 +116,11 @@ public class EditCharacterMenu extends JDialog {
         CharacterData currentCharacterData = currentCharacter.getCharacterData();
         int newDexterity = (int) newDexteritySpinner.getValue();
         int newInitiative = (int) newInitiativeSpinner.getValue();
-        String newDeathStatus = newDeathStatusCombo.getSelectedItem().toString();
+        Object selectedItem = newDeathStatusCombo.getSelectedItem();
+        if (selectedItem == null) {
+            return;
+        }
+        String newDeathStatus = selectedItem.toString();
 
         if (newDexterity != currentCharacterData.dexterity()) {
             currentCharacter.setDexterity(newDexterity);
@@ -129,7 +133,7 @@ public class EditCharacterMenu extends JDialog {
             currentCharacter.setDeathStatus(newDeathStatus);
         }
         updateDetails();
-        savedCharacterLabel.setVisible(true);
+        savedPlayerLabel.setVisible(true);
 
         //this.dispose();
     }
@@ -140,9 +144,9 @@ public class EditCharacterMenu extends JDialog {
      */
     private void updateCharactersCombo() {
 
-        savedCharacterLabel.setVisible(false);
+        savedPlayerLabel.setVisible(false);
 
-        if (characterMap.isEmpty()) {
+        if (playerMap.isEmpty()) {
             charactersCombo.addItem("No Characters");
             characterNameLabel.setText("Null");
             oldInitiativeLabel.setText("Null");
@@ -151,7 +155,7 @@ public class EditCharacterMenu extends JDialog {
             saveEditButton.setEnabled(false);
         } else {
             saveEditButton.setEnabled(true);
-            for (String characterName : characterMap.keySet()) {
+            for (String characterName : playerMap.keySet()) {
                 charactersCombo.removeAllItems();
                 charactersCombo.addItem(characterName);
             }
@@ -164,9 +168,9 @@ public class EditCharacterMenu extends JDialog {
      * Refreshes the display view with attributes from the currently selected character in the combo box.
      */
     private void updateDetails() {
-        savedCharacterLabel.setVisible(false);
+        savedPlayerLabel.setVisible(false);
 
-        if (!characterMap.isEmpty()) {
+        if (!playerMap.isEmpty()) {
             displayCurrentCharacterData();
         }
     }
@@ -194,13 +198,13 @@ public class EditCharacterMenu extends JDialog {
      * @return The active {@link Character} chosen in the combo box.
      */
     private Character getCurrentCharacter() {
-        if (charactersCombo.getSelectedItem() == null || characterMap.isEmpty()) {
-            if (!characterMap.isEmpty()) {
-                return characterMap.entrySet().iterator().next().getValue();
+        if (charactersCombo.getSelectedItem() == null || playerMap.isEmpty()) {
+            if (!playerMap.isEmpty()) {
+                return playerMap.entrySet().iterator().next().getValue();
             }
             return null;
         }
         String name = charactersCombo.getSelectedItem().toString();
-        return characterMap.get(name);
+        return playerMap.get(name);
     }
 }

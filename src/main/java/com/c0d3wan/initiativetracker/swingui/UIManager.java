@@ -79,8 +79,8 @@ public class UIManager {
     public void openEditCharacterMenu() {
         updateCharacterMap();
 
-        EditCharacterMenu editCharacterMenu = new EditCharacterMenu(parentFrame, characterMap);
-        editCharacterMenu.setVisible(true);
+        EditPlayerMenu editPlayerMenu = new EditPlayerMenu(parentFrame, characterMap);
+        editPlayerMenu.setVisible(true);
 
         characterManager.updateCharacters();
         updateInitiativeList();
