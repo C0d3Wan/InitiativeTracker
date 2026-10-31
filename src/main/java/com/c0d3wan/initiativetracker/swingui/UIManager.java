@@ -117,7 +117,7 @@ public class UIManager {
         characterMap.clear();
         npcMap.clear();
         for (Character character : characterManager.getCharacterList()) {
-        if (character.getCharacterType() != CharacterType.PLAYER) {
+            if (character.getCharacterType() != CharacterType.PLAYER) {
                 npcMap.put(character.getName(), (NonePlayerCharacter) character);
             } else {
                 characterMap.put(character.getName(), character);

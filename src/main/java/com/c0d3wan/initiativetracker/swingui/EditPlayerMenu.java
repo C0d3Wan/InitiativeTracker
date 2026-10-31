@@ -155,8 +155,8 @@ public class EditPlayerMenu extends JDialog {
             saveEditButton.setEnabled(false);
         } else {
             saveEditButton.setEnabled(true);
+            charactersCombo.removeAllItems();
             for (String characterName : playerMap.keySet()) {
-                charactersCombo.removeAllItems();
                 charactersCombo.addItem(characterName);
             }
 
