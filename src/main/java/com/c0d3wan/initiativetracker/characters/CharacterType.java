@@ -12,6 +12,6 @@ public enum CharacterType {
     ALLY,
     /** A composite entity representing multiple homogeneous combatants. */
     HORDE,
-    /** Fallback or unrecognized combatant type. */
+    /** Fallback or unrecognised combatant type. */
     UNKNOWN
 }

@@ -33,7 +33,7 @@ public class SaveLoadManager {
      * to a default key for local development.
      *
      * @return The initialized {@link SecretKeySpec}.
-     * @throws RuntimeException If the key cannot be decoded or initialized.
+     * @throws RuntimeException If the key cannot be decoded or initialised.
      */
     private static SecretKeySpec getSecretKey() {
         try {
@@ -54,7 +54,7 @@ public class SaveLoadManager {
      *
      * @param data The UTF-8 string to encrypt.
      * @return The Base64-encoded ciphertext string.
-     * @throws Exception If cipher initialization or encryption fails.
+     * @throws Exception If cipher initialisation or encryption fails.
      */
     private static String encrypt(String data) throws Exception {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
@@ -68,7 +68,7 @@ public class SaveLoadManager {
      *
      * @param encryptedData The Base64 ciphertext string.
      * @return The decrypted UTF-8 plaintext string.
-     * @throws Exception If cipher initialization or decryption fails.
+     * @throws Exception If cipher initialisation or decryption fails.
      */
     private static String decrypt(String encryptedData) throws Exception {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
@@ -304,7 +304,7 @@ public class SaveLoadManager {
 
             Set<String> existingNames = manager.getCharacterList().stream()
                     .map(c -> c.getCharacterData().name().toLowerCase())
-                    .collect(Collectors.toSet());;
+                    .collect(Collectors.toSet());
 
             for (CharacterRecordDTO dto : session.combatants) {
                 if (existingNames.contains(dto.name.toLowerCase(Locale.ROOT))){

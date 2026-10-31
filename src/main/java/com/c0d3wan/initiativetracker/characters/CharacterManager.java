@@ -22,7 +22,7 @@ public class CharacterManager {
 
     /**
      * Adds a character to the combat tracker, sorts the initiative order,
-     * and initializes the first turn if no combatant is currently active.
+     * and initialises the first turn if no combatant is currently active.
      *
      * @param character The {@link Character} to enrol.
      */
