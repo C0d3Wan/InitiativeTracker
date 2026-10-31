@@ -4,7 +4,7 @@ package com.c0d3wan.initiativetracker.characters;
  * Represents a non-player combatant entity within the initiative tracking system.
  * <p>
  * Encapsulates hit point tracking, subclassification tags (such as enemy archetype),
- * and dynamic synchronization with an owning parent {@link Horde} if attached.
+ * and dynamic synchronisation with an owning parent {@link Horde} if attached.
  */
 public class NonePlayerCharacter extends Character {
     private int health;
