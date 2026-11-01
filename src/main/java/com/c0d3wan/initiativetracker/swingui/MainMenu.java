@@ -3,8 +3,10 @@ package com.c0d3wan.initiativetracker.swingui;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
+import com.c0d3wan.initiativetracker.FileManagement.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
+import com.formdev.flatlaf.FlatLaf;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
@@ -27,6 +29,8 @@ public class MainMenu extends JFrame {
     private final JButton editNPCHealthButton = new JButton("Edit NPC Health");
 
     private final JMenuBar menuBar = new JMenuBar();
+    private final JMenuItem openItem = new JMenuItem("Open");
+    private final JMenuItem saveAsItem = new JMenuItem("Save As");
     private final JMenuItem saveItem = new JMenuItem("Save");
     private final JMenuItem exitItem = new JMenuItem("Exit");
 
@@ -36,12 +40,13 @@ public class MainMenu extends JFrame {
     private final UIManager uiManager;
 
     /**
-     * Constructs and initializes the main application window.
+     * Constructs and initialises the main application window.
      *
      * @param characterManager The {@link CharacterManager} maintaining combat data.
      */
     public MainMenu(CharacterManager characterManager) {
-        uiManager = new UIManager(this, characterManager, initiativeList, passButton, failButton, deathSaveLabel);
+        uiManager = new UIManager(this, characterManager, initiativeList);
+        uiManager.shareDeathSaveItems(passButton, failButton, deathSaveLabel);
         setupMainMenu();
         setupMenuBar();
 
@@ -62,15 +67,19 @@ public class MainMenu extends JFrame {
         failButton.addActionListener(e -> uiManager.passDeathSave(false));
 
         lightMode.addActionListener(e -> {
-            uiManager.changeColourMode("LIGHT");
+            UIManager.setDarkMode(false);
             lightMode.setEnabled(false);
             darkMode.setEnabled(true);
         });
         darkMode.addActionListener(e -> {
-            uiManager.changeColourMode("DARK");
-            darkMode.setEnabled(false);
+            UIManager.setDarkMode(true);
             lightMode.setEnabled(true);
+            darkMode.setEnabled(false);
         });
+        openItem.addActionListener(e -> uiManager.loadList());
+        saveItem.addActionListener(e -> uiManager.saveList());
+        saveAsItem.addActionListener(e -> uiManager.saveListAs());
+        exitItem.addActionListener(e -> confirmExit());
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -79,11 +88,20 @@ public class MainMenu extends JFrame {
         });
     }
 
+    /**
+     * Sets up the layout, layout manager, widgets and border for the Window
+     */
     private void setupMainMenu() {
         Dimension windowSize = new Dimension(550, 300);
         mainMenuPane.setLayout(new MigLayout("insets 2 0 2 0, fillx", "[center][center][center][center]", "[center][center][center][center][center]"));
         mainMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);
+
+        if (FlatLaf.isLafDark()) {
+            darkMode.setEnabled(false);
+        } else {
+            lightMode.setEnabled(false);
+        }
 
         addCharacterButton.setFocusPainted(false);
         editCharacterButton.setFocusPainted(false);
@@ -121,12 +139,17 @@ public class MainMenu extends JFrame {
         failButton.setVisible(false);
     }
 
+    /**
+     * Sets up the menu bar for the main menu
+     */
     private void setupMenuBar() {
         JMenu fileMenu = new JMenu("File");
         JMenu viewMenu = new JMenu("View");
         JMenu colourMenu = new JMenu("Colour Modes");
 
+        fileMenu.add(openItem);
         fileMenu.add(saveItem);
+        fileMenu.add(saveAsItem);
         fileMenu.add(exitItem);
         menuBar.add(fileMenu);
 
@@ -136,16 +159,20 @@ public class MainMenu extends JFrame {
         menuBar.add(viewMenu);
     }
 
+    /**
+     * prompts the user to ensure they want to exit the application
+     */
     private void confirmExit() {
         int choice = JOptionPane.showConfirmDialog(
                 this,
                 "Are you sure you want to exit the Tracker?",
-                "Exit Conformation",
+                "Exit Confirmation",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE
         );
 
         if (choice == JOptionPane.YES_OPTION) {
+            ConfigManager.saveConfig();
             System.exit(0);
         }
     }

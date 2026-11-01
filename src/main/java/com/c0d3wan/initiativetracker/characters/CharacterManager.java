@@ -1,4 +1,5 @@
 package com.c0d3wan.initiativetracker.characters;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -9,24 +10,21 @@ import java.util.stream.Collectors;
 public class CharacterManager {
     private final List<Character> characters;
     private List<Character> charactersOrdered;
-    private List<Character> initiativeOrdered;
     private Character currentCharacter;
 
     /**
-     * Constructs a new, empty CharacterManager instance.
+     * Constructs a new, empty {@code CharacterManager}.
      */
     public CharacterManager() {
         characters = new ArrayList<>();
         charactersOrdered = new ArrayList<>();
-        initiativeOrdered = new ArrayList<>();
     }
 
     /**
-     * Registers a new character into combat, resorts the roster, and recalculates turn order.
-     * <p>
-     * If no turn is currently underway, this method automatically starts the first turn.
+     * Adds a character to the combat tracker, sorts the initiative order,
+     * and initialises the first turn if no combatant is currently active.
      *
-     * @param character The {@link Character} instance to append to combat.
+     * @param character The {@link Character} to enrol.
      */
     public void addCharacter(Character character) {
         characters.add(character);
@@ -35,7 +33,6 @@ public class CharacterManager {
         if (currentCharacter == null) {
             newTurn();
         }
-        initiativeOrdered = getTurnOrder();
 
     }
 
@@ -46,7 +43,6 @@ public class CharacterManager {
      */
     public void updateCharacters() {
         sortCharacters();
-        initiativeOrdered = getTurnOrder();
     }
 
     /**
@@ -67,7 +63,6 @@ public class CharacterManager {
 
 
         if (!wasCurrent) {
-            initiativeOrdered = getTurnOrder();
             return;
         }
 
@@ -75,15 +70,14 @@ public class CharacterManager {
         if (!charactersOrdered.isEmpty()) {
             currentCharacter = charactersOrdered.get(index % charactersOrdered.size());
         }
-        initiativeOrdered = getTurnOrder();
 
     }
 
     /**
-     * Advances combat to the next character's turn.
+     * Advances combat to the next eligible character's turn.
      * <p>
-     * Rotates cyclically to the beginning of the initiative list once the end of
-     * the round is reached. Marks the prior combatant inactive and the new combatant active.
+     * Rotates cyclically through the initiative list, automatically skipping any
+     * combatants whose status is {@link DeathStatus#DEAD}.
      */
     public void newTurn() {
         sortCharacters();
@@ -108,17 +102,16 @@ public class CharacterManager {
             checked++;
         }
 
-        initiativeOrdered = getTurnOrder();
+
     }
 
     /**
-     * Generates a circular rotation of the sorted initiative list positioned so that the
-     * active character is at index 0.
+     * Retrieves the remaining turn order for the current round, cyclically shifted
+     * so that the active turn holder appears first.
      *
-     * @return A newly allocated {@link List} containing all combatants in current turn sequence.
+     * @return A rotated {@link List} of {@link Character} objects starting with the current turn.
      */
     public List<Character> getTurnOrder() {
-        sortCharacters();
         int i = charactersOrdered.indexOf(currentCharacter);
         if (i <= 0) return new ArrayList<>(charactersOrdered);
 
@@ -128,17 +121,16 @@ public class CharacterManager {
     }
 
     /**
-     * Clears all combatants from the manager and resets active turn state to empty.
+     * Clears all registered combatants, sorted queues, and resets the active turn holder.
      */
     public void clearCharacters() {
         characters.clear();
         charactersOrdered.clear();
         currentCharacter = null;
-        initiativeOrdered = getTurnOrder();
     }
 
     /**
-     * Sorts the underlying character roster by descending composite initiative score.
+     * Sorts the registered characters in descending order according to their calculated initiative value.
      */
     public void sortCharacters() {
         charactersOrdered = characters.stream()
@@ -146,29 +138,46 @@ public class CharacterManager {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Selects and sets the active turn holder by searching for a matching character name.
+     *
+     * @param name The name of the character to activate. Does nothing if {@code name} is null or not found.
+     */
     public void setCurrentCharacterByName(String name) {
         if (name == null) return;
         for (Character c : characters) {
-            if (c.getCharacterData().get("Name").toString().equals(name)) {
+            if (c.getName().equals(name)) {
                 currentCharacter = c;
                 break;
             }
         }
-        initiativeOrdered = getTurnOrder();
     }
 
     /**
-     * Retrieves the raw, unsorted list of combatants in their original insertion order.
+     * Provides an unmodifiable view of the raw character list in registration order.
      *
-     * @return The mutable master {@link List} of all added characters.
+     * @return An unmodifiable {@link List} of registered characters.
      */
-    public List<Character> getCharacterList() {return characters;}
+    public List<Character> getCharacterList() {
+        return Collections.unmodifiableList(characters);
+    }
 
     /**
-     * Retrieves the combat-ready list of characters rotated to the current turn order.
+     * Retrieves the active initiative order rotated from the current turn holder.
      *
-     * @return The {@link List} of characters starting with the active combatant at index 0.
+     * @return A rotated {@link List} of {@link Character} objects.
+     * @see #getTurnOrder()
      */
-    public List<Character> getInitiativeOrder() {return initiativeOrdered;}
+    public List<Character> getInitiativeOrder() {
+        return getTurnOrder();
+    }
 
+    /**
+     * Gets the character who is currently taking their turn.
+     *
+     * @return The active {@link Character}, or {@code null} if the tracker is empty.
+     */
+    public Character getCurrentCharacter() {
+        return currentCharacter;
+    }
 }

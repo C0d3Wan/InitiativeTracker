@@ -16,25 +16,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package com.c0d3wan.initiativetracker;
+import com.c0d3wan.initiativetracker.FileManagement.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.swingui.MainMenu;
-import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.swing.*;
 
 /**
- * Entry point for launching the D&D Initiative Tracker application.
+ * Entry point for the Initiative Tracker application.
+ * <p>
+ * Initialises core state management, loads persistent configuration settings,
+ * and launches the Swing graphical user interface on the Event Dispatch Thread (EDT).
  */
 public class Main {
+
     /**
-     * Starts the application by initializing core managers and launching the GUI.
+     * Application bootstrapper.
      *
      * @param args Command-line arguments passed during startup (unused).
      */
     public static void main(String[] args) {
         CharacterManager characterManager = new CharacterManager();
-
-        FlatDarkLaf.setup();
+        ConfigManager.loadConfig();
         SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
     }
 }

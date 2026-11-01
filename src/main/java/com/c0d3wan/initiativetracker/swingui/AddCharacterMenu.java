@@ -9,11 +9,11 @@ import java.util.Map;
 import java.awt.*;
 
 import com.c0d3wan.initiativetracker.characters.Character;
-import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
+import com.c0d3wan.initiativetracker.characters.*;
 import net.miginfocom.swing.MigLayout;
 
 /**
- * Modal dialog interface for creating and adding a new character to the initiative tracker.
+ * Modal {@link JDialog} interface for creating and adding a new character to the initiative tracker.
  */
 public class AddCharacterMenu extends JDialog {
     private final JPanel addCharacterPane = new JPanel();
@@ -22,10 +22,10 @@ public class AddCharacterMenu extends JDialog {
     private final JSpinner dexteritySpinner= new JSpinner();
     private final JSpinner maxHealthSpinner = new JSpinner();
     private final JSpinner npcAmountSpinner = new JSpinner();
-    private final JComboBox<String> deathStatusCombo = new JComboBox<>();
-    private final JComboBox<String> characterTypeCombo = new JComboBox<>();
+    private final JComboBox<DeathStatus> deathStatusCombo = new JComboBox<>();
+    private final JComboBox<CharacterType> characterTypeCombo = new JComboBox<>();
     private final JButton addCharacterButton = new JButton("Add character");
-    private final JLabel npcAmountLabel = new JLabel("NPC Amount:");
+    private final JLabel npcAmountLabel = new JLabel("Horde Amount:");
     private final JLabel maxHealthLabel = new JLabel("Max Health:");
     private final JLabel savedCharacterLabel = new JLabel("Character Saved!!!");
 
@@ -34,9 +34,9 @@ public class AddCharacterMenu extends JDialog {
     private final Map<String, Character> characterMap;
 
     /**
-     * Constructs a new modal dialog to create a character.
+     * Constructs a new modal dialogue to create a character.
      *
-     * @param parent       The parent {@link Frame} window binding this dialog.
+     * @param parent       The parent {@link Frame} window binding this dialogue.
      * @param characterMap The existing map of characters used to prevent duplicate names.
      */
     public AddCharacterMenu(Frame parent, Map<String, Character> characterMap) {
@@ -46,7 +46,7 @@ public class AddCharacterMenu extends JDialog {
 
         setTitle("Add Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
 
         pack();
 
@@ -71,43 +71,49 @@ public class AddCharacterMenu extends JDialog {
         addCharacterButton.addActionListener(e -> saveCharacter());
     }
 
+    /**
+     * Forms a new {@link Character} or {@link NonePlayerCharacter} using inputs from the user
+     * <p>
+     * If it is a {@link NonePlayerCharacter}, adds it to a group of similar NPCs
+     */
     private void saveCharacter() {
         String name = characterName.getText().trim();
         int initiative = (int) initiativeSpinner.getValue();
         int dexterity = (int) dexteritySpinner.getValue();
-        String type = (String) characterTypeCombo.getSelectedItem();
-        String status = (String) deathStatusCombo.getSelectedItem();
+        CharacterType type = (CharacterType) characterTypeCombo.getSelectedItem();
+        DeathStatus status = (DeathStatus) deathStatusCombo.getSelectedItem();
 
         if (name.length() > 16) {
-            name = name.substring(0, 14) + "...";
+            name = name.substring(0, 16) + "...";
         }
 
-        assert type != null;
+        if (type == null) {return;}
         Character newCharacter;
-        if (!type.equalsIgnoreCase("PLAYER")) {
+        if (type != CharacterType.PLAYER) {
             int maxHealth = (int) maxHealthSpinner.getValue();
-            int maxNPCS = (int) npcAmountSpinner.getValue();
-            for (int i = 1; i <= maxNPCS; i++) {
-                String newName = name + " " + i;
-                newCharacter = new NonePlayerCharacter(newName, initiative, dexterity, maxHealth, type, status);
-                if (maxNPCS > 1) {
-                    ((NonePlayerCharacter) newCharacter).editEnemyType(name);
-                }
-                characterMap.put(name, newCharacter);
-                characters.add(newCharacter);
+            if (type == CharacterType.HORDE) {
+                int maxNPCS = (int) npcAmountSpinner.getValue();
+                newCharacter = new Horde(name, initiative, dexterity, maxHealth, status, maxNPCS);
+            } else {
+                newCharacter = new NonePlayerCharacter(name, initiative, dexterity, maxHealth, type, status);
             }
+
+
         } else {
             newCharacter = new Character(name, initiative, dexterity, type, status);
 
-            characterMap.put(name, newCharacter);
-            characters.add(newCharacter);
         }
+        characterMap.put(name, newCharacter);
+        characters.add(newCharacter);
         confirmed = true;
         savedCharacterLabel.setVisible(true);
         resetWidgets();
         pack();
     }
 
+    /**
+     * Sets up the layout manager, layout, widgets and border of the {@link Frame}
+     */
     private void setupMenu() {
         Dimension windowSize = new Dimension(400,220);
         addCharacterPane.setLayout(new MigLayout("insets 2 2 2 2, fillx", "[l][center, grow, push][right, grow]", "[][][][][][][][][]"));
@@ -125,18 +131,19 @@ public class AddCharacterMenu extends JDialog {
         initiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
         dexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
         maxHealthSpinner.setModel(new SpinnerNumberModel(1, 1, 2000, 1));
-        npcAmountSpinner.setModel(new SpinnerNumberModel(1, 1, 30, 1));
+        npcAmountSpinner.setModel(new SpinnerNumberModel(1, 1, 100, 1));
 
-        final DefaultComboBoxModel<String> characterTypeComboModel = new DefaultComboBoxModel<>();
-        characterTypeComboModel.addElement("PLAYER");
-        characterTypeComboModel.addElement("ENEMY");
-        characterTypeComboModel.addElement("ALLY");
+        final DefaultComboBoxModel<CharacterType> characterTypeComboModel = new DefaultComboBoxModel<>();
+        characterTypeComboModel.addElement(CharacterType.PLAYER);
+        characterTypeComboModel.addElement(CharacterType.ENEMY);
+        characterTypeComboModel.addElement(CharacterType.ALLY);
+        characterTypeComboModel.addElement(CharacterType.HORDE);
         characterTypeCombo.setModel(characterTypeComboModel);
 
-        final DefaultComboBoxModel<String> deathStatusComboModel = new DefaultComboBoxModel<>();
-        deathStatusComboModel.addElement("ALIVE");
-        deathStatusComboModel.addElement("DEAD");
-        deathStatusComboModel.addElement("DOWN");
+        final DefaultComboBoxModel<DeathStatus> deathStatusComboModel = new DefaultComboBoxModel<>();
+        deathStatusComboModel.addElement(DeathStatus.ALIVE);
+        deathStatusComboModel.addElement(DeathStatus.DEAD);
+        deathStatusComboModel.addElement(DeathStatus.DOWN);
         deathStatusCombo.setModel(deathStatusComboModel);
 
         addCharacterButton.setFocusPainted(false);
@@ -164,16 +171,17 @@ public class AddCharacterMenu extends JDialog {
         addCharacterPane.add(deathStatusCombo, "cell 1 6, span, growx");
 
         addCharacterPane.add(addCharacterButton, "cell 2 7, align right, growx");
-        addCharacterPane.add(savedCharacterLabel, "cell 0 8, span, growx, hidemode 3");
+        addCharacterPane.add(savedCharacterLabel, "cell 0 8, span, hidemode 3, align center");
     }
 
     /**
      * Checks that the entered name is non-empty and case-insensitively unique against existing characters.
+     * <p>
      * Enables or disables the submit button accordingly.
      */
     private void validateName() {
         String name = characterName.getText().trim();
-        boolean isValid = !name.isEmpty();
+        boolean isValid = name.matches("[A-Za-z0-9 _'-]+");
         for (String characterName : characterMap.keySet()) {
             if (name.equalsIgnoreCase(characterName)) {
                 isValid = false;
@@ -184,14 +192,22 @@ public class AddCharacterMenu extends JDialog {
         addCharacterButton.setEnabled(isValid);
     }
 
+    /**
+     * Updates the {@link Frame} to show the NPC settings
+     */
     private void updateForMaxHealth() {
         Object selectedItem = characterTypeCombo.getSelectedItem();
-        assert selectedItem != null;
-        if (!selectedItem.equals("PLAYER")) {
+        if (selectedItem == null) {return;}
+        if (selectedItem != CharacterType.PLAYER) {
             maxHealthLabel.setVisible(true);
             maxHealthSpinner.setVisible(true);
-            npcAmountSpinner.setVisible(true);
-            npcAmountLabel.setVisible(true);
+            if (selectedItem == CharacterType.HORDE) {
+                npcAmountSpinner.setVisible(true);
+                npcAmountLabel.setVisible(true);
+            } else {
+                npcAmountSpinner.setVisible(false);
+                npcAmountLabel.setVisible(false);
+            }
         } else {
             maxHealthLabel.setVisible(false);
             maxHealthSpinner.setVisible(false);
@@ -204,7 +220,7 @@ public class AddCharacterMenu extends JDialog {
     /**
      * Checks if the creation form was submitted successfully.
      *
-     * @return {@code true} if confirmed; {@code false} if canceled or closed.
+     * @return {@code true} if confirmed; {@code false} if cancelled or closed.
      */
     public boolean isConfirmed() {
         return confirmed;
@@ -226,5 +242,6 @@ public class AddCharacterMenu extends JDialog {
         characterTypeCombo.setSelectedIndex(0);
         maxHealthSpinner.setValue(1);
         deathStatusCombo.setSelectedIndex(0);
+        npcAmountSpinner.setValue(1);
     }
 }
