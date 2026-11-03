@@ -1,5 +1,8 @@
 package com.c0d3wan.initiativetracker.characters;
 
+import com.c0d3wan.initiativetracker.characters.data.CharacterType;
+import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
+
 /**
  * Represents a non-player combatant entity within the initiative tracking system.
  * <p>

@@ -1,5 +1,7 @@
 package com.c0d3wan.initiativetracker.characters;
 
+import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
+
 import java.util.*;
 import java.util.stream.Collectors;
 

@@ -1,6 +1,6 @@
 package com.c0d3wan.initiativetracker.swingui;
 
-import com.c0d3wan.initiativetracker.FileManagement.FileManager;
+import com.c0d3wan.initiativetracker.filemanagement.FileManager;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -64,7 +64,7 @@ public class LoadFileMenu extends JDialog {
      */
     private void setupCombo() {
         List<File> files = FileManager.getFiles();
-        if (files == null || files.isEmpty()) {
+        if (files.isEmpty()) {
             fileSelection.addItem("No files");
         } else {
             loadButton.setEnabled(true);

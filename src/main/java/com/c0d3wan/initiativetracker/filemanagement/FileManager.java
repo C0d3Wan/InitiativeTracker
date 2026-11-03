@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.FileManagement;
+package com.c0d3wan.initiativetracker.filemanagement;
 
 import java.io.File;
 import java.util.*;

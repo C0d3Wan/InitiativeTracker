@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.FileManagement;
+package com.c0d3wan.initiativetracker.filemanagement;
 
 import com.c0d3wan.initiativetracker.swingui.UIManager;
 import com.google.gson.*;

@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.characters;
+package com.c0d3wan.initiativetracker.characters.data;
 
 /**
  * Defines the available alignment  categories for a combat participant.

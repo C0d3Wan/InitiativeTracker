@@ -1,7 +1,8 @@
-package com.c0d3wan.initiativetracker.FileManagement;
+package com.c0d3wan.initiativetracker.filemanagement;
 
 import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.Character;
+import com.c0d3wan.initiativetracker.characters.data.CharacterData;
 import com.google.gson.*;
 
 import javax.crypto.Cipher;

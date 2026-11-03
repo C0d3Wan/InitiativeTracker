@@ -1,6 +1,6 @@
 package com.c0d3wan.initiativetracker.swingui;
 
-import com.c0d3wan.initiativetracker.FileManagement.FileManager;
+import com.c0d3wan.initiativetracker.filemanagement.FileManager;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.List;
 
 import com.c0d3wan.initiativetracker.characters.*;
+import com.c0d3wan.initiativetracker.characters.data.CharacterType;
 import net.miginfocom.swing.MigLayout;
 
 /**

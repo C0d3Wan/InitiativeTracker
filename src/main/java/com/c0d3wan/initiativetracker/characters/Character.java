@@ -1,5 +1,9 @@
 package com.c0d3wan.initiativetracker.characters;
 
+import com.c0d3wan.initiativetracker.characters.data.CharacterData;
+import com.c0d3wan.initiativetracker.characters.data.CharacterType;
+import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
+
 import java.util.*;
 
 /**

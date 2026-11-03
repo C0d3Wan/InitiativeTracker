@@ -10,6 +10,8 @@ import java.awt.*;
 
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.*;
+import com.c0d3wan.initiativetracker.characters.data.CharacterType;
+import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
 import net.miginfocom.swing.MigLayout;
 
 /**

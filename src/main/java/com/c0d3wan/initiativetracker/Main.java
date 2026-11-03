@@ -17,7 +17,7 @@
  */
 package com.c0d3wan.initiativetracker;
 
-import com.c0d3wan.initiativetracker.FileManagement.ConfigManager;
+import com.c0d3wan.initiativetracker.filemanagement.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.swingui.MainMenu;
 

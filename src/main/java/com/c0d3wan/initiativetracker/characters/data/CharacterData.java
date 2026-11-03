@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.characters;
+package com.c0d3wan.initiativetracker.characters.data;
 
 /**
  * An immutable data transfer record representing a snapshot of a character's state.
