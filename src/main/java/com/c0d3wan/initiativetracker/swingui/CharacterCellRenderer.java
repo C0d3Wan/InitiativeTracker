@@ -28,7 +28,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
     private final JPanel deathSavePanel = new JPanel();
     private final JLabel npcHealth = new JLabel();
 
-    private static final Color ACTIVE_TURN_COLOR = new Color(38, 162, 105);
+    private static final Color ACTIVE_TURN_COLOR = new Color(0x26A269);
 
     /**
      * Constructs a new CharacterCellRenderer and configures subcomponents and layouts.
