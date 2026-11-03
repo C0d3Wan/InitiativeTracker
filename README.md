@@ -141,7 +141,7 @@ src/main/java/com/c0d3wan/initiativetracker/
 │   ├── data/
 │   │   ├── CharacterType.java          # Enum for alignment categories (PLAYER, ENEMY, ALLY, HORDE, UNKNOWN)
 │   │   ├── DeathStatus.java            # Enum for health states (ALIVE, DOWN, DEAD, UNKNOWN)
-│   │   ├── CharacterData.java          # Immutable record snapshot of combatant state
+│   │   └── CharacterData.java          # Immutable record snapshot of combatant state
 │   ├── Character.java              # Base combatant model with composite initiative math and death saves
 │   ├── CharacterManager.java       # Roster collection, stream sorting, and circular turn rotation
 │   ├── Horde.java                  # Composite group NPC entity with aggregated health scaling
