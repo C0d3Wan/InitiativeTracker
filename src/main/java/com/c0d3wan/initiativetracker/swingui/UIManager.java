@@ -227,7 +227,9 @@ public class UIManager {
 
         if (isConfirmed == JFileChooser.APPROVE_OPTION) {
             File file = saveAsMenu.getSelectedFile();
-            file = new File(file + ".sav");
+            if (!file.getName().endsWith(".sav")){
+                file = new File(file + ".sav");
+            }
             SaveLoadManager.saveAs(characterManager, file);
         }
 

@@ -26,6 +26,8 @@ public class SaveLoadManager {
 
     private static File currentFileName = null;
 
+    public static File saveDir = null;
+
     /**
      * Derives the AES secret key used for encrypting and decrypting save files.
      * <p>
@@ -175,7 +177,15 @@ public class SaveLoadManager {
      * @param manager The combat manager containing active participants.
      */
     public static void save(CharacterManager manager) {
-        saveAs(manager, Objects.requireNonNullElseGet(currentFileName, () -> new File(FileManager.getSaveDirectory(), "Save.sav")));
+        String saveName = "Save.sav";
+        saveDir = new File (FileManager.getSaveDirectory(), saveName);
+        int count = 1;
+        while (saveDir.exists()) {
+            saveName = "Save" + count + ".sav";
+            saveDir = new File (FileManager.getSaveDirectory(), saveName);
+            count ++;
+        }
+        saveAs(manager, Objects.requireNonNullElseGet(currentFileName, () -> saveDir));
     }
 
     /**
@@ -187,6 +197,7 @@ public class SaveLoadManager {
     public static void saveAs(CharacterManager manager, File targetFile) {
         try{
             saveToFile(manager, targetFile);
+            currentFileName = targetFile;
         } catch (IOException e) {
             System.err.println("Warning: Could not create save");
         }
