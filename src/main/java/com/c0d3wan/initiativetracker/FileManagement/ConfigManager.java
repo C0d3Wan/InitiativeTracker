@@ -42,6 +42,7 @@ public class ConfigManager {
     public static void loadConfig() {
         File targetFile = new File(FileManager.getDirectory(), "Config.json");
         if (!targetFile.exists()) {
+            UIManager.setDarkMode(true);
             return;
         }
 

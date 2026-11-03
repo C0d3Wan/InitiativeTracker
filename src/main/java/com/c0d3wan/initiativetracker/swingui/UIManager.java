@@ -1,11 +1,13 @@
 package com.c0d3wan.initiativetracker.swingui;
 
+import com.c0d3wan.initiativetracker.FileManagement.FileManager;
 import com.c0d3wan.initiativetracker.FileManagement.SaveLoadManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.*;
 import com.formdev.flatlaf.*;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -216,25 +218,46 @@ public class UIManager {
      * Opens a {@link SaveAsMenu} to save the current list to a new file
      */
     public void saveListAs() {
-        SaveAsMenu saveAsMenu = new SaveAsMenu(parentFrame);
-        saveAsMenu.setVisible(true);
+        //SaveAsMenu saveAsMenu = new SaveAsMenu(parentFrame);
+        //saveAsMenu.setVisible(true);
 
+        JFileChooser saveAsMenu = new JFileChooser();
+        saveAsMenu.setCurrentDirectory(FileManager.getSaveDirectory());
+        int isConfirmed = saveAsMenu.showSaveDialog(parentFrame);
+
+        if (isConfirmed == JFileChooser.APPROVE_OPTION) {
+            File file = saveAsMenu.getSelectedFile();
+            System.out.println(file);
+        }
+
+        /*
         if (saveAsMenu.isConfirmed()) {
             String saveFile = saveAsMenu.getSavefile();
             SaveLoadManager.saveAs(characterManager, saveFile);
         }
+         */
     }
 
     /**
      * Opens a {@link LoadFileMenu} to load a list from an existing file
      */
     public void loadList() {
+        /*
         LoadFileMenu loadMenu = new LoadFileMenu(parentFrame);
         loadMenu.setVisible(true);
         if (loadMenu.isItemSelected()) {
             String fileToLoad = loadMenu.getFileToLoad();
             SaveLoadManager.load(characterManager, fileToLoad, true);
             updateInitiativeList();
+        }
+         */
+        JFileChooser loadMenu = new JFileChooser();
+        loadMenu.setCurrentDirectory(FileManager.getSaveDirectory());
+        int isConfirmed = loadMenu.showOpenDialog(parentFrame);
+
+        if (isConfirmed == JFileChooser.APPROVE_OPTION) {
+            File file = loadMenu.getSelectedFile();
+            System.out.println(file);
         }
     }
 }
