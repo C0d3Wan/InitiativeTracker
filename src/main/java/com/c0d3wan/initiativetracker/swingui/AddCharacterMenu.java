@@ -29,6 +29,7 @@ public class AddCharacterMenu extends JDialog {
     private final JButton addCharacterButton = new JButton("Add character");
     private final JLabel npcAmountLabel = new JLabel("Horde Amount:");
     private final JLabel maxHealthLabel = new JLabel("Max Health:");
+    private final JLabel deathStatusLabel = new JLabel("Death Status");
     private final JLabel savedCharacterLabel = new JLabel("Character Saved!!!");
 
     private boolean confirmed = false;
@@ -70,9 +71,7 @@ public class AddCharacterMenu extends JDialog {
         });
         characterName.addFocusListener(new FocusListener() {
             @Override
-            public void focusGained(FocusEvent focusEvent) {
-                //validateName();
-            }
+            public void focusGained(FocusEvent focusEvent) {}
 
             @Override
             public void focusLost(FocusEvent focusEvent) {
@@ -139,7 +138,6 @@ public class AddCharacterMenu extends JDialog {
         final JLabel initiativeLabel = new JLabel("Initiative:");
         final JLabel dexterityLabel = new JLabel("Dexterity (0-30):");
         final JLabel characterTypeLabel = new JLabel("Character Type:");
-        final JLabel deathStatusLabel = new JLabel("Death Status");
 
         initiativeSpinner.setModel(new SpinnerNumberModel(0, -30, 200, 1));
         dexteritySpinner.setModel(new SpinnerNumberModel(0, 0, 30, 1));
@@ -173,7 +171,7 @@ public class AddCharacterMenu extends JDialog {
         addCharacterPane.add(characterTypeLabel, "cell 0 3");
         addCharacterPane.add(maxHealthLabel, "cell 0 4, hidemode 3");
         addCharacterPane.add(npcAmountLabel, "cell 0 5, hidemode 3");
-        addCharacterPane.add(deathStatusLabel, "cell 0 6");
+        addCharacterPane.add(deathStatusLabel, "cell 0 6, hidemode 3");
 
         addCharacterPane.add(characterName, "cell 1 0, span, growx");
         addCharacterPane.add(initiativeSpinner, "cell 1 1, span, growx");
@@ -181,7 +179,7 @@ public class AddCharacterMenu extends JDialog {
         addCharacterPane.add(characterTypeCombo, "cell 1 3, span, growx");
         addCharacterPane.add(maxHealthSpinner, "cell 1 4, hidemode 3, span, growx");
         addCharacterPane.add(npcAmountSpinner, "cell 1 5, hidemode 3, span, growx");
-        addCharacterPane.add(deathStatusCombo, "cell 1 6, span, growx");
+        addCharacterPane.add(deathStatusCombo, "cell 1 6, span, growx, hidemode 3");
 
         addCharacterPane.add(addCharacterButton, "cell 2 7, align right, growx");
         addCharacterPane.add(savedCharacterLabel, "cell 0 8, span, hidemode 3, align center");
@@ -219,6 +217,9 @@ public class AddCharacterMenu extends JDialog {
         if (selectedItem != CharacterType.PLAYER) {
             maxHealthLabel.setVisible(true);
             maxHealthSpinner.setVisible(true);
+            deathStatusLabel.setVisible(false);
+            deathStatusCombo.setVisible(false);
+            deathStatusCombo.setSelectedIndex(0);
             if (selectedItem == CharacterType.HORDE) {
                 npcAmountSpinner.setVisible(true);
                 npcAmountLabel.setVisible(true);
@@ -231,6 +232,8 @@ public class AddCharacterMenu extends JDialog {
             maxHealthSpinner.setVisible(false);
             npcAmountSpinner.setVisible(false);
             npcAmountLabel.setVisible(false);
+            deathStatusLabel.setVisible(true);
+            deathStatusCombo.setVisible(true);
         }
         pack();
     }
