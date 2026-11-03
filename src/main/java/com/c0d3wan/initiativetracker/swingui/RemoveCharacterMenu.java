@@ -41,7 +41,6 @@ public class RemoveCharacterMenu extends JDialog {
 
         setTitle("Remove Character");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        pack();
         setLocationRelativeTo(parent);
 
         updateSelectionCombo();
@@ -111,6 +110,7 @@ public class RemoveCharacterMenu extends JDialog {
                 characterSelectionCombo.insertItemAt(("All " + type), 2);
             }
         }
+        pack();
     }
 
     /**

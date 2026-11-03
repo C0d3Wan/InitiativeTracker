@@ -23,7 +23,7 @@ public class NonePlayerCharacter extends Character {
      * @param status     The initial {@link DeathStatus}.
      */
     public NonePlayerCharacter(String name, int initiative, int dex, int maxHealth, CharacterType type, DeathStatus status) {
-        super(name, initiative, dex, type, status);
+        super(name, initiative, Math.min(dex, 0), type, status);
         this.health = maxHealth;
         this.maxHealth = maxHealth;
     }
