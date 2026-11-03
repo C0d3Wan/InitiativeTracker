@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * inside an IDE or from a packaged JAR release.
  */
 public class SaveLoadManager {
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().create();
 
     private static final String ALGORITHM = "AES";
 

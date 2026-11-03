@@ -27,11 +27,11 @@ public class ConfigManager {
      * Saves the current application settings to {@code Config.json} in the configuration directory.
      */
     public static void saveConfig() {
-        File targetFile = new File(FileManager.getDirectory(), "Config.json");
+        File targetFile = new File(FileManager.getDirectory(), "Config.sav");
         try {
             saveToFile(targetFile);
         } catch (IOException e) {
-            System.err.println("Warning: Could not save Config.json");
+            System.err.println("Warning: Could not save Config.sav");
         }
     }
 
@@ -40,7 +40,7 @@ public class ConfigManager {
      * and applies them to the user interface.
      */
     public static void loadConfig() {
-        File targetFile = new File(FileManager.getDirectory(), "Config.json");
+        File targetFile = new File(FileManager.getDirectory(), "Config.sav");
         if (!targetFile.exists()) {
             UIManager.setDarkMode(true);
             return;
@@ -49,7 +49,7 @@ public class ConfigManager {
         try {
             loadFromFile(targetFile);
         } catch (IOException | JsonSyntaxException e) {
-            System.err.println("Warning: Could not load Config.json");
+            System.err.println("Warning: Could not load Config.sav");
         }
     }
 
