@@ -1,5 +1,6 @@
 package com.c0d3wan.initiativetracker.filemanagement;
 
+import com.c0d3wan.initiativetracker.filemanagement.data.ConfigDTO;
 import com.c0d3wan.initiativetracker.swingui.UIManager;
 import com.google.gson.*;
 
@@ -15,13 +16,6 @@ import com.formdev.flatlaf.*;
  */
 public class ConfigManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
-    /**
-     * Data transfer object representing the persistent configuration options.
-     */
-    private static class ConfigDTO {
-        boolean darkMode;
-    }
 
     /**
      * Saves the current application settings to {@code Config.json} in the configuration directory.
