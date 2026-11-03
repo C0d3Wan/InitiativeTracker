@@ -3,6 +3,8 @@ package com.c0d3wan.initiativetracker.swingui;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +65,17 @@ public class AddCharacterMenu extends JDialog {
 
             @Override
             public void changedUpdate(DocumentEvent documentEvent) {
+                validateName();
+            }
+        });
+        characterName.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent focusEvent) {
+                //validateName();
+            }
+
+            @Override
+            public void focusLost(FocusEvent focusEvent) {
                 validateName();
             }
         });
@@ -187,6 +200,11 @@ public class AddCharacterMenu extends JDialog {
                 isValid = false;
                 break;
             }
+        }
+        if (!isValid) {
+            characterName.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
+        } else {
+            characterName.setBorder(BorderFactory.createEmptyBorder());
         }
 
         addCharacterButton.setEnabled(isValid);
