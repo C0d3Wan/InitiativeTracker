@@ -22,7 +22,7 @@ public class MainMenu extends JFrame {
     private final JButton nextTurnButton = new JButton("Next Turn");
     private final JButton removeCharacterButton = new JButton("Remove Character");
     private final JList<Character> initiativeList = new JList<>();
-    private final JButton editCharacterButton = new JButton("Edit Character");
+    private final JButton editCharacterButton = new JButton("Edit Player");
     private final JButton passButton = new JButton("Pass");
     private final JButton failButton = new JButton("Fail");
     private final JLabel deathSaveLabel = new JLabel("Death Saves:");

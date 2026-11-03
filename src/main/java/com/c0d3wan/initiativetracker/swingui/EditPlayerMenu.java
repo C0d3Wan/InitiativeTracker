@@ -41,7 +41,7 @@ public class EditPlayerMenu extends JDialog {
 
         setTitle("Edit Character");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        pack();
+        //pack();
         setLocationRelativeTo(parent);
 
         updateCharactersCombo();
@@ -132,8 +132,8 @@ public class EditPlayerMenu extends JDialog {
         if (!newDeathStatus.equals(currentCharacterData.deathStatus().toString())) {
             currentCharacter.setDeathStatus(newDeathStatus);
         }
-        updateDetails();
         savedPlayerLabel.setVisible(true);
+        updateDetails();
 
         //this.dispose();
     }
@@ -168,7 +168,7 @@ public class EditPlayerMenu extends JDialog {
      * Refreshes the display view with attributes from the currently selected character in the combo box.
      */
     private void updateDetails() {
-        savedPlayerLabel.setVisible(false);
+        //savedPlayerLabel.setVisible(false);
 
         if (!playerMap.isEmpty()) {
             displayCurrentCharacterData();
@@ -190,6 +190,7 @@ public class EditPlayerMenu extends JDialog {
         newInitiativeSpinner.setValue(currentCharacterData.initiative());
         newDexteritySpinner.setValue(currentCharacterData.dexterity());
         newDeathStatusCombo.setSelectedItem(currentCharacter.getDeathStatus());
+        pack();
     }
 
     /**
