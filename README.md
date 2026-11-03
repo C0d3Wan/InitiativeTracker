@@ -138,14 +138,15 @@ Go to [Releases](https://github.com/C0d3Wan/InitiativeTracker/releases) and inst
 ```text
 src/main/java/com/c0d3wan/initiativetracker/
 ├── characters/
+│   ├── data/
+│   │   ├── CharacterType.java          # Enum for alignment categories (PLAYER, ENEMY, ALLY, HORDE, UNKNOWN)
+│   │   ├── DeathStatus.java            # Enum for health states (ALIVE, DOWN, DEAD, UNKNOWN)
+│   │   ├── CharacterData.java          # Immutable record snapshot of combatant state
 │   ├── Character.java              # Base combatant model with composite initiative math and death saves
-│   ├── CharacterData.java          # Immutable record snapshot of combatant state
 │   ├── CharacterManager.java       # Roster collection, stream sorting, and circular turn rotation
-│   ├── CharacterType.java          # Enum for alignment categories (PLAYER, ENEMY, ALLY, HORDE, UNKNOWN)
-│   ├── DeathStatus.java            # Enum for health states (ALIVE, DOWN, DEAD, UNKNOWN)
 │   ├── Horde.java                  # Composite group NPC entity with aggregated health scaling
 │   └── NonePlayerCharacter.java    # NPC subclass adding HP tracking, enemy subtypes, and auto-death triggers
-├── FileManagement/
+├── filemanagement/
 │   ├── ConfigManager.java          # Serializes and restores UI theme preferences
 │   ├── FileManager.java            # Cross-platform directory routing (Windows, Linux, macOS)
 │   └── SaveLoadManager.java        # AES encryption, decryption, and JSON serialization for encounters
