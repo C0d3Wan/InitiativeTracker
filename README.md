@@ -147,6 +147,9 @@ src/main/java/com/c0d3wan/initiativetracker/
 │   ├── Horde.java                  # Composite group NPC entity with aggregated health scaling
 │   └── NonePlayerCharacter.java    # NPC subclass adding HP tracking, enemy subtypes, and auto-death triggers
 ├── filemanagement/
+│   ├── data/
+│   │   ├── CombatSessionDTO.java       # Data transfer objects for serialized combat sessions, records, and NPCs
+│   │   └── ConfigDTO.java              # Data transfer object for persistent UI configuration options
 │   ├── ConfigManager.java          # Serializes and restores UI theme preferences
 │   ├── FileManager.java            # Cross-platform directory routing (Windows, Linux, macOS)
 │   └── SaveLoadManager.java        # AES encryption, decryption, and JSON serialization for encounters
