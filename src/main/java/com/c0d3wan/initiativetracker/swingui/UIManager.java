@@ -268,6 +268,7 @@ public class UIManager {
 
     private static JFileChooser createFileMenu() {
         JFileChooser fileMenu = new JFileChooser();
+        fileMenu.setFileHidingEnabled(false);
         fileMenu.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File file) {
