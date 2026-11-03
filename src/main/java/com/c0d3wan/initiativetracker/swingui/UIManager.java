@@ -7,6 +7,7 @@ import com.c0d3wan.initiativetracker.characters.*;
 import com.formdev.flatlaf.*;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -221,8 +222,7 @@ public class UIManager {
         //SaveAsMenu saveAsMenu = new SaveAsMenu(parentFrame);
         //saveAsMenu.setVisible(true);
 
-        JFileChooser saveAsMenu = new JFileChooser();
-        saveAsMenu.setCurrentDirectory(FileManager.getSaveDirectory());
+        JFileChooser saveAsMenu = createFileMenu();
         int isConfirmed = saveAsMenu.showSaveDialog(parentFrame);
 
         if (isConfirmed == JFileChooser.APPROVE_OPTION) {
@@ -251,13 +251,34 @@ public class UIManager {
             updateInitiativeList();
         }
          */
-        JFileChooser loadMenu = new JFileChooser();
-        loadMenu.setCurrentDirectory(FileManager.getSaveDirectory());
+        JFileChooser loadMenu = createFileMenu();
         int isConfirmed = loadMenu.showOpenDialog(parentFrame);
 
         if (isConfirmed == JFileChooser.APPROVE_OPTION) {
             File file = loadMenu.getSelectedFile();
             System.out.println(file);
         }
+    }
+
+    private static JFileChooser createFileMenu() {
+        JFileChooser fileMenu = new JFileChooser();
+        fileMenu.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                if (file.isDirectory()) {
+                    return true;
+                } else {
+                    String filename = file.getName().toLowerCase();
+                    return filename.endsWith(".sav");
+                }
+            }
+
+            @Override
+            public String getDescription() {
+                return "Save Files (*.sav)";
+            }
+        });
+        fileMenu.setCurrentDirectory(FileManager.getSaveDirectory());
+        return fileMenu;
     }
 }
