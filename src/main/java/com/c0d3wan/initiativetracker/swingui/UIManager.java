@@ -227,7 +227,8 @@ public class UIManager {
 
         if (isConfirmed == JFileChooser.APPROVE_OPTION) {
             File file = saveAsMenu.getSelectedFile();
-            System.out.println(file);
+            file = new File(file + ".sav");
+            SaveLoadManager.saveAs(characterManager, file);
         }
 
         /*
@@ -256,7 +257,8 @@ public class UIManager {
 
         if (isConfirmed == JFileChooser.APPROVE_OPTION) {
             File file = loadMenu.getSelectedFile();
-            System.out.println(file);
+            SaveLoadManager.load(characterManager, file, true);
+            updateInitiativeList();
         }
     }
 

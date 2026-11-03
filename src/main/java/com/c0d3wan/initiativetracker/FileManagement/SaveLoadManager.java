@@ -24,7 +24,7 @@ public class SaveLoadManager {
 
     private static final String ALGORITHM = "AES";
 
-    private static String currentFileName = null;
+    private static File currentFileName = null;
 
     /**
      * Derives the AES secret key used for encrypting and decrypting save files.
@@ -175,25 +175,16 @@ public class SaveLoadManager {
      * @param manager The combat manager containing active participants.
      */
     public static void save(CharacterManager manager) {
-        if (currentFileName == null || currentFileName.isEmpty()) {
-            saveAs(manager, "save.json");
-        } else {
-            saveAs(manager, currentFileName);
-        }
+        saveAs(manager, Objects.requireNonNullElseGet(currentFileName, () -> new File(FileManager.getSaveDirectory(), "Save.sav")));
     }
 
     /**
      * Encrypts and writes the active combat state to a specified filename within the save directory.
      *
      * @param manager  The combat manager containing active participants.
-     * @param fileName The target save filename (appends {@code .json} automatically if omitted).
+     * @param targetFile The target save filename .
      */
-    public static void saveAs(CharacterManager manager, String fileName) {
-        if (!fileName.endsWith(".json")) {
-            fileName += ".json";
-        }
-        currentFileName = fileName;
-        File targetFile = new File(FileManager.getSaveDirectory(), fileName);
+    public static void saveAs(CharacterManager manager, File targetFile) {
         try{
             saveToFile(manager, targetFile);
         } catch (IOException e) {
@@ -205,17 +196,13 @@ public class SaveLoadManager {
      * Loads, decrypts, and populates combatants from a designated save file into the {@link CharacterManager}.
      *
      * @param manager       The target combat manager to populate.
-     * @param fileName      The name of the save file to read.
+     * @param targetFile      The name of the save file to read.
      * @param clearExisting If {@code true}, wipes current combatants before importing; if {@code false}, merges non-duplicate entries.
      */
-    public static void load(CharacterManager manager, String fileName, boolean clearExisting) {
-        if (!fileName.endsWith(".json")) {
-            fileName += ".json";
-        }
-        currentFileName = fileName;
-        File targetFile = new File(FileManager.getSaveDirectory(), fileName);
+    public static void load(CharacterManager manager, File targetFile, boolean clearExisting) {
         try {
             loadFromFile(manager, targetFile, clearExisting);
+            currentFileName = targetFile;
         } catch (IOException e) {
             System.err.println("Warning: Could not load file");
         }
