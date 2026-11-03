@@ -1,9 +1,7 @@
 package com.c0d3wan.initiativetracker.swingui;
 
+import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.Character;
-import com.c0d3wan.initiativetracker.characters.CharacterData;
-import com.c0d3wan.initiativetracker.characters.DeathStatus;
-import com.c0d3wan.initiativetracker.characters.NonePlayerCharacter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -121,8 +119,10 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         if (!isPlayer(characterData)) {
             NonePlayerCharacter npc = (NonePlayerCharacter) character;
             npcHealth.setText(npc.getHealth() + "/" + npc.getMaxHealth());
+            npcHealth.setVisible(true);
         } else {
             npcHealth.setText("N/A");
+            npcHealth.setVisible(false);
         }
 
         if (index == 0) {
