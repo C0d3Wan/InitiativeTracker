@@ -19,6 +19,8 @@ public class Character {
     private final Map<String, Integer> deathSaves = new HashMap<>();;
     private final CharacterType characterType;
     private DeathStatus deathStatus;
+    private final ArrayList<String> conditions = new ArrayList<>();
+
 
     /**
      * Constructs a new {@code Character} instance.
@@ -258,5 +260,5 @@ public class Character {
         return Collections.unmodifiableMap(deathSaves);
     }
 
-
+    public ArrayList<String> getConditions() {return conditions;}
 }
