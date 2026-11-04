@@ -4,6 +4,7 @@ import com.c0d3wan.initiativetracker.characters.data.CharacterData;
 import com.c0d3wan.initiativetracker.characters.data.CharacterType;
 import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
 
+import javax.crypto.AEADBadTagException;
 import java.util.*;
 
 /**
@@ -16,10 +17,10 @@ public class Character {
     private final String characterName;
     private int baseInitiative;
     private int dexterity;
-    private final Map<String, Integer> deathSaves = new HashMap<>();;
+    private final Map<String, Integer> deathSaves = new HashMap<>();
     private final CharacterType characterType;
     private DeathStatus deathStatus;
-    private final ArrayList<String> conditions = new ArrayList<>();
+    private final Map<String, Object> conditions = new HashMap<>();
 
 
     /**
@@ -43,6 +44,8 @@ public class Character {
         baseInitiative = initiative;
         deathSaves.put("Pass", 0);
         deathSaves.put("Fail", 0);
+
+        ClearConditions();
     }
 
     /**
@@ -70,6 +73,69 @@ public class Character {
         } catch(IllegalArgumentException | NullPointerException e){
             return CharacterType.UNKNOWN;
         }
+    }
+
+    /**
+     *
+     * @param newConditions a {@code ArrayList} of conditions to change
+     * @param add whether we are adding or removing conditions
+     */
+    public void ModifyConditions(ArrayList<String> newConditions, boolean add){
+        if (add) {
+            for (String condition : newConditions) {
+                AddCondition(condition);
+            }
+        }else {
+            for (String condition : newConditions) {
+                RemoveCondition(condition);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param condition The condition to be added
+     */
+    public void AddCondition(String condition){
+        if (Objects.equals(condition, "Exhaution")) {
+            conditions.put(condition, ((int) conditions.get(condition)) + 1);
+        } else {
+            conditions.put(condition, true);
+        }
+    }
+
+    /**
+     *
+     * @param condition The condition to be removed
+     */
+    public void RemoveCondition(String condition){
+        if (Objects.equals(condition, "Exhaution")) {
+            conditions.put(condition, ((int) conditions.get(condition)) - 1);
+        } else {
+            conditions.put(condition, false);
+        }
+    }
+
+    /**
+     *
+     */
+    public void ClearConditions(){
+        conditions.put("Blinded", false);
+        conditions.put("Charmed", false);
+        conditions.put("Deafened", false);
+        conditions.put("Exhaustion", 0);
+        conditions.put("Frightened", false);
+        conditions.put("Grappled", false);
+        conditions.put("Incapacitated", false);
+        conditions.put("Invisible", false);
+        conditions.put("Paralyzed", false);
+        conditions.put("Petrified", false);
+        conditions.put("Poisoned", false);
+        conditions.put("Prone", false);
+        conditions.put("Restrained", false);
+        conditions.put("Stunned", false);
+        conditions.put("Unconscious", false);
+
     }
 
     /**
@@ -260,5 +326,5 @@ public class Character {
         return Collections.unmodifiableMap(deathSaves);
     }
 
-    public ArrayList<String> getConditions() {return conditions;}
+    public Map<String, Object> getConditions() {return conditions;}
 }
