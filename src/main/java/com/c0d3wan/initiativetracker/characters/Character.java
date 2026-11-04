@@ -16,7 +16,7 @@ public class Character {
     private final String characterName;
     private int baseInitiative;
     private int dexterity;
-    private final Map<String, Integer> deathSaves;
+    private final Map<String, Integer> deathSaves = new HashMap<>();;
     private final CharacterType characterType;
     private DeathStatus deathStatus;
 
@@ -39,8 +39,6 @@ public class Character {
 
         dexterity = (characterType == CharacterType.ENEMY) ? 0 : dex;
         baseInitiative = initiative;
-
-        deathSaves = new HashMap<>();
         deathSaves.put("Pass", 0);
         deathSaves.put("Fail", 0);
     }
@@ -84,21 +82,6 @@ public class Character {
         } catch(IllegalArgumentException | NullPointerException e){
             return DeathStatus.UNKNOWN;
         }
-    }
-
-    /**
-     * Creates an immutable snapshot of the character's current state.
-     *
-     * @return A {@link CharacterData} record populated with current values.
-     */
-    public CharacterData getCharacterData() {
-        return new CharacterData(
-                characterName,
-                baseInitiative,
-                dexterity,
-                getInitiativeValue(),
-                characterType,
-                deathStatus);
     }
 
     /**
@@ -195,6 +178,21 @@ public class Character {
     }
 
     /**
+     * Creates an immutable snapshot of the character's current state.
+     *
+     * @return A {@link CharacterData} record populated with current values.
+     */
+    public CharacterData getCharacterData() {
+        return new CharacterData(
+                characterName,
+                baseInitiative,
+                dexterity,
+                getInitiativeValue(),
+                characterType,
+                deathStatus);
+    }
+
+    /**
      * Calculates the total effective initiative score used for ordering.
      * <p>
      * If the character is an enemy, returns the base initiative. Otherwise, adds
@@ -259,4 +257,6 @@ public class Character {
     public Map<String, Integer> getDeathSaves() {
         return Collections.unmodifiableMap(deathSaves);
     }
+
+
 }
