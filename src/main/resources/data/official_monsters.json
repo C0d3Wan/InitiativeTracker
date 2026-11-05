@@ -1,0 +1,490 @@
+{
+  "version": "1.0",
+  "monsters": [
+    {
+      "name": "Goblin",
+      "group_name": "Humanoids",
+      "type": "Humanoid (goblinoid)",
+      "size": "Small",
+      "alignment": "Neutral Evil",
+      "armor_class": 15,
+      "hit_points": {
+        "average": 7,
+        "formula": "2d6"
+      },
+      "speed": {
+        "walk": 30
+      },
+      "stats": {
+        "strength": 8,
+        "dexterity": 14,
+        "constitution": 10,
+        "intelligence": 10,
+        "wisdom": 8,
+        "charisma": 8
+      },
+      "challenge_rating": "1/4",
+      "experience_points": 50,
+      "senses": [
+        "darkvision 60 ft.",
+        "passive Perception 9"
+      ],
+      "languages": [
+        "Common",
+        "Goblin"
+      ],
+      "traits": [
+        {
+          "name": "Nimble Escape",
+          "description": "The goblin can take the Disengage or Hide action as a bonus action on each of its turns."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Snap Retreat",
+          "description": "When a creature misses the goblin with a melee attack, the goblin can move up to 5 feet without provoking opportunity attacks."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Scimitar",
+          "description": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target. Hit: 5 (1d6 + 2) piercing damage."
+        }
+      ]
+    },
+    {
+      "name": "Hobgoblin",
+      "group_name": "Humanoids",
+      "type": "Humanoid (goblinoid)",
+      "size": "Medium",
+      "alignment": "Lawful Evil",
+      "armor_class": 18,
+      "hit_points": {
+        "average": 11,
+        "formula": "2d8 + 2"
+      },
+      "speed": {
+        "walk": 30
+      },
+      "stats": {
+        "strength": 13,
+        "dexterity": 12,
+        "constitution": 12,
+        "intelligence": 10,
+        "wisdom": 10,
+        "charisma": 9
+      },
+      "challenge_rating": "1/2",
+      "experience_points": 100,
+      "senses": [
+        "darkvision 60 ft.",
+        "passive Perception 10"
+      ],
+      "languages": [
+        "Common",
+        "Goblin"
+      ],
+      "traits": [
+        {
+          "name": "Martial Advantage",
+          "description": "The hobgoblin deals an extra 7 (2d6) damage to a target it hits with an attack if an ally of the hobgoblin is within 5 feet of the target and the ally isn't incapacitated."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Shield Block",
+          "description": "When a creature hits the hobgoblin with a melee attack, it can add 2 to its AC against that attack, potentially causing it to miss."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Longsword",
+          "description": "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 5 (1d8 + 1) slashing damage, or 6 (1d10 + 1) slashing damage if used with two hands."
+        },
+        {
+          "name": "Longbow",
+          "description": "Ranged Weapon Attack: +3 to hit, range 150/600 ft., one target. Hit: 5 (1d8 + 1) piercing damage."
+        }
+      ]
+    },
+    {
+      "name": "Red Dragon",
+      "group_name": "Dragons",
+      "type": "Dragon",
+      "size": "Huge",
+      "alignment": "Chaotic Evil",
+      "armor_class": 19,
+      "hit_points": {
+        "average": 256,
+        "formula": "19d12 + 133"
+      },
+      "speed": {
+        "walk": 40,
+        "climb": 40,
+        "fly": 80
+      },
+      "stats": {
+        "strength": 27,
+        "dexterity": 10,
+        "constitution": 25,
+        "intelligence": 16,
+        "wisdom": 13,
+        "charisma": 21
+      },
+      "challenge_rating": "17",
+      "experience_points": 18000,
+      "senses": [
+        "blindsight 60 ft.",
+        "darkvision 120 ft.",
+        "passive Perception 22"
+      ],
+      "languages": [
+        "Common",
+        "Draconic"
+      ],
+      "traits": [
+        {
+          "name": "Legendary Resistance (3/Day)",
+          "description": "If the dragon fails a saving throw, it can choose to succeed instead."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Tail Swipe",
+          "description": "When a creature within 10 feet hits the dragon with a melee attack, the dragon can make a tail attack against it."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Weapon Attack: +13 to hit, reach 10 ft., one target. Hit: 19 (2d10 + 8) piercing damage plus 7 (2d6) fire damage."
+        },
+        {
+          "name": "Fire Breath (Recharge 5-6)",
+          "description": "The dragon exhales fire in a 60-foot cone. Each creature in that area must make a DC 21 Dexterity saving throw, taking 63 (18d6) fire damage on a failed save, or half as much on a successful one."
+        }
+      ],
+      "legendary_actions": {
+        "description": "The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The dragon regains spent legendary actions at the start of its turn.",
+        "actions": [
+          {
+            "name": "Detect",
+            "description": "The dragon makes a Wisdom (Perception) check."
+          },
+          {
+            "name": "Tail Attack",
+            "description": "The dragon makes a tail attack."
+          },
+          {
+            "name": "Wing Attack (Costs 2 Actions)",
+            "description": "The dragon beats its wings. Each creature within 10 ft. of the dragon must succeed on a DC 22 Dexterity saving throw or take 15 (2d6 + 8) bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed."
+          }
+        ]
+      },
+      "lair_actions": {
+        "description": "While fighting inside its lair, a legendary dragon can use lair actions. On initiative count 20 (losing initiative ties), the dragon takes a lair action to cause one of the following effects:",
+        "actions": [
+          {
+            "name": "Magma Eruption",
+            "description": "Magma erupts from a point on the ground the dragon can see within 120 feet of it, creating a 20-foot-high, 5-foot-radius geyser. Each creature in the geyser's area must make a DC 15 Dexterity saving throw, taking 21 (6d6) fire damage on a failed save, or half as much damage on a successful one."
+          },
+          {
+            "name": "Tremor",
+            "description": "A tremor shakes the lair in a 60-foot radius around the dragon. Each creature other than the dragon on the ground in that area must succeed on a DC 15 Dexterity saving throw or be knocked prone."
+          },
+          {
+            "name": "Volcanic Gases",
+            "description": "Volcanic gases form a cloud in a 20-foot-radius sphere centered on a point the dragon can see within 120 feet of it. Each creature that starts its turn in the cloud must succeed on a DC 13 Constitution saving throw or be poisoned until the end of its turn."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Green Dragon",
+      "group_name": "Dragons",
+      "type": "Dragon",
+      "size": "Huge",
+      "alignment": "Lawful Evil",
+      "armor_class": 19,
+      "hit_points": {
+        "average": 207,
+        "formula": "18d12 + 90"
+      },
+      "speed": {
+        "walk": 40,
+        "fly": 80,
+        "swim": 40
+      },
+      "stats": {
+        "strength": 23,
+        "dexterity": 12,
+        "constitution": 21,
+        "intelligence": 18,
+        "wisdom": 15,
+        "charisma": 17
+      },
+      "challenge_rating": "15",
+      "experience_points": 13000,
+      "senses": [
+        "blindsight 60 ft.",
+        "darkvision 120 ft.",
+        "passive Perception 20"
+      ],
+      "languages": [
+        "Common",
+        "Draconic"
+      ],
+      "traits": [
+        {
+          "name": "Amphibious",
+          "description": "The dragon can breathe air and water."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Venomous Riposte",
+          "description": "When missed by a melee attack, the dragon can spit acidic saliva, dealing 4 (1d8) acid damage to the attacker."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The dragon makes three attacks: one with its bite and two with its claws."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Weapon Attack: +11 to hit, reach 10 ft., one target. Hit: 17 (2d10 + 6) piercing damage plus 7 (2d6) poison damage."
+        },
+        {
+          "name": "Poison Breath (Recharge 5-6)",
+          "description": "The dragon exhales poisonous gas in a 60-foot cone. Each creature in that area must make a DC 18 Constitution saving throw, taking 42 (12d6) poison damage on a failed save, or half as much on a successful one."
+        }
+      ],
+      "legendary_actions": {
+        "description": "The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn.",
+        "actions": [
+          {
+            "name": "Detect",
+            "description": "The dragon makes a Wisdom (Perception) check."
+          },
+          {
+            "name": "Tail Attack",
+            "description": "The dragon makes a tail attack."
+          },
+          {
+            "name": "Wing Attack (Costs 2 Actions)",
+            "description": "The dragon beats its wings. Each creature within 10 ft. of the dragon must succeed on a DC 19 Dexterity saving throw or take 13 (2d6 + 6) bludgeoning damage and be knocked prone."
+          }
+        ]
+      },
+      "lair_actions": {
+        "description": "While fighting inside its lair, the green dragon can use lair actions on initiative count 20:",
+        "actions": [
+          {
+            "name": "Thick Roots and Vines",
+            "description": "Grasping roots and vines sprout in a 20-foot radius centered on a point the dragon can see within 120 feet of it. That area treats terrain as difficult, and creatures starting their turn there must succeed on a DC 15 Strength saving throw or be restrained."
+          },
+          {
+            "name": "Cloud of Fog",
+            "description": "A cloud of thick fog fills a 20-foot-radius sphere centered on a point the dragon can see within 120 feet. The fog heavily obscures the area until initiative count 20 on the next round."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Blue Dragon",
+      "group_name": "Dragons",
+      "type": "Dragon",
+      "size": "Huge",
+      "alignment": "Lawful Evil",
+      "armor_class": 19,
+      "hit_points": {
+        "average": 225,
+        "formula": "18d12 + 108"
+      },
+      "speed": {
+        "walk": 40,
+        "burrow": 30,
+        "fly": 80
+      },
+      "stats": {
+        "strength": 25,
+        "dexterity": 10,
+        "constitution": 23,
+        "intelligence": 16,
+        "wisdom": 15,
+        "charisma": 19
+      },
+      "challenge_rating": "16",
+      "experience_points": 15000,
+      "senses": [
+        "blindsight 60 ft.",
+        "darkvision 120 ft.",
+        "passive Perception 20"
+      ],
+      "languages": [
+        "Common",
+        "Draconic"
+      ],
+      "traits": [
+        {
+          "name": "Lightning Absorption",
+          "description": "Whenever the dragon is subjected to lightning damage, it takes no damage and regains hit points equal to the lightning damage dealt."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Static Discharge",
+          "description": "When a creature hits the dragon with a metal melee weapon, it takes 3 (1d6) lightning damage."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The dragon makes three attacks: one with its bite and two with its claws."
+        },
+        {
+          "name": "Bite",
+          "description": "Melee Weapon Attack: +12 to hit, reach 10 ft., one target. Hit: 18 (2d10 + 7) piercing damage plus 5 (1d10) lightning damage."
+        },
+        {
+          "name": "Lightning Breath (Recharge 5-6)",
+          "description": "The dragon exhales a line of lightning 90 feet long and 5 feet wide. Each creature in that line must make DC 19 Dexterity saving throw, taking 66 (12d10) lightning damage on a failed save, or half as much on a successful one."
+        }
+      ],
+      "legendary_actions": {
+        "description": "The dragon can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn.",
+        "actions": [
+          {
+            "name": "Detect",
+            "description": "The dragon makes a Wisdom (Perception) check."
+          },
+          {
+            "name": "Tail Attack",
+            "description": "The dragon makes a tail attack."
+          },
+          {
+            "name": "Wing Attack (Costs 2 Actions)",
+            "description": "The dragon beats its wings. Each creature within 10 ft. of the dragon must succeed on a DC 20 Dexterity saving throw or take 14 (2d6 + 7) bludgeoning damage and be knocked prone."
+          }
+        ]
+      },
+      "lair_actions": {
+        "description": "While fighting inside its lair, the blue dragon can use lair actions on initiative count 20:",
+        "actions": [
+          {
+            "name": "Lightning Strike",
+            "description": "A section of lightning streaks down from the ceiling to a point the dragon can see within 120 feet. Each creature within 5 feet of that point must make a DC 15 Dexterity saving throw, taking 22 (4d10) lightning damage on a failed save."
+          },
+          {
+            "name": "Sandstorm",
+            "description": "Creating a swirling cloud of sand, the area becomes heavily obscured until initiative count 20 of the next round."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Lich",
+      "group_name": "Undead",
+      "type": "Undead (wizard)",
+      "size": "Medium",
+      "alignment": "Any Evil Alignment",
+      "armor_class": 17,
+      "hit_points": {
+        "average": 135,
+        "formula": "18d8 + 54"
+      },
+      "speed": {
+        "walk": 30
+      },
+      "stats": {
+        "strength": 11,
+        "dexterity": 16,
+        "constitution": 16,
+        "intelligence": 20,
+        "wisdom": 14,
+        "charisma": 16
+      },
+      "challenge_rating": "21",
+      "experience_points": 33000,
+      "senses": [
+        "truesight 120 ft.",
+        "passive Perception 19"
+      ],
+      "languages": [
+        "Common",
+        "Abyssal",
+        "Celestial",
+        "Draconic"
+      ],
+      "traits": [
+        {
+          "name": "Turn Resistance",
+          "description": "The lich has advantage on saving throws against any effect that turns undead."
+        },
+        {
+          "name": "Rejuvenation",
+          "description": "If it has a phylactery, a destroyed lich gains a new body in 1d10 days, regaining all its hit points."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Counterspell",
+          "description": "When the lich sees a creature casting a spell within 60 feet, it attempts to interrupt the spellcasting as a reaction."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Paralyzing Touch",
+          "description": "Melee Spell Attack: +12 to hit, reach 5 ft., one creature. Hit: 10 (3d6) cold damage, and the target must succeed on a DC 18 Constitution saving throw or be paralyzed for 1 minute."
+        }
+      ],
+      "legendary_actions": {
+        "description": "The lich can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. The lich regains spent legendary actions at the start of its turn.",
+        "actions": [
+          {
+            "name": "Cantrip",
+            "description": "The lich casts a cantrip."
+          },
+          {
+            "name": "Paralyzing Touch (Costs 2 Actions)",
+            "description": "The lich uses its Paralyzing Touch."
+          },
+          {
+            "name": "Frightening Gaze (Costs 2 Actions)",
+            "description": "The lich fixes its gaze on one creature it can see within 10 feet of it. The target must succeed on a DC 18 Wisdom saving throw or become frightened for 1 minute."
+          },
+          {
+            "name": "Disrupt Life (Costs 3 Actions)",
+            "description": "Each non-undead creature within 20 feet of the lich must make a DC 18 Constitution saving throw, taking 21 (6d6) necrotic damage on a failed save, or half as much on a successful one."
+          }
+        ]
+      },
+      "lair_actions": {
+        "description": "The lich can use lair actions within its lair on initiative count 20:",
+        "actions": [
+          {
+            "name": "Spell Slot Restoration",
+            "description": "The lich rolls a d8 and regains a spell slot of that level or lower. If it has no spent spell slots of that level or lower, nothing happens."
+          },
+          {
+            "name": "Negative Energy Tether",
+            "description": "The lich targets one creature it can see within 30 feet. Whenever the lich takes damage, the target must make a DC 18 Constitution saving throw or take damage equal to half the damage dealt to the lich."
+          },
+          {
+            "name": "Spectral Apparitions",
+            "description": "Apparitions materialize and attack one creature that the lich can see within 60 feet. The target must succeed on a DC 18 Constitution saving throw, taking 52 (15d6) necrotic damage on a failed save, or half as much damage on a success."
+          }
+        ]
+      }
+    }
+  ]
+}

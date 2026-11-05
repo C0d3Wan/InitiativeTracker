@@ -17,7 +17,8 @@
  */
 package com.c0d3wan.initiativetracker;
 
-import com.c0d3wan.initiativetracker.filemanagement.ConfigManager;
+import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiarySyncManager;
+import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.swingui.MainMenu;
 
@@ -29,7 +30,7 @@ import javax.swing.*;
  * Initialises core state management, loads persistent configuration settings,
  * and launches the Swing graphical user interface on the Event Dispatch Thread (EDT).
  */
-public class Main {
+public class                                                                      Main {
 
     /**
      * Application bootstrapper.
@@ -39,6 +40,9 @@ public class Main {
     public static void main(String[] args) {
         CharacterManager characterManager = new CharacterManager();
         ConfigManager.loadConfig();
+
+        BestiarySyncManager.syncOfficialMonsters();
+
         SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
     }
 }

@@ -1,7 +1,6 @@
-package com.c0d3wan.initiativetracker.filemanagement.data;
+package com.c0d3wan.initiativetracker.filemanagement.saveload.data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Data transfer object representing the top-level structure of a saved combat session.

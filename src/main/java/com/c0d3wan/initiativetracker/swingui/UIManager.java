@@ -1,11 +1,12 @@
 package com.c0d3wan.initiativetracker.swingui;
 
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
-import com.c0d3wan.initiativetracker.filemanagement.SaveLoadManager;
+import com.c0d3wan.initiativetracker.filemanagement.saveload.SaveLoadManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.data.CharacterType;
 import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
+import com.c0d3wan.initiativetracker.swingui.bestiary.BestiaryMenu;
 import com.c0d3wan.initiativetracker.swingui.renderers.CharacterCellRenderer;
 import com.formdev.flatlaf.*;
 
@@ -113,6 +114,17 @@ public class UIManager {
         RemoveCharacterMenu removeCharacterMenu = new RemoveCharacterMenu(parentFrame, characterManager, characterMap, npcMap);
         removeCharacterMenu.setVisible(true);
 
+        updateInitiativeList();
+    }
+
+    /**
+     * Opens the modal dialog to browse the bestiary database and add monsters to tracker.
+     */
+    public void openBestiaryMenu() {
+        BestiaryMenu bestiaryMenu = new BestiaryMenu(parentFrame, characterManager);
+        bestiaryMenu.setVisible(true);
+
+        characterManager.updateCharacters();
         updateInitiativeList();
     }
 
