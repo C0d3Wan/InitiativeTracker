@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.filemanagement.data;
+package com.c0d3wan.initiativetracker.filemanagement.saveload.data;
 
 /**
  * Data transfer object representing the persistent configuration options.

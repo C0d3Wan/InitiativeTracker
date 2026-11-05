@@ -4,9 +4,9 @@ import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.data.CharacterData;
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
-import com.c0d3wan.initiativetracker.filemanagement.data.CombatSessionDTO;
-import com.c0d3wan.initiativetracker.filemanagement.data.CombatSessionDTO.CharacterRecordDTO;
-import com.c0d3wan.initiativetracker.filemanagement.data.CombatSessionDTO.NPCRecordDTO;
+import com.c0d3wan.initiativetracker.filemanagement.saveload.data.CombatSessionDTO;
+import com.c0d3wan.initiativetracker.filemanagement.saveload.data.CombatSessionDTO.CharacterRecordDTO;
+import com.c0d3wan.initiativetracker.filemanagement.saveload.data.CombatSessionDTO.NPCRecordDTO;
 import com.google.gson.*;
 
 import javax.crypto.Cipher;

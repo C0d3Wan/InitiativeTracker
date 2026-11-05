@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.filemanagement.Bestiery;
+package com.c0d3wan.initiativetracker.filemanagement.bestiary;
 
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
 
@@ -11,14 +11,12 @@ public class BestiaryTableInitialiser {
     public static void main(String[] args) {
         System.out.println("=== Initializing Bestiary Database Table ===");
 
-        // Resolves path using your existing FileManager[cite: 7]
         File configDir = FileManager.getDirectory();
         File dbFile = new File(configDir, "initiativetracker.db");
         String dbUrl = "jdbc:sqlite:" + dbFile.getAbsolutePath();
 
         System.out.println("[INFO] Database location: " + dbFile.getAbsolutePath());
 
-        // Full DDL creating the monsters table with all columns and an integer flag for is_official
         String createTableSql = "CREATE TABLE IF NOT EXISTS monsters (" +
                 "name TEXT PRIMARY KEY COLLATE NOCASE," +
                 "type TEXT," +
