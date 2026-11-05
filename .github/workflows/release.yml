@@ -40,7 +40,8 @@ jobs:
             --input target \
             --main-jar InitiativeTracker.jar \
             --name InitiativeTracker \
-            --icon packaging/InitiativeTracker.png
+            --icon packaging/InitiativeTracker.png \
+            --java-options "--enable-native-access=ALL-UNNAMED"
 
       - name: Create App Image Directory
         run: |          
@@ -79,6 +80,7 @@ jobs:
           --appdir InitiativeTracker \
           --desktop-file InitiativeTracker/InitiativeTracker.desktop \
           --icon-file InitiativeTracker/InitiativeTracker.png \
+          --java-options "--enable-native-access=ALL-UNNAMED" \
           --output appimage
 
       - uses: actions/upload-artifact@v7
@@ -120,6 +122,7 @@ jobs:
             --main-jar InitiativeTracker.jar `
             --name InitiativeTracker `
             --icon packaging/InitiativeTracker.ico `
+            --java-options "--enable-native-access=ALL-UNNAMED" `
             --win-menu
 
       - uses: actions/upload-artifact@v7
