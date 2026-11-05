@@ -1,0 +1,144 @@
+{
+  "version": "1.0",
+  "monsters": [
+    {
+      "name": "Goblin",
+      "type": "Humanoid",
+      "size": "Small",
+      "alignment": "Neutral Evil",
+      "armorClass": 15,
+      "hitPoints": {
+        "average": 7,
+        "formula": "2d6"
+      },
+      "speed": {
+        "walk": 30
+      },
+      "stats": {
+        "strength": 8,
+        "dexterity": 14,
+        "constitution": 10,
+        "intelligence": 10,
+        "wisdom": 8,
+        "charisma": 8
+      },
+      "challengeRating": "1/4",
+      "experiencePoints": 50,
+      "damageResistances": [],
+      "damageVulnerabilities": [],
+      "damageImmunities": [],
+      "conditionImmunities": [],
+      "senses": ["darkvision 60 ft.", "passive Perception 9"],
+      "languages": ["Common", "Goblin"],
+      "traits": [
+        {
+          "name": "Nimble Escape",
+          "description": "The goblin can take the Disengage or Hide action as a bonus action on each of its turns."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Scimitar",
+          "description": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target. Hit: 5 (1d6 + 2) piercing damage."
+        }
+      ]
+    },
+    {
+      "name": "Skeleton",
+      "type": "Undead",
+      "size": "Medium",
+      "alignment": "Lawful Evil",
+      "armorClass": 13,
+      "hitPoints": {
+        "average": 13,
+        "formula": "2d8 + 4"
+      },
+      "speed": {
+        "walk": 30
+      },
+      "stats": {
+        "strength": 10,
+        "dexterity": 14,
+        "constitution": 15,
+        "intelligence": 6,
+        "wisdom": 8,
+        "charisma": 5
+      },
+      "challengeRating": "1/4",
+      "experiencePoints": 50,
+      "damageResistances": [],
+      "damageVulnerabilities": [
+        "bludgeoning"
+      ],
+      "damageImmunities": [
+        "poison"
+      ],
+      "conditionImmunities": [
+        "exhaustion",
+        "poisoned"
+      ],
+      "senses": ["darkvision 60 ft.", "passive Perception 9"],
+      "languages": ["understands all languages it knew in life but can't speak"],
+      "actions": [
+        {
+          "name": "Shortsword",
+          "description": "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target. Hit: 5 (1d6 + 2) piercing damage."
+        }
+      ]
+    },
+    {
+      "name": "Orc",
+      "type": "Humanoid",
+      "size": "Medium",
+      "alignment": "Chaotic Evil",
+      "armorClass": 13,
+      "hitPoints": {
+        "average": 15,
+        "formula": "2d8 + 6"
+      },
+      "speed": {
+        "walk": 30
+      },
+      "stats": {
+        "strength": 16,
+        "dexterity": 12,
+        "constitution": 16,
+        "intelligence": 7,
+        "wisdom": 11,
+        "charisma": 10
+      },
+      "challengeRating": "1/2",
+      "experiencePoints": 100,
+      "damageResistances": [],
+      "damageVulnerabilities": [],
+      "damageImmunities": [],
+      "conditionImmunities": [],
+      "senses": ["darkvision 60 ft.", "passive Perception 10"],
+      "languages": ["Common", "Orc"],
+      "traits": [
+        {
+          "name": "Aggressive",
+          "description": "As a bonus action, the orc can move up to its speed toward a hostile creature that it can see."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Greataxe",
+          "description": "Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 9 (1d12 + 3) slashing damage."
+        },
+        {
+          "name": "Javelin",
+          "description": "Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 6 (1d6 + 3) piercing damage."
+        }
+      ]
+    }
+  ]
+}
