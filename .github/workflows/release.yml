@@ -50,6 +50,7 @@ jobs:
             --app-version "$VERSION" \
             --input target \
             --main-jar InitiativeTracker.jar \
+            --java-options "--enable-native-access=ALL-UNNAMED" \
             --name InitiativeTracker
 
       - name: Add Desktop File
