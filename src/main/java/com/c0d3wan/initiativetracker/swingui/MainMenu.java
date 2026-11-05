@@ -3,7 +3,7 @@ package com.c0d3wan.initiativetracker.swingui;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-import com.c0d3wan.initiativetracker.filemanagement.ConfigManager;
+import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.formdev.flatlaf.FlatLaf;

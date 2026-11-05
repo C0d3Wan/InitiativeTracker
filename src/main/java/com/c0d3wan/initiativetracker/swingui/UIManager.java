@@ -1,7 +1,7 @@
 package com.c0d3wan.initiativetracker.swingui;
 
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
-import com.c0d3wan.initiativetracker.filemanagement.SaveLoadManager;
+import com.c0d3wan.initiativetracker.filemanagement.saveload.SaveLoadManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.data.CharacterType;
