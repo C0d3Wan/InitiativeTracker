@@ -234,28 +234,12 @@ public class UIManager {
             }
             SaveLoadManager.saveAs(characterManager, file);
         }
-
-        /*
-        if (saveAsMenu.isConfirmed()) {
-            String saveFile = saveAsMenu.getSavefile();
-            SaveLoadManager.saveAs(characterManager, saveFile);
-        }
-         */
     }
 
     /**
      * Opens a {@link LoadFileMenu} to load a list from an existing file
      */
     public void loadList() {
-        /*
-        LoadFileMenu loadMenu = new LoadFileMenu(parentFrame);
-        loadMenu.setVisible(true);
-        if (loadMenu.isItemSelected()) {
-            String fileToLoad = loadMenu.getFileToLoad();
-            SaveLoadManager.load(characterManager, fileToLoad, true);
-            updateInitiativeList();
-        }
-         */
         JFileChooser loadMenu = createFileMenu();
         int isConfirmed = loadMenu.showOpenDialog(parentFrame);
 
