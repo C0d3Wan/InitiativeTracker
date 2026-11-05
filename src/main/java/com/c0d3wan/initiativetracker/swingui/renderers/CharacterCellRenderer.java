@@ -206,6 +206,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
             }
         }
         if (hasConditions.isEmpty()) return "";
+        else if (hasConditions.size() > 5) return hasConditions.size() + " Conditions";
         else return hasConditions.toString();
     }
 }
