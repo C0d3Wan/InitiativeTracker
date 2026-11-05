@@ -45,8 +45,9 @@ public class BestiaryDTO {
 
         private List<Feature> traits;
         private List<Feature> actions;
-        private ActionGroup legendaryActions;
-        private ActionGroup lairActions;
+        private List<Feature> reactions;
+        private ActionGroup legendary_actions;
+        private ActionGroup lair_actions;
 
         public Monster() {}
 
@@ -114,11 +115,14 @@ public class BestiaryDTO {
         public List<Feature> getActions() { return actions; }
         public void setActions(List<Feature> actions) { this.actions = actions; }
 
-        public ActionGroup getLegendaryActions() { return legendaryActions; }
-        public void setLegendaryActions(ActionGroup legendaryActions) { this.legendaryActions = legendaryActions; }
+        public List<Feature> getReactions() { return reactions; }
+        public void setReactions(List<Feature> reactions) { this.reactions = reactions; }
 
-        public ActionGroup getLairActions() { return lairActions; }
-        public void setLairActions(ActionGroup lairActions) { this.lairActions = lairActions; }
+        public ActionGroup getLegendaryActions() { return legendary_actions; }
+        public void setLegendaryActions(ActionGroup legendary_actions) { this.legendary_actions = legendary_actions; }
+
+        public ActionGroup getLairActions() { return lair_actions; }
+        public void setLairActions(ActionGroup lair_actions) { this.lair_actions = lair_actions; }
     }
 
     public static class HitPoints {

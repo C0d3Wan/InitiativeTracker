@@ -30,9 +30,6 @@ public class BestiaryDatabase {
         initTable();
     }
 
-    /**
-     * Initialises the SQLite monsters table with all individual attribute columns.
-     */
     public static void initTable(){
         String createTableSql = "CREATE TABLE IF NOT EXISTS monsters (" +
                 "name TEXT PRIMARY KEY COLLATE NOCASE," +
@@ -41,60 +38,74 @@ public class BestiaryDatabase {
                 "size TEXT," +
                 "alignment TEXT," +
                 "armor_class INTEGER," +
-                "hit_points TEXT," +              // JSON object
-                "speed TEXT," +                 // JSON map
-                "stats TEXT," +                 // JSON map
+                "hit_points TEXT," +
+                "speed TEXT," +
+                "stats TEXT," +
                 "challenge_rating TEXT," +
                 "experience_points INTEGER," +
-                "saving_throws TEXT," +         // JSON map
-                "skills TEXT," +                // JSON map
-                "damage_resistances TEXT," +    // JSON list
-                "damage_vulnerabilities TEXT," +// JSON list
-                "damage_immunities TEXT," +     // JSON list
-                "condition_immunities TEXT," +  // JSON list
-                "senses TEXT," +                // JSON list
-                "languages TEXT," +             // JSON list
-                "traits TEXT," +                // JSON list
-                "actions TEXT," +               // JSON list
-                "legendary_actions TEXT," +     // JSON object/group
-                "lair_actions TEXT," +          // JSON object/group
-                "is_official INTEGER DEFAULT 1" + // 1 for official, 0 for homebrew
+                "saving_throws TEXT," +
+                "skills TEXT," +
+                "damage_resistances TEXT," +
+                "damage_vulnerabilities TEXT," +
+                "damage_immunities TEXT," +
+                "condition_immunities TEXT," +
+                "senses TEXT," +
+                "languages TEXT," +
+                "traits TEXT," +
+                "actions TEXT," +
+                "reactions TEXT," +
+                "legendary_actions TEXT," +
+                "lair_actions TEXT," +
+                "is_official INTEGER DEFAULT 1" +
                 ");";
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement()) {
             stmt.execute(createTableSql);
+
+            addColumnIfNotExists(conn, "reactions");
+            addColumnIfNotExists(conn, "legendary_actions");
+            addColumnIfNotExists(conn, "lair_actions");
+
         } catch (SQLException e) {
             System.err.println("Failed to initialize bestiary database table: " + e.getMessage());
         }
     }
 
-    /**
-     * Saves or updates a user-created homebrew monster (is_official = 0).
-     */
+    private static void addColumnIfNotExists(Connection conn, String columnName) {
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute("ALTER TABLE monsters ADD COLUMN " + columnName + " TEXT;");
+        } catch (SQLException ignored) {
+            // Column likely already exists, safe to ignore
+        }
+    }
+
     public static void saveUserMonster(BestiaryDTO.Monster monster) {
         saveMonster(monster, 0);
     }
 
-    /**
-     * Saves or updates an official monster (is_official = 1).
-     */
     public static void saveOfficialMonster(BestiaryDTO.Monster monster) {
         saveMonster(monster, 1);
     }
 
-    /**
-     * Internal helper to persist a monster into SQLite across all mapped columns.
-     */
     private static void saveMonster(BestiaryDTO.Monster monster, int isOfficial) {
         if (monster == null || monster.getName() == null || monster.getName().isBlank()) return;
 
-        String sql = "INSERT OR REPLACE INTO monsters (" +
+        String sql = "INSERT INTO monsters (" +
                 "name, group_name, type, size, alignment, armor_class, hit_points, speed, stats, " +
                 "challenge_rating, experience_points, saving_throws, skills, " +
                 "damage_resistances, damage_vulnerabilities, damage_immunities, " +
-                "condition_immunities, senses, languages, traits, actions, legendary_actions, lair_actions, is_official" +
-                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "condition_immunities, senses, languages, traits, actions, reactions, legendary_actions, lair_actions, is_official" +
+                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                "ON CONFLICT(name) DO UPDATE SET " +
+                "group_name=excluded.group_name, type=excluded.type, size=excluded.size, alignment=excluded.alignment, " +
+                "armor_class=excluded.armor_class, hit_points=excluded.hit_points, speed=excluded.speed, stats=excluded.stats, " +
+                "challenge_rating=excluded.challenge_rating, experience_points=excluded.experience_points, " +
+                "saving_throws=excluded.saving_throws, skills=excluded.skills, damage_resistances=excluded.damage_resistances, " +
+                "damage_vulnerabilities=excluded.damage_vulnerabilities, damage_immunities=excluded.damage_immunities, " +
+                "condition_immunities=excluded.condition_immunities, senses=excluded.senses, languages=excluded.languages, " +
+                "traits=excluded.traits, actions=excluded.actions, reactions=excluded.reactions, " +
+                "legendary_actions=excluded.legendary_actions, lair_actions=excluded.lair_actions, is_official=excluded.is_official;";
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -119,9 +130,10 @@ public class BestiaryDatabase {
             pstmt.setString(19, GSON.toJson(monster.getLanguages()));
             pstmt.setString(20, GSON.toJson(monster.getTraits()));
             pstmt.setString(21, GSON.toJson(monster.getActions()));
-            pstmt.setString(22, GSON.toJson(monster.getLegendaryActions()));
-            pstmt.setString(23, GSON.toJson(monster.getLairActions()));
-            pstmt.setInt(24, isOfficial);
+            pstmt.setString(22, GSON.toJson(monster.getReactions()));
+            pstmt.setString(23, GSON.toJson(monster.getLegendaryActions()));
+            pstmt.setString(24, GSON.toJson(monster.getLairActions()));
+            pstmt.setInt(25, isOfficial);
 
             pstmt.executeUpdate();
         } catch (SQLException e){
@@ -129,10 +141,6 @@ public class BestiaryDatabase {
         }
     }
 
-    /**
-     * Deletes a custom homebrew monster from the database where is_official = 0.
-     * Official monsters (is_official = 1) cannot be deleted.
-     */
     public static boolean deleteMonster(String name) {
         if (name == null || name.isBlank()) return false;
 
@@ -148,9 +156,6 @@ public class BestiaryDatabase {
         }
     }
 
-    /**
-     * Loads all monsters from the database and fully reconstructs their DTO objects.
-     */
     public static List<BestiaryDTO.Monster> loadAllMonsters() {
         List<BestiaryDTO.Monster> monsters = new ArrayList<>();
         String sql = "SELECT * FROM monsters";
@@ -168,9 +173,6 @@ public class BestiaryDatabase {
         return monsters;
     }
 
-    /**
-     * Finds a specific monster by name.
-     */
     public static Optional<BestiaryDTO.Monster> findMonsterByName(String name) {
         if (name == null || name.isBlank()) return Optional.empty();
 
@@ -189,9 +191,6 @@ public class BestiaryDatabase {
         return Optional.empty();
     }
 
-    /**
-     * Helper method to map a database ResultSet row back into a fully hydrated Monster DTO.
-     */
     private static BestiaryDTO.Monster mapResultSetToMonster(ResultSet rs) throws SQLException {
         BestiaryDTO.Monster m = new BestiaryDTO.Monster();
 
@@ -219,6 +218,7 @@ public class BestiaryDatabase {
 
         m.setTraits(GSON.fromJson(rs.getString("traits"), LIST_FEATURE_TYPE));
         m.setActions(GSON.fromJson(rs.getString("actions"), LIST_FEATURE_TYPE));
+        m.setReactions(GSON.fromJson(rs.getString("reactions"), LIST_FEATURE_TYPE)); // Map reactions JSON
         m.setLegendaryActions(GSON.fromJson(rs.getString("legendary_actions"), BestiaryDTO.ActionGroup.class));
         m.setLairActions(GSON.fromJson(rs.getString("lair_actions"), BestiaryDTO.ActionGroup.class));
 

@@ -39,6 +39,7 @@ public class AddHomebrewMonsterMenu extends JDialog {
     private final JSpinner chaSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 30, 1));
 
     private final JTextArea traitsArea = new JTextArea(4, 20);
+    private final JTextArea reactionsArea = new JTextArea(4, 20);
     private final JTextArea actionsArea = new JTextArea(4, 20);
 
     private final JButton saveButton = new JButton("Save Homebrew");
@@ -51,8 +52,8 @@ public class AddHomebrewMonsterMenu extends JDialog {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(parent);
 
-        setMinimumSize(new Dimension(750, 820));
-        setSize(750, 820);
+        setMinimumSize(new Dimension(750, 880));
+        setSize(750, 880);
         pack();
 
         saveButton.addActionListener(e -> saveMonster());
@@ -61,7 +62,7 @@ public class AddHomebrewMonsterMenu extends JDialog {
     private void setupMenu() {
         pane.setLayout(new MigLayout("insets 4, fill", "[grow]", "[grow][]"));
 
-        JPanel container = new JPanel(new MigLayout("insets 8, fill", "[grow]", "[][][grow, fill][grow, fill][]"));
+        JPanel container = new JPanel(new MigLayout("insets 8, fill", "[grow]", "[][][grow, fill][grow, fill][grow, fill][]"));
         container.setOpaque(false);
 
         JPanel formPanel = new JPanel(new MigLayout("insets 4, fillx, gap 6 8", "[l][grow, fill][l][grow, fill]", ""));
@@ -122,6 +123,11 @@ public class AddHomebrewMonsterMenu extends JDialog {
         JScrollPane traitsScroll = new JScrollPane(traitsArea);
         traitsScroll.setBorder(BorderFactory.createTitledBorder("Traits (Format: Name: Description)"));
 
+        reactionsArea.setLineWrap(true);
+        reactionsArea.setWrapStyleWord(true);
+        JScrollPane reactionsScroll = new JScrollPane(reactionsArea);
+        reactionsScroll.setBorder(BorderFactory.createTitledBorder("Reactions (Format: Name: Description)"));
+
         actionsArea.setLineWrap(true);
         actionsArea.setWrapStyleWord(true);
         JScrollPane actionsScroll = new JScrollPane(actionsArea);
@@ -130,6 +136,7 @@ public class AddHomebrewMonsterMenu extends JDialog {
         container.add(formPanel, "growx, wrap");
         container.add(statsPanel, "growx, wrap");
         container.add(traitsScroll, "grow, wrap");
+        container.add(reactionsScroll, "grow, wrap");
         container.add(actionsScroll, "grow, wrap");
 
         saveButton.setFocusPainted(false);
@@ -210,6 +217,9 @@ public class AddHomebrewMonsterMenu extends JDialog {
 
         List<BestiaryDTO.Feature> traits = parseFeatures(traitsArea.getText());
         if (!traits.isEmpty()) monster.setTraits(traits);
+
+        List<BestiaryDTO.Feature> reactions = parseFeatures(reactionsArea.getText());
+        if (!reactions.isEmpty()) monster.setReactions(reactions);
 
         List<BestiaryDTO.Feature> actions = parseFeatures(actionsArea.getText());
         if (!actions.isEmpty()) monster.setActions(actions);

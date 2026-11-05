@@ -355,12 +355,43 @@ public class BestiaryMenu extends JDialog {
                     abilities.append("• ").append(t.getName()).append(": ").append(t.getDescription()).append("\n\n");
                 }
             }
+            if (m.getReactions() != null && !m.getReactions().isEmpty()) {
+                abilities.append("--- REACTIONS ---\n");
+                for (BestiaryDTO.Feature r : m.getReactions()) {
+                    abilities.append("• ").append(r.getName()).append(": ").append(r.getDescription()).append("\n\n");
+                }
+            }
             if (m.getActions() != null && !m.getActions().isEmpty()) {
                 abilities.append("--- ACTIONS ---\n");
                 for (BestiaryDTO.Feature a : m.getActions()) {
                     abilities.append("• ").append(a.getName()).append(": ").append(a.getDescription()).append("\n\n");
                 }
             }
+
+            if (m.getLegendaryActions() != null) {
+                abilities.append("--- LEGENDARY ACTIONS ---\n");
+                if (m.getLegendaryActions().getDescription() != null && !m.getLegendaryActions().getDescription().isBlank()) {
+                    abilities.append(m.getLegendaryActions().getDescription()).append("\n\n");
+                }
+                if (m.getLegendaryActions().getActions() != null) {
+                    for (BestiaryDTO.Feature la : m.getLegendaryActions().getActions()) {
+                        abilities.append("• ").append(la.getName()).append(": ").append(la.getDescription()).append("\n\n");
+                    }
+                }
+            }
+
+            if (m.getLairActions() != null) {
+                abilities.append("--- LAIR ACTIONS ---\n");
+                if (m.getLairActions().getDescription() != null && !m.getLairActions().getDescription().isBlank()) {
+                    abilities.append(m.getLairActions().getDescription()).append("\n\n");
+                }
+                if (m.getLairActions().getActions() != null) {
+                    for (BestiaryDTO.Feature lra : m.getLairActions().getActions()) {
+                        abilities.append("• ").append(lra.getName()).append(": ").append(lra.getDescription()).append("\n\n");
+                    }
+                }
+            }
+
             abilitiesArea.setText(abilities.toString());
             abilitiesArea.setCaretPosition(0);
         });
