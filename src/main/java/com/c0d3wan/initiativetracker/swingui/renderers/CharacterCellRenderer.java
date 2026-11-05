@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui;
+package com.c0d3wan.initiativetracker.swingui.renderers;
 
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.data.CharacterData;
@@ -9,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.List;
 import java.util.*;
 
 /**
@@ -18,6 +19,7 @@ import java.util.*;
 @SuppressWarnings({"SameParameterValue"})
 public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Character> {
     private final JLabel nameLabel = new JLabel();
+    private final JLabel conditionLabel = new JLabel("Held");
     private final JLabel initiativeLabel = new JLabel();
     private final JLabel characterTypeLabel = new JLabel();
     private final JLabel deathStatusLabel = new JLabel();
@@ -36,7 +38,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
      * Constructs a new CharacterCellRenderer and configures subcomponents and layouts.
      */
     public CharacterCellRenderer() {
-        setLayout(new MigLayout("insets 0 2 0 2, fillx, aligny center", "[grow, push]12[]12[]12[]12[][]", "[]"));
+        setLayout(new MigLayout("insets 0 2 0 2, fillx, aligny center", "[grow, push][]20[][][]20[][]", "[]"));
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
 
         setupLabels();
@@ -48,12 +50,14 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
      */
     private void setupLabels() {
         nameLabel.setFont(nameLabel.getFont().deriveFont(Font.BOLD, 20f));
-        initiativeLabel.setFont(initiativeLabel.getFont().deriveFont(Font.PLAIN, 14));
+        conditionLabel.setFont(conditionLabel.getFont().deriveFont(Font.PLAIN, 10f));
+        initiativeLabel.setFont(initiativeLabel.getFont().deriveFont(Font.PLAIN, 14f));
         characterTypeLabel.setFont(characterTypeLabel.getFont().deriveFont(Font.PLAIN, 14f));
         npcHealth.setFont(npcHealth.getFont().deriveFont(Font.PLAIN, 12f));
         deathStatusLabel.setFont(deathStatusLabel.getFont().deriveFont(Font.PLAIN, 14f));
 
         add(nameLabel, "growx, aligny center");
+        add(conditionLabel, "aligny center");
         add(initiativeLabel, "aligny center");
         add(characterTypeLabel, "aligny center");
         add(npcHealth, "aligny center");
@@ -112,6 +116,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
             boolean cellHasFocus) {
         CharacterData characterData = character.getCharacterData();
         nameLabel.setText(character.getName());
+        conditionLabel.setText(listConditions(character));
         initiativeLabel.setText(String.valueOf(character.getInitiativeValue()));
         characterTypeLabel.setText(character.getCharacterType().toString());
         deathStatusLabel.setText(character.getDeathStatus().toString());
@@ -183,5 +188,25 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         deathFail1.setSelected(fails >= 1);
         deathFail2.setSelected(fails >= 2);
         deathFail3.setSelected(fails >= 3);
+    }
+
+    private String listConditions(Character character) {
+        Map<String, Object> conditions = character.getConditions();
+        List<String> hasConditions = new ArrayList<>();
+        for (Map.Entry<String, Object> entry: conditions.entrySet()) {
+            String condition = entry.getKey();
+            Object value = entry.getValue();
+            if (condition.equals("Exhaustion")) {
+                if ((int) value != 0) {
+                    String exhaustionLevel = String.format("Exhaustion Lvl: %s", value);
+                    hasConditions.add(exhaustionLevel);
+                }
+            } else if ((boolean) value) {
+                hasConditions.add(condition);
+            }
+        }
+        if (hasConditions.isEmpty()) return "";
+        else if (hasConditions.size() > 5) return hasConditions.size() + " Conditions";
+        else return hasConditions.toString();
     }
 }

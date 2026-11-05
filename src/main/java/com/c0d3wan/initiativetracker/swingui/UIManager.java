@@ -7,6 +7,7 @@ import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.data.CharacterType;
 import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
 import com.c0d3wan.initiativetracker.swingui.bestiary.BestiaryMenu;
+import com.c0d3wan.initiativetracker.swingui.renderers.CharacterCellRenderer;
 import com.formdev.flatlaf.*;
 
 import javax.swing.*;
