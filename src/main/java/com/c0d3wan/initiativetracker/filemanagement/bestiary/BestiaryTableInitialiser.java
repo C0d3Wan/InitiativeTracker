@@ -19,6 +19,7 @@ public class BestiaryTableInitialiser {
 
         String createTableSql = "CREATE TABLE IF NOT EXISTS monsters (" +
                 "name TEXT PRIMARY KEY COLLATE NOCASE," +
+                "group_name TEXT," +
                 "type TEXT," +
                 "size TEXT," +
                 "alignment TEXT," +

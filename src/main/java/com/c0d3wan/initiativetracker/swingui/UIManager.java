@@ -6,6 +6,7 @@ import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.data.CharacterType;
 import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
+import com.c0d3wan.initiativetracker.swingui.bestiary.BestiaryMenu;
 import com.formdev.flatlaf.*;
 
 import javax.swing.*;
@@ -112,6 +113,17 @@ public class UIManager {
         RemoveCharacterMenu removeCharacterMenu = new RemoveCharacterMenu(parentFrame, characterManager, characterMap, npcMap);
         removeCharacterMenu.setVisible(true);
 
+        updateInitiativeList();
+    }
+
+    /**
+     * Opens the modal dialog to browse the bestiary database and add monsters to tracker.
+     */
+    public void openBestiaryMenu() {
+        BestiaryMenu bestiaryMenu = new BestiaryMenu(parentFrame, characterManager);
+        bestiaryMenu.setVisible(true);
+
+        characterManager.updateCharacters();
         updateInitiativeList();
     }
 

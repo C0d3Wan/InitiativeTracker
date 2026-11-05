@@ -12,13 +12,13 @@ import java.util.Optional;
 public class BestiaryTrackerIntegration {
     private static final Dice DICE = new Dice();
 
-
     public static boolean addMonsterToTracker(
             CharacterManager characterManager,
             String monsterName,
             String customName,
             int count,
             HPMode hpMode,
+            int manualHp,
             int initiativeRoll) {
 
         Optional<BestiaryDTO.Monster> optionalMonster = BestiaryDatabase.findMonsterByName(monsterName);
@@ -30,14 +30,19 @@ public class BestiaryTrackerIntegration {
         String name = (customName == null || customName.isBlank()) ? monster.getName() : customName.trim();
 
         int dexMod = 0;
-        Map<String, Integer> stats = monster.getStats();
+        Map<String, ?> stats = monster.getStats();
         if (stats != null && stats.containsKey("dexterity")) {
-            dexMod = (stats.get("dexterity") - 10) / 2;
+            Object dexObj = stats.get("dexterity");
+            if (dexObj instanceof Number) {
+                dexMod = (((Number) dexObj).intValue() - 10) / 2;
+            }
         }
 
         int maxHealth;
         BestiaryDTO.HitPoints hpData = monster.getHitPoints();
-        if (hpData != null) {
+        if (hpMode == HPMode.MANUAL) {
+            maxHealth = manualHp;
+        } else if (hpData != null) {
             if (hpMode == HPMode.AVERAGE) {
                 maxHealth = hpData.getAverage();
             } else {
@@ -66,10 +71,21 @@ public class BestiaryTrackerIntegration {
     public static boolean addMonsterToTracker(
             CharacterManager characterManager,
             String monsterName,
+            String customName,
             int count,
             HPMode hpMode,
             int initiativeRoll) {
-        return addMonsterToTracker(characterManager, monsterName, null, count, hpMode, initiativeRoll);
+        return addMonsterToTracker(characterManager, monsterName, customName, count, hpMode, 0, initiativeRoll);
+    }
+
+    public static boolean addMonsterToTracker(
+            CharacterManager characterManager,
+            String monsterName,
+            int count,
+            HPMode hpMode,
+            int manualHp) {
+        int initiativeRoll = rollMonsterInitiative(monsterName);
+        return addMonsterToTracker(characterManager, monsterName, null, count, hpMode, manualHp, initiativeRoll);
     }
 
     public static boolean addMonsterToTracker(
@@ -77,9 +93,8 @@ public class BestiaryTrackerIntegration {
             String monsterName,
             int count,
             HPMode hpMode) {
-
         int initiativeRoll = rollMonsterInitiative(monsterName);
-        return addMonsterToTracker(characterManager, monsterName, null, count, hpMode, initiativeRoll);
+        return addMonsterToTracker(characterManager, monsterName, null, count, hpMode, 0, initiativeRoll);
     }
 
     public static boolean addMonsterToTracker(
@@ -88,18 +103,20 @@ public class BestiaryTrackerIntegration {
             String customName,
             int count,
             HPMode hpMode) {
-
         int initiativeRoll = rollMonsterInitiative(monsterName);
-        return addMonsterToTracker(characterManager, monsterName, customName, count, hpMode, initiativeRoll);
+        return addMonsterToTracker(characterManager, monsterName, customName, count, hpMode, 0, initiativeRoll);
     }
 
     private static int rollMonsterInitiative(String monsterName) {
         Optional<BestiaryDTO.Monster> optionalMonster = BestiaryDatabase.findMonsterByName(monsterName);
         int dexMod = 0;
         if (optionalMonster.isPresent()) {
-            Map<String, Integer> stats = optionalMonster.get().getStats();
+            Map<String, ?> stats = optionalMonster.get().getStats();
             if (stats != null && stats.containsKey("dexterity")) {
-                dexMod = (stats.get("dexterity") - 10) / 2;
+                Object dexObj = stats.get("dexterity");
+                if (dexObj instanceof Number) {
+                    dexMod = (((Number) dexObj).intValue() - 10) / 2;
+                }
             }
         }
         return DICE.D20() + dexMod;

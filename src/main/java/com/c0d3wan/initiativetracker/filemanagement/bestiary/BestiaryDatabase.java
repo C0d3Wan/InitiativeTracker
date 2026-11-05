@@ -36,6 +36,7 @@ public class BestiaryDatabase {
     public static void initTable(){
         String createTableSql = "CREATE TABLE IF NOT EXISTS monsters (" +
                 "name TEXT PRIMARY KEY COLLATE NOCASE," +
+                "group_name TEXT," +
                 "type TEXT," +
                 "size TEXT," +
                 "alignment TEXT," +
@@ -89,41 +90,61 @@ public class BestiaryDatabase {
         if (monster == null || monster.getName() == null || monster.getName().isBlank()) return;
 
         String sql = "INSERT OR REPLACE INTO monsters (" +
-                "name, type, size, alignment, armor_class, hit_points, speed, stats, " +
+                "name, group_name, type, size, alignment, armor_class, hit_points, speed, stats, " +
                 "challenge_rating, experience_points, saving_throws, skills, " +
                 "damage_resistances, damage_vulnerabilities, damage_immunities, " +
                 "condition_immunities, senses, languages, traits, actions, legendary_actions, lair_actions, is_official" +
-                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, monster.getName().trim());
-            pstmt.setString(2, monster.getType());
-            pstmt.setString(3, monster.getSize());
-            pstmt.setString(4, monster.getAlignment());
-            pstmt.setInt(5, monster.getArmorClass());
-            pstmt.setString(6, GSON.toJson(monster.getHitPoints()));
-            pstmt.setString(7, GSON.toJson(monster.getSpeed()));
-            pstmt.setString(8, GSON.toJson(monster.getStats()));
-            pstmt.setString(9, monster.getChallengeRating());
-            pstmt.setInt(10, monster.getExperiencePoints());
-            pstmt.setString(11, GSON.toJson(monster.getSavingThrows()));
-            pstmt.setString(12, GSON.toJson(monster.getSkills()));
-            pstmt.setString(13, GSON.toJson(monster.getDamageResistances()));
-            pstmt.setString(14, GSON.toJson(monster.getDamageVulnerabilities()));
-            pstmt.setString(15, GSON.toJson(monster.getDamageImmunities()));
-            pstmt.setString(16, GSON.toJson(monster.getConditionImmunities()));
-            pstmt.setString(17, GSON.toJson(monster.getSenses()));
-            pstmt.setString(18, GSON.toJson(monster.getLanguages()));
-            pstmt.setString(19, GSON.toJson(monster.getTraits()));
-            pstmt.setString(20, GSON.toJson(monster.getActions()));
-            pstmt.setString(21, GSON.toJson(monster.getLegendaryActions()));
-            pstmt.setString(22, GSON.toJson(monster.getLairActions()));
-            pstmt.setInt(23, isOfficial);
+            pstmt.setString(2, monster.getGroupName());
+            pstmt.setString(3, monster.getType());
+            pstmt.setString(4, monster.getSize());
+            pstmt.setString(5, monster.getAlignment());
+            pstmt.setInt(6, monster.getArmorClass());
+            pstmt.setString(7, GSON.toJson(monster.getHitPoints()));
+            pstmt.setString(8, GSON.toJson(monster.getSpeed()));
+            pstmt.setString(9, GSON.toJson(monster.getStats()));
+            pstmt.setString(10, monster.getChallengeRating());
+            pstmt.setInt(11, monster.getExperiencePoints());
+            pstmt.setString(12, GSON.toJson(monster.getSavingThrows()));
+            pstmt.setString(13, GSON.toJson(monster.getSkills()));
+            pstmt.setString(14, GSON.toJson(monster.getDamageResistances()));
+            pstmt.setString(15, GSON.toJson(monster.getDamageVulnerabilities()));
+            pstmt.setString(16, GSON.toJson(monster.getDamageImmunities()));
+            pstmt.setString(17, GSON.toJson(monster.getConditionImmunities()));
+            pstmt.setString(18, GSON.toJson(monster.getSenses()));
+            pstmt.setString(19, GSON.toJson(monster.getLanguages()));
+            pstmt.setString(20, GSON.toJson(monster.getTraits()));
+            pstmt.setString(21, GSON.toJson(monster.getActions()));
+            pstmt.setString(22, GSON.toJson(monster.getLegendaryActions()));
+            pstmt.setString(23, GSON.toJson(monster.getLairActions()));
+            pstmt.setInt(24, isOfficial);
 
             pstmt.executeUpdate();
         } catch (SQLException e){
             System.err.println("Failed to save monster '" + monster.getName() + "': " + e.getMessage());
+        }
+    }
+
+    /**
+     * Deletes a custom homebrew monster from the database where is_official = 0.
+     * Official monsters (is_official = 1) cannot be deleted.
+     */
+    public static boolean deleteMonster(String name) {
+        if (name == null || name.isBlank()) return false;
+
+        String sql = "DELETE FROM monsters WHERE name = ? AND is_official = 0";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name.trim());
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.err.println("Failed to delete monster '" + name + "': " + e.getMessage());
+            return false;
         }
     }
 
@@ -146,6 +167,7 @@ public class BestiaryDatabase {
         }
         return monsters;
     }
+
     /**
      * Finds a specific monster by name.
      */
@@ -174,6 +196,7 @@ public class BestiaryDatabase {
         BestiaryDTO.Monster m = new BestiaryDTO.Monster();
 
         m.setName(rs.getString("name"));
+        m.setGroup(rs.getString("group_name"));
         m.setType(rs.getString("type"));
         m.setSize(rs.getString("size"));
         m.setAlignment(rs.getString("alignment"));
@@ -181,7 +204,6 @@ public class BestiaryDatabase {
         m.setChallengeRating(rs.getString("challenge_rating"));
         m.setExperiencePoints(rs.getInt("experience_points"));
 
-        // Deserialize JSON columns back into complex objects/lists using Gson
         m.setHitPoints(GSON.fromJson(rs.getString("hit_points"), BestiaryDTO.HitPoints.class));
         m.setSpeed(GSON.fromJson(rs.getString("speed"), MAP_STRING_INT_TYPE));
         m.setStats(GSON.fromJson(rs.getString("stats"), MAP_STRING_INT_TYPE));
@@ -202,5 +224,4 @@ public class BestiaryDatabase {
 
         return m;
     }
-
 }

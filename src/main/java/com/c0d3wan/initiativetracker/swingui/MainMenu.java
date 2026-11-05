@@ -6,6 +6,7 @@ import javax.swing.border.TitledBorder;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
+import com.c0d3wan.initiativetracker.swingui.bestiary.BestiaryMenu;
 import com.formdev.flatlaf.FlatLaf;
 import net.miginfocom.swing.MigLayout;
 
@@ -46,6 +47,7 @@ public class MainMenu extends JFrame {
      */
     public MainMenu(CharacterManager characterManager) {
         uiManager = new UIManager(this, characterManager, initiativeList);
+        uiManager.openBestiaryMenu();
         uiManager.shareDeathSaveItems(passButton, failButton, deathSaveLabel);
         setupMainMenu();
         setupMenuBar();

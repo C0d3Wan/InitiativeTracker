@@ -3,7 +3,8 @@
   "monsters": [
     {
       "name": "Goblin",
-      "type": "Humanoid",
+      "group_name": "Humanoids",
+      "type": "Humanoid (goblinoid)",
       "size": "Small",
       "alignment": "Neutral Evil",
       "armorClass": 15,
@@ -49,6 +50,7 @@
     },
     {
       "name": "Skeleton",
+      "group_name": "Undead",
       "type": "Undead",
       "size": "Medium",
       "alignment": "Lawful Evil",
@@ -96,7 +98,8 @@
     },
     {
       "name": "Orc",
-      "type": "Humanoid",
+      "group_name": "Humanoids",
+      "type": "Humanoid (orc)",
       "size": "Medium",
       "alignment": "Chaotic Evil",
       "armorClass": 13,
