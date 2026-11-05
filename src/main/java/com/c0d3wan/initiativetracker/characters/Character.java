@@ -16,9 +16,11 @@ public class Character {
     private final String characterName;
     private int baseInitiative;
     private int dexterity;
-    private final Map<String, Integer> deathSaves = new HashMap<>();;
+    private final Map<String, Integer> deathSaves = new HashMap<>();
     private final CharacterType characterType;
     private DeathStatus deathStatus;
+    private final Map<String, Object> conditions = new HashMap<>();
+
 
     /**
      * Constructs a new {@code Character} instance.
@@ -41,6 +43,8 @@ public class Character {
         baseInitiative = initiative;
         deathSaves.put("Pass", 0);
         deathSaves.put("Fail", 0);
+
+        clearConditions();
     }
 
     /**
@@ -68,6 +72,69 @@ public class Character {
         } catch(IllegalArgumentException | NullPointerException e){
             return CharacterType.UNKNOWN;
         }
+    }
+
+    /**
+     *
+     * @param newConditions a {@code ArrayList} of conditions to change
+     * @param add whether we are adding or removing conditions
+     */
+    public void ModifyConditions(ArrayList<String> newConditions, boolean add){
+        if (add) {
+            for (String condition : newConditions) {
+                addCondition(condition);
+            }
+        }else {
+            for (String condition : newConditions) {
+                removeCondition(condition);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param condition The condition to be added
+     */
+    public void addCondition(String condition){
+        if (Objects.equals(condition, "Exhaustion")) {
+            conditions.put(condition, ((int) conditions.get(condition)) + 1);
+        } else {
+            conditions.put(condition, true);
+        }
+    }
+
+    /**
+     *
+     * @param condition The condition to be removed
+     */
+    public void removeCondition(String condition){
+        if (Objects.equals(condition, "Exhaustion")) {
+            conditions.put(condition, ((int) conditions.get(condition)) - 1);
+        } else {
+            conditions.put(condition, false);
+        }
+    }
+
+    /**
+     *
+     */
+    public void clearConditions(){
+        conditions.put("Blinded", false);
+        conditions.put("Charmed", false);
+        conditions.put("Deafened", false);
+        conditions.put("Exhaustion", 0);
+        conditions.put("Frightened", false);
+        conditions.put("Grappled", false);
+        conditions.put("Incapacitated", false);
+        conditions.put("Invisible", false);
+        conditions.put("Paralyzed", false);
+        conditions.put("Petrified", false);
+        conditions.put("Poisoned", false);
+        conditions.put("Prone", false);
+        conditions.put("Restrained", false);
+        conditions.put("Stunned", false);
+        conditions.put("Unconscious", false);
+
     }
 
     /**
@@ -258,5 +325,5 @@ public class Character {
         return Collections.unmodifiableMap(deathSaves);
     }
 
-
+    public Map<String, Object> getConditions() {return conditions;}
 }
