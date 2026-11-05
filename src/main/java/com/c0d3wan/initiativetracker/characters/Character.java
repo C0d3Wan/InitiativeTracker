@@ -44,7 +44,7 @@ public class Character {
         deathSaves.put("Pass", 0);
         deathSaves.put("Fail", 0);
 
-        ClearConditions();
+        clearConditions();
     }
 
     /**
@@ -82,11 +82,11 @@ public class Character {
     public void ModifyConditions(ArrayList<String> newConditions, boolean add){
         if (add) {
             for (String condition : newConditions) {
-                AddCondition(condition);
+                addCondition(condition);
             }
         }else {
             for (String condition : newConditions) {
-                RemoveCondition(condition);
+                removeCondition(condition);
             }
         }
     }
@@ -95,8 +95,8 @@ public class Character {
      *
      * @param condition The condition to be added
      */
-    public void AddCondition(String condition){
-        if (Objects.equals(condition, "Exhaution")) {
+    public void addCondition(String condition){
+        if (Objects.equals(condition, "Exhaustion")) {
             conditions.put(condition, ((int) conditions.get(condition)) + 1);
         } else {
             conditions.put(condition, true);
@@ -107,8 +107,8 @@ public class Character {
      *
      * @param condition The condition to be removed
      */
-    public void RemoveCondition(String condition){
-        if (Objects.equals(condition, "Exhaution")) {
+    public void removeCondition(String condition){
+        if (Objects.equals(condition, "Exhaustion")) {
             conditions.put(condition, ((int) conditions.get(condition)) - 1);
         } else {
             conditions.put(condition, false);
@@ -118,7 +118,7 @@ public class Character {
     /**
      *
      */
-    public void ClearConditions(){
+    public void clearConditions(){
         conditions.put("Blinded", false);
         conditions.put("Charmed", false);
         conditions.put("Deafened", false);
