@@ -6,14 +6,16 @@ import com.google.gson.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Handles application startup synchronisation of bundled official D&D 5e monsters
+ * from resource JSON files into the SQLite bestiary database without impacting user homebrew records.
+ */
 public class BestiarySyncManager {
-    // Use BestiaryDatabase's GSON instance which has LOWER_CASE_WITH_UNDERSCORES enabled
     private static final Gson GSON = BestiaryDatabase.GSON;
     private static final String OFFICIAL_DATA_PATH = "/data/official_monsters.json";
 
     /**
-     * Runs on application startup to sync official monsters into the database
-     * without touching user-created homebrew records.
+     * Executes on application startup to parse bundled official monster records and sync them into the database.
      */
     public static void syncOfficialMonsters() {
         System.out.println("[INFO] Starting official bestiary synchronization...");

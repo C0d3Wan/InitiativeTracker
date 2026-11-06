@@ -118,7 +118,7 @@ public class UIManager {
     }
 
     /**
-     * Opens the modal dialog to browse the bestiary database and add monsters to tracker.
+     * Opens the modal dialogue to browse the bestiary database and add monsters to tracker.
      */
     public void openBestiaryMenu() {
         BestiaryMenu bestiaryMenu = new BestiaryMenu(parentFrame, characterManager);

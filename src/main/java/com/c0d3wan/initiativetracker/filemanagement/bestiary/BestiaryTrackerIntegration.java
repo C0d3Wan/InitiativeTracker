@@ -9,9 +9,25 @@ import com.c0d3wan.initiativetracker.Dice;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Bridges the bestiary database records with the initiative tracker manager,
+ * allowing monsters to be instantiated as non-player characters or hordes with configured HP modes and initiative rolls.
+ */
 public class BestiaryTrackerIntegration {
     private static final Dice DICE = new Dice();
 
+    /**
+     * Adds a monster from the bestiary into the character manager tracker with full customisation options.
+     *
+     * @param characterManager the active character manager instance
+     * @param monsterName      the name of the monster to pull from the bestiary
+     * @param customName       optional custom display name for the tracker entry
+     * @param count            the quantity of creatures to add (creates a Horde if > 1)
+     * @param hpMode           the health calculation mode (Average, Roll, or Manual)
+     * @param manualHp         manual health value if HPMode is MANUAL
+     * @param initiativeRoll   the pre-determined or manual initiative score
+     * @return true if successfully added, false if the monster was not found in the database
+     */
     public static boolean addMonsterToTracker(
             CharacterManager characterManager,
             String monsterName,
@@ -68,6 +84,9 @@ public class BestiaryTrackerIntegration {
         return true;
     }
 
+    /**
+     * Adds a monster to the tracker with automatic initiative rolling and manual health support.
+     */
     public static boolean addMonsterToTracker(
             CharacterManager characterManager,
             String monsterName,
@@ -78,6 +97,9 @@ public class BestiaryTrackerIntegration {
         return addMonsterToTracker(characterManager, monsterName, customName, count, hpMode, 0, initiativeRoll);
     }
 
+    /**
+     * Adds a monster to the tracker with a manual health override and automatic initiative rolling.
+     */
     public static boolean addMonsterToTracker(
             CharacterManager characterManager,
             String monsterName,
@@ -88,6 +110,9 @@ public class BestiaryTrackerIntegration {
         return addMonsterToTracker(characterManager, monsterName, null, count, hpMode, manualHp, initiativeRoll);
     }
 
+    /**
+     * Adds a monster to the tracker with standard default health mode and automatic initiative.
+     */
     public static boolean addMonsterToTracker(
             CharacterManager characterManager,
             String monsterName,
@@ -97,6 +122,9 @@ public class BestiaryTrackerIntegration {
         return addMonsterToTracker(characterManager, monsterName, null, count, hpMode, 0, initiativeRoll);
     }
 
+    /**
+     * Adds a monster to the tracker specifying custom naming and count under standard initiative rules.
+     */
     public static boolean addMonsterToTracker(
             CharacterManager characterManager,
             String monsterName,
@@ -107,6 +135,12 @@ public class BestiaryTrackerIntegration {
         return addMonsterToTracker(characterManager, monsterName, customName, count, hpMode, 0, initiativeRoll);
     }
 
+    /**
+     * Rolls an initiative score for a specific monster based on its dexterity modifier.
+     *
+     * @param monsterName the name of the monster in the database
+     * @return the total initiative roll (d20 + Dex modifier)
+     */
     private static int rollMonsterInitiative(String monsterName) {
         Optional<BestiaryDTO.Monster> optionalMonster = BestiaryDatabase.findMonsterByName(monsterName);
         int dexMod = 0;

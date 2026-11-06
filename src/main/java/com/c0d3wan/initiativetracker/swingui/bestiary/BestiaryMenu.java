@@ -18,7 +18,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Modal {@link JDialog} interface for browsing, viewing, and adding monsters from the bestiary database.
+ * Modal {@link JDialog} interface for browsing, searching, viewing details,
+ * managing homebrew, and adding monsters from the bestiary database into the initiative tracker.
  */
 public class BestiaryMenu extends JDialog {
     private final JPanel pane = new JPanel();
@@ -60,6 +61,12 @@ public class BestiaryMenu extends JDialog {
     private List<BestiaryDTO.Monster> allMonsters;
     private String selectedMonsterName = null;
 
+    /**
+     * Constructs a new BestiaryMenu dialogue.
+     *
+     * @param parent           the parent frame window
+     * @param characterManager the active character manager to receive added combatants
+     */
     public BestiaryMenu(Frame parent, CharacterManager characterManager) {
         super(parent, "Bestiary Database", true);
         this.characterManager = characterManager;
@@ -141,6 +148,9 @@ public class BestiaryMenu extends JDialog {
         addToTrackerButton.addActionListener(e -> addCurrentMonsterToTracker());
     }
 
+    /**
+     * Initialises and lays out all UI components within the dialogue pane.
+     */
     private void setupMenu() {
         pane.setLayout(new MigLayout("insets 6 6 6 6, fill", "[320px::320px, fill][grow, fill]", "[][grow]"));
         pane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
@@ -259,11 +269,17 @@ public class BestiaryMenu extends JDialog {
         pane.add(rightPanel, "cell 1 0 1 2, grow");
     }
 
+    /**
+     * Loads all monsters from the database and updates the tree view.
+     */
     private void loadMonsters() {
         allMonsters = BestiaryDatabase.loadAllMonsters();
         filterMonsters();
     }
 
+    /**
+     * Filters and populates the tree view based on the current search input.
+     */
     private void filterMonsters() {
         String filter = searchField.getText().trim().toLowerCase();
         rootNode.removeAllChildren();
@@ -292,6 +308,11 @@ public class BestiaryMenu extends JDialog {
         }
     }
 
+    /**
+     * Displays the complete stat block details for the selected monster.
+     *
+     * @param selectedName the name of the monster to display
+     */
     private void displaySelectedMonsterDetails(String selectedName) {
         successLabel.setVisible(false);
         BestiaryDatabase.findMonsterByName(selectedName).ifPresent(m -> {
@@ -397,6 +418,9 @@ public class BestiaryMenu extends JDialog {
         });
     }
 
+    /**
+     * Clears all fields in the monster detail view.
+     */
     private void clearMonsterDetails() {
         nameLabel.setText("Select a monster");
         typeSizeAlignmentLabel.setText("");
@@ -410,6 +434,9 @@ public class BestiaryMenu extends JDialog {
         addToTrackerButton.setEnabled(false);
     }
 
+    /**
+     * Adds the currently selected monster to the initiative tracker based on configured parameters.
+     */
     private void addCurrentMonsterToTracker() {
         if (selectedMonsterName == null || selectedMonsterName.isBlank()) return;
 

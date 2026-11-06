@@ -13,8 +13,17 @@ import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Manages SQLite database operations for the D&D 5e bestiary system.
+ * Handles table initialisation, upserting official and homebrew monster records,
+ * querying database rows, and mapping SQL result sets back into data transfer objects.
+ */
 public class BestiaryDatabase {
-    // Made public so your JSON loader/sync manager can share this exact GSON configuration
+
+    /**
+     * Shared Gson instance configured with lower-case with underscores field naming policy
+     * to seamlessly map JSON snake_case fields to Java DTO properties.
+     */
     public static final Gson GSON = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .create();
@@ -35,6 +44,9 @@ public class BestiaryDatabase {
         initTable();
     }
 
+    /**
+     * Initialises the SQLite monsters table and applies schema updates if columns are missing.
+     */
     public static void initTable(){
         String createTableSql = "CREATE TABLE IF NOT EXISTS monsters (" +
                 "name TEXT PRIMARY KEY COLLATE NOCASE," +
@@ -77,6 +89,12 @@ public class BestiaryDatabase {
         }
     }
 
+    /**
+     * Safely checks and adds a column to the monsters table if it does not already exist.
+     *
+     * @param conn       the active SQLite database connection
+     * @param columnName the name of the column to add
+     */
     private static void addColumnIfNotExists(Connection conn, String columnName) {
         try (Statement stmt = conn.createStatement()) {
             stmt.execute("ALTER TABLE monsters ADD COLUMN " + columnName + " TEXT;");
@@ -85,14 +103,30 @@ public class BestiaryDatabase {
         }
     }
 
+    /**
+     * Saves a user-created homebrew monster record into the database with official flag set to 0.
+     *
+     * @param monster the monster DTO to save
+     */
     public static void saveUserMonster(BestiaryDTO.Monster monster) {
         saveMonster(monster, 0);
     }
 
+    /**
+     * Saves an official SRD monster record into the database with official flag set to 1.
+     *
+     * @param monster the monster DTO to save
+     */
     public static void saveOfficialMonster(BestiaryDTO.Monster monster) {
         saveMonster(monster, 1);
     }
 
+    /**
+     * Inserts or updates a monster record in the SQLite database using an upsert operation.
+     *
+     * @param monster    the monster data transfer object
+     * @param isOfficial integer flag (1 for official, 0 for user homebrew)
+     */
     private static void saveMonster(BestiaryDTO.Monster monster, int isOfficial) {
         if (monster == null || monster.getName() == null || monster.getName().isBlank()) return;
 
@@ -146,6 +180,12 @@ public class BestiaryDatabase {
         }
     }
 
+    /**
+     * Deletes a user-created homebrew monster from the database by name. Official monsters cannot be deleted.
+     *
+     * @param name the name of the monster to delete
+     * @return true if a row was successfully deleted, false otherwise
+     */
     public static boolean deleteMonster(String name) {
         if (name == null || name.isBlank()) return false;
 
@@ -161,6 +201,11 @@ public class BestiaryDatabase {
         }
     }
 
+    /**
+     * Loads all monster records stored in the database.
+     *
+     * @return a list of all monster DTOs
+     */
     public static List<BestiaryDTO.Monster> loadAllMonsters() {
         List<BestiaryDTO.Monster> monsters = new ArrayList<>();
         String sql = "SELECT * FROM monsters";
@@ -178,6 +223,12 @@ public class BestiaryDatabase {
         return monsters;
     }
 
+    /**
+     * Queries the database for a specific monster by its name.
+     *
+     * @param name the name of the monster to find
+     * @return an Optional containing the monster DTO if found, or Optional.empty() otherwise
+     */
     public static Optional<BestiaryDTO.Monster> findMonsterByName(String name) {
         if (name == null || name.isBlank()) return Optional.empty();
 
@@ -196,6 +247,13 @@ public class BestiaryDatabase {
         return Optional.empty();
     }
 
+    /**
+     * Maps a current SQL ResultSet row into a fully populated BestiaryDTO.Monster object.
+     *
+     * @param rs the active ResultSet cursor
+     * @return the populated Monster instance
+     * @throws SQLException if a database access error occurs
+     */
     private static BestiaryDTO.Monster mapResultSetToMonster(ResultSet rs) throws SQLException {
         BestiaryDTO.Monster m = new BestiaryDTO.Monster();
 

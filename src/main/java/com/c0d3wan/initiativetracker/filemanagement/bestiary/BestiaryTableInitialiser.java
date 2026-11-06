@@ -7,7 +7,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
+/**
+ * Utility executable class used to standalone initialise or re-create the bestiary database table
+ * with all necessary columns and indices.
+ */
 public class BestiaryTableInitialiser {
+
+    /**
+     * Main execution entry point for table initialisation.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         System.out.println("=== Initializing Bestiary Database Table ===");
 

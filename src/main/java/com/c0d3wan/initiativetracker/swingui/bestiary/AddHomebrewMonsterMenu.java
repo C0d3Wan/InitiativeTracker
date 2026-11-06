@@ -5,13 +5,16 @@ import com.c0d3wan.initiativetracker.filemanagement.bestiary.data.BestiaryDTO;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Modal {@link JDialog} interface allowing users to create, configure,
+ * and save custom homebrew monster records into the bestiary database.
+ */
 public class AddHomebrewMonsterMenu extends JDialog {
     private final JPanel pane = new JPanel();
 
@@ -45,6 +48,11 @@ public class AddHomebrewMonsterMenu extends JDialog {
     private final JButton saveButton = new JButton("Save Homebrew");
     private boolean confirmed = false;
 
+    /**
+     * Constructs a new AddHomebrewMonsterMenu dialogue.
+     *
+     * @param parent the parent frame window
+     */
     public AddHomebrewMonsterMenu(Frame parent) {
         super(parent, "Create Homebrew Monster", true);
         setupMenu();
@@ -59,6 +67,9 @@ public class AddHomebrewMonsterMenu extends JDialog {
         saveButton.addActionListener(e -> saveMonster());
     }
 
+    /**
+     * Lays out all form inputs, ability score spinners, and action areas.
+     */
     private void setupMenu() {
         pane.setLayout(new MigLayout("insets 4, fill", "[grow]", "[grow][]"));
 
@@ -149,6 +160,9 @@ public class AddHomebrewMonsterMenu extends JDialog {
         setContentPane(pane);
     }
 
+    /**
+     * Validates input fields, packages the data into a Monster DTO, and saves it to the database as user homebrew.
+     */
     private void saveMonster() {
         String name = nameField.getText().trim();
         if (name.isBlank()) {
@@ -229,6 +243,12 @@ public class AddHomebrewMonsterMenu extends JDialog {
         dispose();
     }
 
+    /**
+     * Parses raw text input lines into structured Feature DTO objects.
+     *
+     * @param text raw multi-line text input
+     * @return a list of parsed Feature objects
+     */
     private List<BestiaryDTO.Feature> parseFeatures(String text) {
         List<BestiaryDTO.Feature> features = new ArrayList<>();
         if (text == null || text.isBlank()) return features;
@@ -250,6 +270,11 @@ public class AddHomebrewMonsterMenu extends JDialog {
         return features;
     }
 
+    /**
+     * Checks whether the user successfully saved a new homebrew monster.
+     *
+     * @return true if confirmed and saved, false otherwise
+     */
     public boolean isConfirmed() {
         return confirmed;
     }

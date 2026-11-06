@@ -1,14 +1,16 @@
 package com.c0d3wan.initiativetracker.filemanagement.bestiary.data;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Data Transfer Object container representing the overall structure of the bestiary JSON resource file.
+ */
 public class BestiaryDTO {
     private String version;
     private List<Monster> monsters;
 
+    /** Default constructor. */
     public BestiaryDTO() {}
 
     public String getVersion() { return version; }
@@ -18,7 +20,7 @@ public class BestiaryDTO {
     public void setMonsters(List<Monster> monsters) { this.monsters = monsters; }
 
     /**
-     * Represents an individual D&D 5e monster record.
+     * Represents an individual D&D 5e monster record, including its stats, resistances, and actions.
      */
     public static class Monster {
         private String name;
@@ -51,8 +53,8 @@ public class BestiaryDTO {
         private ActionGroup legendary_actions;
         private ActionGroup lair_actions;
 
+        /** Default constructor. */
         public Monster() {}
-
 
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
@@ -127,10 +129,14 @@ public class BestiaryDTO {
         public void setLairActions(ActionGroup lair_actions) { this.lair_actions = lair_actions; }
     }
 
+    /**
+     * Represents a monster's hit points, including average value and dice formula.
+     */
     public static class HitPoints {
         private int average;
         private String formula;
 
+        /** Default constructor. */
         public HitPoints() {}
 
         public int getAverage() { return average; }
@@ -140,10 +146,14 @@ public class BestiaryDTO {
         public void setFormula(String formula) { this.formula = formula; }
     }
 
+    /**
+     * Represents a specific feature, trait, or action belonging to a monster.
+     */
     public static class Feature {
         private String name;
         private String description;
 
+        /** Default constructor. */
         public Feature() {}
 
         public String getName() { return name; }
@@ -153,10 +163,14 @@ public class BestiaryDTO {
         public void setDescription(String description) { this.description = description; }
     }
 
+    /**
+     * Represents a grouped section of actions (such as Legendary or Lair actions) with a description.
+     */
     public static class ActionGroup {
         private String description;
         private List<Feature> actions;
 
+        /** Default constructor. */
         public ActionGroup() {}
 
         public String getDescription() { return description; }
