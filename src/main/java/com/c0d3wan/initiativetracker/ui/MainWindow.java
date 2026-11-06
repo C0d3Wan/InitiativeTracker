@@ -6,6 +6,7 @@ import javax.swing.border.TitledBorder;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.ui.components.InitiativeListPanel;
+import com.c0d3wan.initiativetracker.ui.components.MainMenuBar;
 import com.formdev.flatlaf.FlatLaf;
 import net.miginfocom.swing.MigLayout;
 
@@ -28,14 +29,7 @@ public class MainWindow extends JFrame {
     private final JLabel deathSaveLabel = new JLabel("Death Saves:");
     private final JButton editNPCHealthButton = new JButton("Edit NPC Health");
 
-    private final JMenuBar menuBar = new JMenuBar();
-    private final JMenuItem openItem = new JMenuItem("Open");
-    private final JMenuItem saveAsItem = new JMenuItem("Save As");
-    private final JMenuItem saveItem = new JMenuItem("Save");
-    private final JMenuItem exitItem = new JMenuItem("Exit");
-
-    private final JMenuItem lightMode = new JMenuItem("Light");
-    private final JMenuItem darkMode = new JMenuItem("Dark");
+    private final JMenuBar menuBar;
 
     private final UIController uiController;
 
@@ -47,10 +41,10 @@ public class MainWindow extends JFrame {
     public MainWindow(CharacterManager characterManager) {
         initiativeListPanel = new InitiativeListPanel();
         uiController = new UIController(this, characterManager, initiativeListPanel);
+        menuBar = new MainMenuBar(uiController);
         //uiController.openBestiaryMenu();
         uiController.shareDeathSaveItems(passButton, failButton, deathSaveLabel);
         setupMainMenu();
-        setupMenuBar();
 
         setJMenuBar(menuBar);
         setContentPane(mainMenuPane);
@@ -68,20 +62,6 @@ public class MainWindow extends JFrame {
         passButton.addActionListener(e -> uiController.passDeathSave(true));
         failButton.addActionListener(e -> uiController.passDeathSave(false));
 
-        lightMode.addActionListener(e -> {
-            UIController.setDarkMode(false);
-            lightMode.setEnabled(false);
-            darkMode.setEnabled(true);
-        });
-        darkMode.addActionListener(e -> {
-            UIController.setDarkMode(true);
-            lightMode.setEnabled(true);
-            darkMode.setEnabled(false);
-        });
-        openItem.addActionListener(e -> uiController.loadList());
-        saveItem.addActionListener(e -> uiController.saveList());
-        saveAsItem.addActionListener(e -> uiController.saveListAs());
-        exitItem.addActionListener(e -> confirmExit());
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -138,29 +118,9 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Sets up the menu bar for the main menu
-     */
-    private void setupMenuBar() {
-        JMenu fileMenu = new JMenu("File");
-        JMenu viewMenu = new JMenu("View");
-        JMenu colourMenu = new JMenu("Colour Modes");
-
-        fileMenu.add(openItem);
-        fileMenu.add(saveItem);
-        fileMenu.add(saveAsItem);
-        fileMenu.add(exitItem);
-        menuBar.add(fileMenu);
-
-        colourMenu.add(darkMode);
-        colourMenu.add(lightMode);
-        viewMenu.add(colourMenu);
-        menuBar.add(viewMenu);
-    }
-
-    /**
      * prompts the user to ensure they want to exit the application
      */
-    private void confirmExit() {
+    public void confirmExit() {
         int choice = JOptionPane.showConfirmDialog(
                 this,
                 "Are you sure you want to exit the Tracker?",
