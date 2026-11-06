@@ -7,7 +7,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class BestiarySyncManager {
-    private static final Gson GSON = new GsonBuilder().create();
+    // Use BestiaryDatabase's GSON instance which has LOWER_CASE_WITH_UNDERSCORES enabled
+    private static final Gson GSON = BestiaryDatabase.GSON;
     private static final String OFFICIAL_DATA_PATH = "/data/official_monsters.json";
 
     /**

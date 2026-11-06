@@ -3,6 +3,7 @@ package com.c0d3wan.initiativetracker.filemanagement.bestiary;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.data.BestiaryDTO;
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -13,7 +14,11 @@ import java.sql.*;
 import java.util.*;
 
 public class BestiaryDatabase {
-    private static final Gson GSON= new GsonBuilder().create();
+    // Made public so your JSON loader/sync manager can share this exact GSON configuration
+    public static final Gson GSON = new GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .create();
+
     private static final String DB_NAME = "initiativetracker.db";
     private static final String DB_URL;
 
@@ -218,7 +223,7 @@ public class BestiaryDatabase {
 
         m.setTraits(GSON.fromJson(rs.getString("traits"), LIST_FEATURE_TYPE));
         m.setActions(GSON.fromJson(rs.getString("actions"), LIST_FEATURE_TYPE));
-        m.setReactions(GSON.fromJson(rs.getString("reactions"), LIST_FEATURE_TYPE)); // Map reactions JSON
+        m.setReactions(GSON.fromJson(rs.getString("reactions"), LIST_FEATURE_TYPE));
         m.setLegendaryActions(GSON.fromJson(rs.getString("legendary_actions"), BestiaryDTO.ActionGroup.class));
         m.setLairActions(GSON.fromJson(rs.getString("lair_actions"), BestiaryDTO.ActionGroup.class));
 

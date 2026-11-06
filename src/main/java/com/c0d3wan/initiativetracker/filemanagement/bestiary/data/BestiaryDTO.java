@@ -1,5 +1,7 @@
 package com.c0d3wan.initiativetracker.filemanagement.bestiary.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 import java.util.Map;
 

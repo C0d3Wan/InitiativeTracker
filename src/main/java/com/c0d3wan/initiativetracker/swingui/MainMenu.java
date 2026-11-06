@@ -47,7 +47,7 @@ public class MainMenu extends JFrame {
      */
     public MainMenu(CharacterManager characterManager) {
         uiManager = new UIManager(this, characterManager, initiativeList);
-        //uiManager.openBestiaryMenu();
+        uiManager.openBestiaryMenu();
         uiManager.shareDeathSaveItems(passButton, failButton, deathSaveLabel);
         setupMainMenu();
         setupMenuBar();
