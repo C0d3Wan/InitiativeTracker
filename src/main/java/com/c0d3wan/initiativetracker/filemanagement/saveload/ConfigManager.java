@@ -2,7 +2,7 @@ package com.c0d3wan.initiativetracker.filemanagement.saveload;
 
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.data.ConfigDTO;
-import com.c0d3wan.initiativetracker.swingui.UIController;
+import com.c0d3wan.initiativetracker.ui.UIController;
 import com.google.gson.*;
 
 import java.io.File;
