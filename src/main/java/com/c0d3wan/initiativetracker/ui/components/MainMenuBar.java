@@ -1,12 +1,14 @@
 package com.c0d3wan.initiativetracker.ui.components;
 
+import com.c0d3wan.initiativetracker.ui.MainWindow;
 import com.c0d3wan.initiativetracker.ui.UIController;
+import com.formdev.flatlaf.FlatLaf;
 
 import javax.swing.*;
 
 public class MainMenuBar extends JMenuBar {
     private final UIController uiController;
-    private final JFrame parentFrame;
+    private final MainWindow parentFrame;
 
     private final JMenuItem openItem;
     private final JMenuItem saveAsItem;
@@ -16,7 +18,7 @@ public class MainMenuBar extends JMenuBar {
     private final JMenuItem lightMode;
     private final JMenuItem darkMode;
 
-    public MainMenuBar(JFrame parent, UIController manager) {
+    public MainMenuBar(MainWindow parent, UIController manager) {
         uiController = manager;
         parentFrame = parent;
 
@@ -29,9 +31,16 @@ public class MainMenuBar extends JMenuBar {
         darkMode = new JMenuItem("Dark");
 
         setUpMenuBar();
+        addActionListeners();
     }
 
     private void setUpMenuBar() {
+        if (FlatLaf.isLafDark()) {
+            darkMode.setEnabled(false);
+        } else {
+            lightMode.setEnabled(false);
+        }
+
         JMenu fileMenu = new JMenu("File");
         JMenu viewMenu = new JMenu("View");
         JMenu themeMenu = new JMenu("Themes");
@@ -62,6 +71,6 @@ public class MainMenuBar extends JMenuBar {
         openItem.addActionListener(e -> uiController.loadList());
         saveItem.addActionListener(e -> uiController.saveList());
         saveAsItem.addActionListener(e -> uiController.saveListAs());
-        exitItem.addActionListener(e -> confirmExit());
+        exitItem.addActionListener(e -> parentFrame.confirmExit());
     }
 }

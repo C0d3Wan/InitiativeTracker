@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class UIController {
     private final CharacterManager characterManager;
-    private final JFrame parentFrame;
+    private final MainWindow parentFrame;
     private final Map<String, Character> characterMap = new HashMap<>();
     private final Map<String, NonePlayerCharacter> npcMap = new HashMap<>();
     private final InitiativeListPanel initiativeListPanel;
@@ -43,7 +43,7 @@ public class UIController {
      * @param characterManager The {@link CharacterManager} providing domain logic.
      * @param initiativeListPanel   The {@link JList} visual component displaying initiative order.
      */
-    public UIController(JFrame parentFrame, CharacterManager characterManager, InitiativeListPanel initiativeListPanel) {
+    public UIController(MainWindow parentFrame, CharacterManager characterManager, InitiativeListPanel initiativeListPanel) {
         this.characterManager = characterManager;
         this.parentFrame = parentFrame;
         this.initiativeListPanel = initiativeListPanel;

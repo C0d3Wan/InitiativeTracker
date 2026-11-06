@@ -41,7 +41,7 @@ public class MainWindow extends JFrame {
     public MainWindow(CharacterManager characterManager) {
         initiativeListPanel = new InitiativeListPanel();
         uiController = new UIController(this, characterManager, initiativeListPanel);
-        menuBar = new MainMenuBar(uiController);
+        menuBar = new MainMenuBar(this, uiController);
         //uiController.openBestiaryMenu();
         uiController.shareDeathSaveItems(passButton, failButton, deathSaveLabel);
         setupMainMenu();
@@ -76,14 +76,8 @@ public class MainWindow extends JFrame {
     private void setupMainMenu() {
         Dimension windowSize = new Dimension(550, 300);
         mainMenuPane.setLayout(new MigLayout("insets 2 0 2 0, fill", "[center][center][center][center]", "[center][center][center][center][center]"));
-        mainMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        mainMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);
-
-        if (FlatLaf.isLafDark()) {
-            darkMode.setEnabled(false);
-        } else {
-            lightMode.setEnabled(false);
-        }
 
         addCharacterButton.setFocusPainted(false);
         editCharacterButton.setFocusPainted(false);
