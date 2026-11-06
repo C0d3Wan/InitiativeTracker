@@ -34,13 +34,13 @@ public class BestiarySyncManager {
                     return;
                 }
 
-                int count = 0;
+                int syncedCount = 0;
                 for (BestiaryDTO.Monster monster : dto.getMonsters()) {
                     BestiaryDatabase.saveOfficialMonster(monster);
-                    count++;
+                    syncedCount++;
                 }
 
-                System.out.println("[SUCCESS] Successfully synced " + count + " official monsters into the database.");
+                System.out.println("[SUCCESS] Successfully synced " + syncedCount + " official monsters into the database.");
             }
 
         } catch (Exception e) {

@@ -62,7 +62,7 @@ public class BestiaryMenu extends JDialog {
     private String selectedMonsterName = null;
 
     /**
-     * Constructs a new BestiaryMenu dialogue.
+     * Constructs a new BestiaryMenu dialog.
      *
      * @param parent           the parent frame window
      * @param characterManager the active character manager to receive added combatants
@@ -149,7 +149,7 @@ public class BestiaryMenu extends JDialog {
     }
 
     /**
-     * Initialises and lays out all UI components within the dialogue pane.
+     * Initializes and lays out all UI components within the dialog pane.
      */
     private void setupMenu() {
         pane.setLayout(new MigLayout("insets 6 6 6 6, fill", "[320px::320px, fill][grow, fill]", "[][grow]"));

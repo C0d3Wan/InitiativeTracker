@@ -49,7 +49,7 @@ public class AddHomebrewMonsterMenu extends JDialog {
     private boolean confirmed = false;
 
     /**
-     * Constructs a new AddHomebrewMonsterMenu dialogue.
+     * Constructs a new AddHomebrewMonsterMenu dialog.
      *
      * @param parent the parent frame window
      */
@@ -172,7 +172,7 @@ public class AddHomebrewMonsterMenu extends JDialog {
 
         BestiaryDTO.Monster monster = new BestiaryDTO.Monster();
         monster.setName(name);
-        monster.setGroup(groupField.getText().trim().isBlank() ? "Homebrew" : groupField.getText().trim());
+        monster.setGroupName(groupField.getText().trim().isBlank() ? "Homebrew" : groupField.getText().trim());
         monster.setType(typeField.getText().trim());
         monster.setSize((String) sizeCombo.getSelectedItem());
         monster.setAlignment(alignmentField.getText().trim());

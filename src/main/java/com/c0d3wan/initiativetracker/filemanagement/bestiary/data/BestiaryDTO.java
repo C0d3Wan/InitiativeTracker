@@ -24,7 +24,7 @@ public class BestiaryDTO {
      */
     public static class Monster {
         private String name;
-        private String group_name;
+        private String groupName;
         private String type;
         private String size;
         private String alignment;
@@ -50,8 +50,8 @@ public class BestiaryDTO {
         private List<Feature> traits;
         private List<Feature> actions;
         private List<Feature> reactions;
-        private ActionGroup legendary_actions;
-        private ActionGroup lair_actions;
+        private ActionGroup legendaryActions;
+        private ActionGroup lairActions;
 
         /** Default constructor. */
         public Monster() {}
@@ -59,8 +59,9 @@ public class BestiaryDTO {
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
 
-        public String getGroupName() { return group_name; }
-        public void setGroup(String group) { this.group_name = group; }
+        public String getGroupName() { return groupName; }
+        public void setGroupName(String groupName) { this.groupName = groupName; }
+        public void setGroup(String group) { this.groupName = group; }
 
         public String getType() { return type; }
         public void setType(String type) { this.type = type; }
@@ -122,11 +123,11 @@ public class BestiaryDTO {
         public List<Feature> getReactions() { return reactions; }
         public void setReactions(List<Feature> reactions) { this.reactions = reactions; }
 
-        public ActionGroup getLegendaryActions() { return legendary_actions; }
-        public void setLegendaryActions(ActionGroup legendary_actions) { this.legendary_actions = legendary_actions; }
+        public ActionGroup getLegendaryActions() { return legendaryActions; }
+        public void setLegendaryActions(ActionGroup legendaryActions) { this.legendaryActions = legendaryActions; }
 
-        public ActionGroup getLairActions() { return lair_actions; }
-        public void setLairActions(ActionGroup lair_actions) { this.lair_actions = lair_actions; }
+        public ActionGroup getLairActions() { return lairActions; }
+        public void setLairActions(ActionGroup lairActions) { this.lairActions = lairActions; }
     }
 
     /**
