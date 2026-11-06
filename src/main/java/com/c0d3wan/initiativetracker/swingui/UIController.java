@@ -7,6 +7,10 @@ import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.data.CharacterType;
 import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
 import com.c0d3wan.initiativetracker.swingui.bestiary.BestiaryMenu;
+import com.c0d3wan.initiativetracker.swingui.dialogs.AddCharacterDialog;
+import com.c0d3wan.initiativetracker.swingui.dialogs.EditNPCDialog;
+import com.c0d3wan.initiativetracker.swingui.dialogs.EditPlayerDialog;
+import com.c0d3wan.initiativetracker.swingui.dialogs.RemoveCharacterDialog;
 import com.c0d3wan.initiativetracker.swingui.renderers.CharacterCellRenderer;
 import com.formdev.flatlaf.*;
 
@@ -65,11 +69,11 @@ public class UIController {
      */
     public void openAddCharacterMenu() {
         updateCharacterMap();
-        AddCharacterMenu addCharacterMenu = new AddCharacterMenu(parentFrame, characterMap);
-        addCharacterMenu.setVisible(true);
+        AddCharacterDialog addCharacterDialog = new AddCharacterDialog(parentFrame, characterMap);
+        addCharacterDialog.setVisible(true);
 
-        if (addCharacterMenu.isConfirmed()) {
-            List<Character> newCharacters = addCharacterMenu.getNewCharacter();
+        if (addCharacterDialog.isConfirmed()) {
+            List<Character> newCharacters = addCharacterDialog.getNewCharacter();
             for (Character character: newCharacters) {
                 characterManager.addCharacter(character);
             }
@@ -86,8 +90,8 @@ public class UIController {
     public void openEditCharacterMenu() {
         updateCharacterMap();
 
-        EditPlayerMenu editPlayerMenu = new EditPlayerMenu(parentFrame, characterMap);
-        editPlayerMenu.setVisible(true);
+        EditPlayerDialog editPlayerDialog = new EditPlayerDialog(parentFrame, characterMap);
+        editPlayerDialog.setVisible(true);
 
         characterManager.updateCharacters();
         updateInitiativeList();
@@ -99,8 +103,8 @@ public class UIController {
     public void openEditNPCHealthMenu() {
         updateCharacterMap();
 
-        EditNPCHealth editNPCHealthMenu = new EditNPCHealth(parentFrame, npcMap);
-        editNPCHealthMenu.setVisible(true);
+        EditNPCDialog editNPCDialog = new EditNPCDialog(parentFrame, npcMap);
+        editNPCDialog.setVisible(true);
 
         characterManager.updateCharacters();
         updateInitiativeList();
@@ -111,8 +115,8 @@ public class UIController {
      */
     public void openRemoveCharacterMenu() {
         updateCharacterMap();
-        RemoveCharacterMenu removeCharacterMenu = new RemoveCharacterMenu(parentFrame, characterManager, characterMap, npcMap);
-        removeCharacterMenu.setVisible(true);
+        RemoveCharacterDialog removeCharacterDialog = new RemoveCharacterDialog(parentFrame, characterManager, characterMap, npcMap);
+        removeCharacterDialog.setVisible(true);
 
         updateInitiativeList();
     }
@@ -231,11 +235,9 @@ public class UIController {
     }
 
     /**
-     * Opens a {@link SaveAsMenu} to save the current list to a new file
+     * Opens a {@link JFileChooser} to save the current list to a new file
      */
     public void saveListAs() {
-        //SaveAsMenu saveAsMenu = new SaveAsMenu(parentFrame);
-        //saveAsMenu.setVisible(true);
 
         JFileChooser saveAsMenu = createFileMenu();
         int isConfirmed = saveAsMenu.showSaveDialog(parentFrame);
@@ -247,28 +249,12 @@ public class UIController {
             }
             SaveLoadManager.saveAs(characterManager, file);
         }
-
-        /*
-        if (saveAsMenu.isConfirmed()) {
-            String saveFile = saveAsMenu.getSavefile();
-            SaveLoadManager.saveAs(characterManager, saveFile);
-        }
-         */
     }
 
     /**
-     * Opens a {@link LoadFileMenu} to load a list from an existing file
+     * Opens a {@link JFileChooser} to load a list from an existing file
      */
     public void loadList() {
-        /*
-        LoadFileMenu loadMenu = new LoadFileMenu(parentFrame);
-        loadMenu.setVisible(true);
-        if (loadMenu.isItemSelected()) {
-            String fileToLoad = loadMenu.getFileToLoad();
-            SaveLoadManager.load(characterManager, fileToLoad, true);
-            updateInitiativeList();
-        }
-         */
         JFileChooser loadMenu = createFileMenu();
         int isConfirmed = loadMenu.showOpenDialog(parentFrame);
 

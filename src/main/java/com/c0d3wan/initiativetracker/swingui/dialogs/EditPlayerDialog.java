@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui;
+package com.c0d3wan.initiativetracker.swingui.dialogs;
 
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.data.CharacterData;
@@ -14,7 +14,7 @@ import java.util.*;
  * Modal {@link JDialog} interface for editing statistics (initiative, dexterity, life status)
  * of an existing character.
  */
-public class EditPlayerMenu extends JDialog {
+public class EditPlayerDialog extends JDialog {
     private final JPanel editPlayerPane = new JPanel();
     private final JLabel characterNameLabel = new JLabel();
     private final JSpinner newInitiativeSpinner = new JSpinner();
@@ -35,7 +35,7 @@ public class EditPlayerMenu extends JDialog {
      * @param parent       The parent {@link Frame} window binding this dialogue.
      * @param characterMap Lookup map containing all registered characters keyed by name.
      */
-    public EditPlayerMenu(Frame parent, Map<String, Character> characterMap) {
+    public EditPlayerDialog(Frame parent, Map<String, Character> characterMap) {
         super(parent, "Edit Character", true);
         this.playerMap = characterMap;
         setupMenu();
