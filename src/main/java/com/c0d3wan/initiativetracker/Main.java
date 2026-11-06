@@ -30,7 +30,7 @@ import javax.swing.*;
  * Initialises core state management, loads persistent configuration settings,
  * and launches the Swing graphical user interface on the Event Dispatch Thread (EDT).
  */
-public class                                                                      Main {
+public class Main {
 
     /**
      * Application bootstrapper.
