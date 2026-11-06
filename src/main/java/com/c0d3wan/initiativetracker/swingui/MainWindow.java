@@ -6,7 +6,6 @@ import javax.swing.border.TitledBorder;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
-import com.c0d3wan.initiativetracker.swingui.bestiary.BestiaryMenu;
 import com.formdev.flatlaf.FlatLaf;
 import net.miginfocom.swing.MigLayout;
 
@@ -17,7 +16,7 @@ import java.awt.event.WindowEvent;
 /**
  * Top-level application window hosting the main initiative tracker user interface.
  */
-public class MainMenu extends JFrame {
+public class MainWindow extends JFrame {
     private final JPanel mainMenuPane = new JPanel();
     private final JButton addCharacterButton = new JButton("Add Character");
     private final JButton nextTurnButton = new JButton("Next Turn");
@@ -38,17 +37,17 @@ public class MainMenu extends JFrame {
     private final JMenuItem lightMode = new JMenuItem("Light");
     private final JMenuItem darkMode = new JMenuItem("Dark");
 
-    private final UIManager uiManager;
+    private final UIController uiController;
 
     /**
      * Constructs and initialises the main application window.
      *
      * @param characterManager The {@link CharacterManager} maintaining combat data.
      */
-    public MainMenu(CharacterManager characterManager) {
-        uiManager = new UIManager(this, characterManager, initiativeList);
-        uiManager.openBestiaryMenu();
-        uiManager.shareDeathSaveItems(passButton, failButton, deathSaveLabel);
+    public MainWindow(CharacterManager characterManager) {
+        uiController = new UIController(this, characterManager, initiativeList);
+        uiController.openBestiaryMenu();
+        uiController.shareDeathSaveItems(passButton, failButton, deathSaveLabel);
         setupMainMenu();
         setupMenuBar();
 
@@ -59,28 +58,28 @@ public class MainMenu extends JFrame {
         pack();
         setLocationRelativeTo(null);
 
-        addCharacterButton.addActionListener(e -> uiManager.openAddCharacterMenu());
-        editCharacterButton.addActionListener(e -> uiManager.openEditCharacterMenu());
-        editNPCHealthButton.addActionListener(e -> uiManager.openEditNPCHealthMenu());
-        removeCharacterButton.addActionListener(e -> uiManager.openRemoveCharacterMenu());
-        nextTurnButton.addActionListener(e -> uiManager.nextTurn());
+        addCharacterButton.addActionListener(e -> uiController.openAddCharacterMenu());
+        editCharacterButton.addActionListener(e -> uiController.openEditCharacterMenu());
+        editNPCHealthButton.addActionListener(e -> uiController.openEditNPCHealthMenu());
+        removeCharacterButton.addActionListener(e -> uiController.openRemoveCharacterMenu());
+        nextTurnButton.addActionListener(e -> uiController.nextTurn());
 
-        passButton.addActionListener(e -> uiManager.passDeathSave(true));
-        failButton.addActionListener(e -> uiManager.passDeathSave(false));
+        passButton.addActionListener(e -> uiController.passDeathSave(true));
+        failButton.addActionListener(e -> uiController.passDeathSave(false));
 
         lightMode.addActionListener(e -> {
-            UIManager.setDarkMode(false);
+            UIController.setDarkMode(false);
             lightMode.setEnabled(false);
             darkMode.setEnabled(true);
         });
         darkMode.addActionListener(e -> {
-            UIManager.setDarkMode(true);
+            UIController.setDarkMode(true);
             lightMode.setEnabled(true);
             darkMode.setEnabled(false);
         });
-        openItem.addActionListener(e -> uiManager.loadList());
-        saveItem.addActionListener(e -> uiManager.saveList());
-        saveAsItem.addActionListener(e -> uiManager.saveListAs());
+        openItem.addActionListener(e -> uiController.loadList());
+        saveItem.addActionListener(e -> uiController.saveList());
+        saveAsItem.addActionListener(e -> uiController.saveListAs());
         exitItem.addActionListener(e -> confirmExit());
         addWindowListener(new WindowAdapter() {
             @Override

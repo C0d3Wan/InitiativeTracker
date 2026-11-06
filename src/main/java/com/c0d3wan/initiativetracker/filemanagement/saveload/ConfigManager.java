@@ -2,7 +2,7 @@ package com.c0d3wan.initiativetracker.filemanagement.saveload;
 
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.data.ConfigDTO;
-import com.c0d3wan.initiativetracker.swingui.UIManager;
+import com.c0d3wan.initiativetracker.swingui.UIController;
 import com.google.gson.*;
 
 import java.io.File;
@@ -37,7 +37,7 @@ public class ConfigManager {
     public static void loadConfig() {
         File targetFile = new File(FileManager.getDirectory(), "Config.sav");
         if (!targetFile.exists()) {
-            UIManager.setDarkMode(true);
+            UIController.setDarkMode(true);
             return;
         }
 
@@ -74,7 +74,7 @@ public class ConfigManager {
             ConfigDTO configs = GSON.fromJson(reader, ConfigDTO.class);
 
             if (configs != null) {
-                UIManager.setDarkMode(configs.darkMode);
+                UIController.setDarkMode(configs.darkMode);
             }
         }
     }

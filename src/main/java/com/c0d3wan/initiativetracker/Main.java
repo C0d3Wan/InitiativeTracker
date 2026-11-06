@@ -20,7 +20,7 @@ package com.c0d3wan.initiativetracker;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiarySyncManager;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
-import com.c0d3wan.initiativetracker.swingui.MainMenu;
+import com.c0d3wan.initiativetracker.swingui.MainWindow;
 
 import javax.swing.*;
 
@@ -43,6 +43,6 @@ public class Main {
 
         BestiarySyncManager.syncOfficialMonsters();
 
-        SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
+        SwingUtilities.invokeLater(() -> new MainWindow(characterManager).setVisible(true));
     }
 }

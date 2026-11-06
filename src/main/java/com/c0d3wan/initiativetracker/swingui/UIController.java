@@ -21,7 +21,7 @@ import java.util.Map;
  * Controller class coordinating interactions between the character tracking data layer
  * and the Swing graphical user interface components.
  */
-public class UIManager {
+public class UIController {
     private final CharacterManager characterManager;
     private final JFrame parentFrame;
     private final Map<String, Character> characterMap = new HashMap<>();
@@ -39,7 +39,7 @@ public class UIManager {
      * @param characterManager The {@link CharacterManager} providing domain logic.
      * @param initiativeList   The {@link JList} visual component displaying initiative order.
      */
-    public UIManager(JFrame parentFrame, CharacterManager characterManager, JList<Character> initiativeList) {
+    public UIController(JFrame parentFrame, CharacterManager characterManager, JList<Character> initiativeList) {
         this.characterManager = characterManager;
         this.parentFrame = parentFrame;
 
