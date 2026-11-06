@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui;
+package com.c0d3wan.initiativetracker.ui;
 
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
 import net.miginfocom.swing.MigLayout;

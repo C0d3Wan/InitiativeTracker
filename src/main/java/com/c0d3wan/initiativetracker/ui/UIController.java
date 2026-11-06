@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui;
+package com.c0d3wan.initiativetracker.ui;
 
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.SaveLoadManager;
@@ -6,13 +6,12 @@ import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.data.CharacterType;
 import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
-import com.c0d3wan.initiativetracker.swingui.bestiary.BestiaryMenu;
-import com.c0d3wan.initiativetracker.swingui.components.InitiativeListPanel;
-import com.c0d3wan.initiativetracker.swingui.dialogs.AddCharacterDialog;
-import com.c0d3wan.initiativetracker.swingui.dialogs.EditNPCDialog;
-import com.c0d3wan.initiativetracker.swingui.dialogs.EditPlayerDialog;
-import com.c0d3wan.initiativetracker.swingui.dialogs.RemoveCharacterDialog;
-import com.c0d3wan.initiativetracker.swingui.renderers.CharacterCellRenderer;
+import com.c0d3wan.initiativetracker.ui.bestiary.BestiaryMenu;
+import com.c0d3wan.initiativetracker.ui.components.InitiativeListPanel;
+import com.c0d3wan.initiativetracker.ui.dialogs.AddCharacterDialog;
+import com.c0d3wan.initiativetracker.ui.dialogs.EditNPCDialog;
+import com.c0d3wan.initiativetracker.ui.dialogs.EditPlayerDialog;
+import com.c0d3wan.initiativetracker.ui.dialogs.RemoveCharacterDialog;
 import com.formdev.flatlaf.*;
 
 import javax.swing.*;

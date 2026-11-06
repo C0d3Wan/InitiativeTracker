@@ -1,7 +1,7 @@
-package com.c0d3wan.initiativetracker.swingui.components;
+package com.c0d3wan.initiativetracker.ui.components;
 
 import com.c0d3wan.initiativetracker.characters.Character;
-import com.c0d3wan.initiativetracker.swingui.renderers.CharacterCellRenderer;
+import com.c0d3wan.initiativetracker.ui.renderers.CharacterCellRenderer;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

@@ -1,11 +1,11 @@
-package com.c0d3wan.initiativetracker.swingui;
+package com.c0d3wan.initiativetracker.ui;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
-import com.c0d3wan.initiativetracker.swingui.components.InitiativeListPanel;
+import com.c0d3wan.initiativetracker.ui.components.InitiativeListPanel;
 import com.formdev.flatlaf.FlatLaf;
 import net.miginfocom.swing.MigLayout;
 

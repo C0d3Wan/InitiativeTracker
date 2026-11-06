@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui.bestiary;
+package com.c0d3wan.initiativetracker.ui.bestiary;
 
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiaryDatabase;

@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui.components;
+package com.c0d3wan.initiativetracker.ui.components;
 
 import javax.swing.*;
 

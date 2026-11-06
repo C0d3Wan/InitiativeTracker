@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui.dialogs;
+package com.c0d3wan.initiativetracker.ui.dialogs;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

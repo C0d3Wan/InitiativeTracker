@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui.dialogs;
+package com.c0d3wan.initiativetracker.ui.dialogs;
 
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.data.CharacterData;
