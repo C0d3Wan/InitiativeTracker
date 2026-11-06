@@ -15,6 +15,7 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -280,25 +281,67 @@ public class BestiaryMenu extends JDialog {
     /**
      * Filters and populates the tree view based on the current search input.
      */
+    /**
+     * Filters and populates the tree view based on the current search input,
+     * supporting dynamic multi-category subgroup nesting.
+     */
     private void filterMonsters() {
         String filter = searchField.getText().trim().toLowerCase();
         rootNode.removeAllChildren();
 
         if (allMonsters != null) {
-            Map<String, List<BestiaryDTO.Monster>> groupedMonsters = allMonsters.stream()
-                    .filter(m -> filter.isEmpty() || m.getName().toLowerCase().contains(filter) ||
-                            (m.getGroupName() != null && m.getGroupName().toLowerCase().contains(filter)))
+            List<BestiaryDTO.Monster> filteredList = allMonsters.stream()
+                    .filter(m -> {
+                        if (filter.isEmpty()) return true;
+                        boolean matchesName = m.getName().toLowerCase().contains(filter);
+                        boolean matchesGroup = m.getGroupName() != null && m.getGroupName().toLowerCase().contains(filter);
+                        boolean matchesSubgroup = m.getSubgroups() != null && m.getSubgroups().stream()
+                                .anyMatch(sub -> sub.toLowerCase().contains(filter));
+                        return matchesName || matchesGroup || matchesSubgroup;
+                    })
+                    .collect(Collectors.toList());
+
+            Map<String, List<BestiaryDTO.Monster>> groupedByMain = filteredList.stream()
                     .collect(Collectors.groupingBy(m -> m.getGroupName() != null ? m.getGroupName() : "Uncategorized"));
 
-            groupedMonsters.entrySet().stream()
+            groupedByMain.entrySet().stream()
                     .sorted(Map.Entry.comparingByKey())
-                    .forEach(entry -> {
-                        DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(entry.getKey());
-                        entry.getValue().stream()
+                    .forEach(mainEntry -> {
+                        DefaultMutableTreeNode mainGroupNode = new DefaultMutableTreeNode(mainEntry.getKey());
+
+                        Map<String, List<BestiaryDTO.Monster>> groupedBySub = new TreeMap<>();
+                        List<BestiaryDTO.Monster> directMonsters = new java.util.ArrayList<>();
+
+                        for (BestiaryDTO.Monster m : mainEntry.getValue()) {
+                            List<String> subs = m.getSubgroups();
+                            if (subs == null || subs.isEmpty()) {
+                                directMonsters.add(m);
+                            } else {
+                                for (String sub : subs) {
+                                    groupedBySub.computeIfAbsent(sub, k -> new java.util.ArrayList<>()).add(m);
+                                }
+                            }
+                        }
+
+                        // Add subgroup folders
+                        groupedBySub.entrySet().forEach(subEntry -> {
+                            DefaultMutableTreeNode subGroupNode = new DefaultMutableTreeNode(subEntry.getKey());
+                            subEntry.getValue().stream()
+                                    .map(BestiaryDTO.Monster::getName)
+                                    .sorted()
+                                    .distinct()
+                                    .forEach(monsterName -> subGroupNode.add(new DefaultMutableTreeNode(monsterName)));
+                            mainGroupNode.add(subGroupNode);
+                        });
+
+                        // Add monsters with no subgroups directly under the main group folder
+                        directMonsters.stream()
                                 .map(BestiaryDTO.Monster::getName)
                                 .sorted()
-                                .forEach(monsterName -> groupNode.add(new DefaultMutableTreeNode(monsterName)));
-                        rootNode.add(groupNode);
+                                .distinct()
+                                .forEach(monsterName -> mainGroupNode.add(new DefaultMutableTreeNode(monsterName)));
+
+                        rootNode.add(mainGroupNode);
                     });
         }
 

@@ -25,6 +25,7 @@ public class BestiaryDTO {
     public static class Monster {
         private String name;
         private String groupName;
+        private List<String> subgroups;
         private String type;
         private String size;
         private String alignment;
@@ -62,6 +63,9 @@ public class BestiaryDTO {
         public String getGroupName() { return groupName; }
         public void setGroupName(String groupName) { this.groupName = groupName; }
         public void setGroup(String group) { this.groupName = group; }
+
+        public List<String> getSubgroups() { return subgroups; }
+        public void setSubgroups(List<String> subgroups) { this.subgroups = subgroups; }
 
         public String getType() { return type; }
         public void setType(String type) { this.type = type; }
@@ -130,53 +134,32 @@ public class BestiaryDTO {
         public void setLairActions(ActionGroup lairActions) { this.lairActions = lairActions; }
     }
 
-    /**
-     * Represents a monster's hit points, including average value and dice formula.
-     */
     public static class HitPoints {
         private int average;
         private String formula;
-
-        /** Default constructor. */
         public HitPoints() {}
-
         public int getAverage() { return average; }
         public void setAverage(int average) { this.average = average; }
-
         public String getFormula() { return formula; }
         public void setFormula(String formula) { this.formula = formula; }
     }
 
-    /**
-     * Represents a specific feature, trait, or action belonging to a monster.
-     */
     public static class Feature {
         private String name;
         private String description;
-
-        /** Default constructor. */
         public Feature() {}
-
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
-
         public String getDescription() { return description; }
         public void setDescription(String description) { this.description = description; }
     }
 
-    /**
-     * Represents a grouped section of actions (such as Legendary or Lair actions) with a description.
-     */
     public static class ActionGroup {
         private String description;
         private List<Feature> actions;
-
-        /** Default constructor. */
         public ActionGroup() {}
-
         public String getDescription() { return description; }
         public void setDescription(String description) { this.description = description; }
-
         public List<Feature> getActions() { return actions; }
         public void setActions(List<Feature> actions) { this.actions = actions; }
     }
