@@ -7,6 +7,7 @@ import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.data.CharacterType;
 import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
 import com.c0d3wan.initiativetracker.swingui.bestiary.BestiaryMenu;
+import com.c0d3wan.initiativetracker.swingui.components.InitiativeListPanel;
 import com.c0d3wan.initiativetracker.swingui.dialogs.AddCharacterDialog;
 import com.c0d3wan.initiativetracker.swingui.dialogs.EditNPCDialog;
 import com.c0d3wan.initiativetracker.swingui.dialogs.EditPlayerDialog;
@@ -30,7 +31,7 @@ public class UIController {
     private final JFrame parentFrame;
     private final Map<String, Character> characterMap = new HashMap<>();
     private final Map<String, NonePlayerCharacter> npcMap = new HashMap<>();
-    private final DefaultListModel<Character> characterListModel = new DefaultListModel<>();
+    private final InitiativeListPanel initiativeListPanel;
 
     private JButton passSaveButton;
     private JButton failSaveButton;
@@ -41,14 +42,12 @@ public class UIController {
      *
      * @param parentFrame      The primary {@link JFrame} hosting the interface.
      * @param characterManager The {@link CharacterManager} providing domain logic.
-     * @param initiativeList   The {@link JList} visual component displaying initiative order.
+     * @param initiativeListPanel   The {@link JList} visual component displaying initiative order.
      */
-    public UIController(JFrame parentFrame, CharacterManager characterManager, JList<Character> initiativeList) {
+    public UIController(JFrame parentFrame, CharacterManager characterManager, InitiativeListPanel initiativeListPanel) {
         this.characterManager = characterManager;
         this.parentFrame = parentFrame;
-
-        initiativeList.setModel(characterListModel);
-        initiativeList.setCellRenderer(new CharacterCellRenderer());
+        this.initiativeListPanel = initiativeListPanel;
     }
 
     /**
@@ -152,8 +151,7 @@ public class UIController {
      * subsequently updating the death save control buttons.
      */
     private void updateInitiativeList() {
-        characterListModel.clear();
-        characterManager.getInitiativeOrder().forEach(characterListModel::addElement);
+        initiativeListPanel.refreshCharacters(characterManager.getInitiativeOrder());
 
         updateDeathSaveButtons();
     }
@@ -172,13 +170,11 @@ public class UIController {
      * @param passed {@code true} to record a success; {@code false} to record a failure.
      */
     public void passDeathSave(boolean passed) {
-        if (characterListModel.isEmpty()) {
-            return;
+        Character currentCharacter = initiativeListPanel.getCurrentCharacter();
+        if (currentCharacter != null) {
+            currentCharacter.deathSave(passed);
+            updateInitiativeList();
         }
-
-        Character currentCharacter = characterListModel.get(0);
-        currentCharacter.deathSave(passed);
-        updateInitiativeList();
     }
 
     /**
@@ -195,13 +191,13 @@ public class UIController {
         failSaveButton.setVisible(false);
         deathSaveLabel.setVisible(false);
 
-        if (characterListModel.isEmpty()) {
+        Character currentCharacter = initiativeListPanel.getCurrentCharacter();
+
+        if (currentCharacter == null) {
             parentFrame.revalidate();
             parentFrame.repaint();
             return;
         }
-
-        Character currentCharacter = characterListModel.get(0);
 
         if (currentCharacter.getDeathStatus() == DeathStatus.DOWN) {
             passSaveButton.setVisible(true);

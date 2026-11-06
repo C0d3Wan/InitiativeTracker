@@ -4,8 +4,8 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
-import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
+import com.c0d3wan.initiativetracker.swingui.components.InitiativeListPanel;
 import com.formdev.flatlaf.FlatLaf;
 import net.miginfocom.swing.MigLayout;
 
@@ -21,7 +21,7 @@ public class MainWindow extends JFrame {
     private final JButton addCharacterButton = new JButton("Add Character");
     private final JButton nextTurnButton = new JButton("Next Turn");
     private final JButton removeCharacterButton = new JButton("Remove Character");
-    private final JList<Character> initiativeList = new JList<>();
+    private final InitiativeListPanel initiativeListPanel;
     private final JButton editCharacterButton = new JButton("Edit Character");
     private final JButton passButton = new JButton("Pass");
     private final JButton failButton = new JButton("Fail");
@@ -45,8 +45,9 @@ public class MainWindow extends JFrame {
      * @param characterManager The {@link CharacterManager} maintaining combat data.
      */
     public MainWindow(CharacterManager characterManager) {
-        uiController = new UIController(this, characterManager, initiativeList);
-        uiController.openBestiaryMenu();
+        initiativeListPanel = new InitiativeListPanel();
+        uiController = new UIController(this, characterManager, initiativeListPanel);
+        //uiController.openBestiaryMenu();
         uiController.shareDeathSaveItems(passButton, failButton, deathSaveLabel);
         setupMainMenu();
         setupMenuBar();
@@ -94,7 +95,7 @@ public class MainWindow extends JFrame {
      */
     private void setupMainMenu() {
         Dimension windowSize = new Dimension(550, 300);
-        mainMenuPane.setLayout(new MigLayout("insets 2 0 2 0, fillx", "[center][center][center][center]", "[center][center][center][center][center]"));
+        mainMenuPane.setLayout(new MigLayout("insets 2 0 2 0, fill", "[center][center][center][center]", "[center][center][center][center][center]"));
         mainMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);
 
@@ -116,10 +117,6 @@ public class MainWindow extends JFrame {
         passButton.setFocusPainted(false);
         failButton.setFocusPainted(false);
 
-        final JScrollPane scrollPane1 = new JScrollPane();
-        scrollPane1.setViewportView(initiativeList);
-
-
         mainMenuPane.add(addCharacterButton, "cell 0 0, growx");
         mainMenuPane.add(editCharacterButton, "cell 1 0, growx");
         mainMenuPane.add(editNPCHealthButton, "cell 2 0, growx");
@@ -133,7 +130,7 @@ public class MainWindow extends JFrame {
         mainMenuPane.add(passButton, "cell 2 3, growx");
         mainMenuPane.add(failButton, "cell 3 3, growx");
 
-        mainMenuPane.add(scrollPane1, "cell 0 4, span, grow, pushy");
+        mainMenuPane.add(initiativeListPanel, "cell 0 4, span, grow, pushy");
 
         deathSaveLabel.setVisible(false);
         passButton.setVisible(false);
