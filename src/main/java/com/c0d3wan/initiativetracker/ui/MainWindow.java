@@ -91,6 +91,8 @@ public class MainWindow extends JFrame {
         passButton.setFocusPainted(false);
         failButton.setFocusPainted(false);
 
+        final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, initiativeListPanel, null);
+
         mainMenuPane.add(addCharacterButton, "cell 0 0, growx");
         mainMenuPane.add(editCharacterButton, "cell 1 0, growx");
         mainMenuPane.add(editNPCHealthButton, "cell 2 0, growx");
@@ -104,7 +106,7 @@ public class MainWindow extends JFrame {
         mainMenuPane.add(passButton, "cell 2 3, growx");
         mainMenuPane.add(failButton, "cell 3 3, growx");
 
-        mainMenuPane.add(initiativeListPanel, "cell 0 4, span, grow, pushy");
+        mainMenuPane.add(splitPane, "cell 0 4, span, grow, pushy");
 
         deathSaveLabel.setVisible(false);
         passButton.setVisible(false);
