@@ -19,7 +19,7 @@ import java.util.*;
 @SuppressWarnings({"SameParameterValue"})
 public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Character> {
     private final JLabel nameLabel = new JLabel();
-    private final JLabel conditionLabel = new JLabel("Held");
+    private final JLabel conditionLabel = new JLabel();
     private final JLabel initiativeLabel = new JLabel();
     private final JLabel characterTypeLabel = new JLabel();
     private final JLabel deathStatusLabel = new JLabel();

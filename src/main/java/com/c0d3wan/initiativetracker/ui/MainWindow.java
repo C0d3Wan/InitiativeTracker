@@ -95,6 +95,7 @@ public class MainWindow extends JFrame {
         failButton.setFocusPainted(false);
 
         final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, initiativeListPanel, characterDetailsPanel);
+        characterDetailsPanel.setVisible(false);
 
         mainMenuPane.add(addCharacterButton, "cell 0 0, growx");
         mainMenuPane.add(editCharacterButton, "cell 1 0, growx");
