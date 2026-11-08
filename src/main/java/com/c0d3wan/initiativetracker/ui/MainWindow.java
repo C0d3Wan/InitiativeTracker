@@ -5,6 +5,7 @@ import javax.swing.border.TitledBorder;
 
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
+import com.c0d3wan.initiativetracker.ui.components.CharacterDetailsPanel;
 import com.c0d3wan.initiativetracker.ui.components.InitiativeListPanel;
 import com.c0d3wan.initiativetracker.ui.components.MainMenuBar;
 import com.formdev.flatlaf.FlatLaf;
@@ -23,6 +24,7 @@ public class MainWindow extends JFrame {
     private final JButton nextTurnButton = new JButton("Next Turn");
     private final JButton removeCharacterButton = new JButton("Remove Character");
     private final InitiativeListPanel initiativeListPanel;
+    private final CharacterDetailsPanel characterDetailsPanel;
     private final JButton editCharacterButton = new JButton("Edit Character");
     private final JButton passButton = new JButton("Pass");
     private final JButton failButton = new JButton("Fail");
@@ -40,6 +42,7 @@ public class MainWindow extends JFrame {
      */
     public MainWindow(CharacterManager characterManager) {
         initiativeListPanel = new InitiativeListPanel();
+        characterDetailsPanel = new CharacterDetailsPanel();
         uiController = new UIController(this, characterManager, initiativeListPanel);
         menuBar = new MainMenuBar(this, uiController);
         //uiController.openBestiaryMenu();
@@ -91,7 +94,7 @@ public class MainWindow extends JFrame {
         passButton.setFocusPainted(false);
         failButton.setFocusPainted(false);
 
-        final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, initiativeListPanel, null);
+        final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, initiativeListPanel, characterDetailsPanel);
 
         mainMenuPane.add(addCharacterButton, "cell 0 0, growx");
         mainMenuPane.add(editCharacterButton, "cell 1 0, growx");
