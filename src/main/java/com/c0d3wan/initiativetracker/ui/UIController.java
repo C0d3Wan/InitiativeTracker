@@ -57,6 +57,10 @@ public class UIController {
         initialiseListeners();
     }
 
+    public void displayMainWindow() {
+        mainWindow.setVisible(true);
+    }
+
     /**
      * prompts the user to ensure they want to exit the application
      */

@@ -17,7 +17,6 @@
  */
 package com.c0d3wan.initiativetracker;
 
-import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiarySyncManager;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.ui.MainWindow;
@@ -44,7 +43,7 @@ public class Main {
             ConfigManager.loadConfig();
             MainWindow mainWindow = new MainWindow();
             UIController uiController = new UIController(mainWindow, characterManager);
-            mainWindow.setVisible(true);
+            uiController.displayMainWindow();
         });
     }
 }
