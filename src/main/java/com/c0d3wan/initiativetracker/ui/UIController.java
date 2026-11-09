@@ -45,7 +45,7 @@ public class UIController {
         mainWindow = parentFrame;
         initiativeListPanel = mainWindow.getInitiativeListPanel();
         characterDetailsPanel = mainWindow.getCharacterDetailsPanel();
-        deathSavesPanel = mainWindow.getDeathSavesPanel();
+        deathSavesPanel = initiativeListPanel.getDeathSavesPanel();
         menuBar = mainWindow.getMainMenuBar();
         optionsBarPanel = mainWindow.getOptionsBarPanel();
 
@@ -77,6 +77,8 @@ public class UIController {
     private void initialiseListeners() {
         initiativeListPanel.addSelectionListener(e -> {
             Character selectedCharacter = initiativeListPanel.getSelectedCharacter();
+            characterDetailsPanel.setVisible(true);
+            characterDetailsPanel.displayCharacter(selectedCharacter);
         });
         deathSavesPanel.addPassListener(e -> passDeathSave(true));
         deathSavesPanel.addFailListener(e -> passDeathSave(false));
@@ -98,7 +100,7 @@ public class UIController {
         optionsBarPanel.addEditCharacterListener(e -> openEditCharacterMenu());
         optionsBarPanel.addEditNpcListener(e -> openEditNPCHealthMenu());
         optionsBarPanel.addRemoveCharacterListener(e -> openRemoveCharacterMenu());
-        mainWindow.addNextTurnListener(e -> nextTurn());
+        initiativeListPanel.addNextTurnListener(e -> nextTurn());
     }
 
     /**

@@ -55,34 +55,17 @@ public class MainWindow extends JFrame {
      * Sets up the layout, layout manager, widgets and border for the Window
      */
     private void setupMainMenu() {
-        Dimension windowSize = new Dimension(550, 300);
-        mainMenuPane.setLayout(new MigLayout("insets 2 0 2 0, fill", "[center][center][center][center]", "[center][center][center][center][center]"));
+        Dimension windowSize = new Dimension(650, 400);
+        mainMenuPane.setLayout(new MigLayout("insets 2 0 2 0, fill", "[l][center][center][center]", "[center][center][center][center][center]"));
         mainMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);
 
-        final JSeparator separator1 = new JSeparator();
-        final JLabel label1 = new JLabel("Initiative Order");
+        JTabbedPane tabs = new JTabbedPane();
+        tabs.addTab("Initiative Order", initiativeListPanel);
+        tabs.addTab("Details", characterDetailsPanel);
+        tabs.addTab("Character Options", optionsBarPanel);
 
-        nextTurnButton.setFocusPainted(false);
-
-        final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, initiativeListPanel, characterDetailsPanel);
-        characterDetailsPanel.setVisible(false);
-
-        mainMenuPane.add(optionsBarPanel, "cell 0 0, span");
-
-        mainMenuPane.add(separator1, "cell 0 1, span, growx");
-        mainMenuPane.add(label1, "cell 0 2, span");
-
-        mainMenuPane.add(nextTurnButton, "cell 0 3, growx");
-        mainMenuPane.add(deathSavesPanel, "cell 1 3, align right, span");
-
-        mainMenuPane.add(splitPane, "cell 0 4, span, grow, pushy");
-
-        deathSavesPanel.setVisible(false);
-    }
-
-    public void addNextTurnListener(ActionListener listener) {
-        nextTurnButton.addActionListener(listener);
+        mainMenuPane.add(tabs, "span, grow, push");
     }
 
     /**
