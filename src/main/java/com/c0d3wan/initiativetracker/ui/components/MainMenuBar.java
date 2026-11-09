@@ -1,15 +1,11 @@
 package com.c0d3wan.initiativetracker.ui.components;
 
-import com.c0d3wan.initiativetracker.ui.MainWindow;
-import com.c0d3wan.initiativetracker.ui.UIController;
 import com.formdev.flatlaf.FlatLaf;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainMenuBar extends JMenuBar {
-    private final MainWindow parentFrame;
 
     private final JMenuItem openItem;
     private final JMenuItem saveAsItem;
@@ -19,9 +15,7 @@ public class MainMenuBar extends JMenuBar {
     private final JMenuItem lightMode;
     private final JMenuItem darkMode;
 
-    public MainMenuBar(MainWindow parent) {
-        parentFrame = parent;
-
+    public MainMenuBar() {
         openItem = new JMenuItem("Open");
         saveAsItem = new JMenuItem("Save As");
         saveItem = new JMenuItem("Save");
@@ -31,7 +25,6 @@ public class MainMenuBar extends JMenuBar {
         darkMode = new JMenuItem("Dark");
 
         setUpMenuBar();
-        addActionListeners();
     }
 
     private void setUpMenuBar() {
@@ -55,10 +48,6 @@ public class MainMenuBar extends JMenuBar {
         themeMenu.add(lightMode);
         viewMenu.add(themeMenu);
         add(viewMenu);
-    }
-
-    private void addActionListeners() {
-        exitItem.addActionListener(e -> parentFrame.confirmExit());
     }
 
     public void enableDarkButton(boolean enableDark) {

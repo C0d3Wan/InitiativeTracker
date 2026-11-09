@@ -1,6 +1,7 @@
 package com.c0d3wan.initiativetracker.ui;
 
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
+import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.SaveLoadManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.*;
@@ -56,27 +57,22 @@ public class UIController {
         initialiseListeners();
     }
 
-    private static JFileChooser createFileMenu() {
-        JFileChooser fileMenu = new JFileChooser();
-        fileMenu.setFileHidingEnabled(false);
-        fileMenu.setFileFilter(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                if (file.isDirectory()) {
-                    return true;
-                } else {
-                    String filename = file.getName().toLowerCase();
-                    return filename.endsWith(".sav");
-                }
-            }
+    /**
+     * prompts the user to ensure they want to exit the application
+     */
+    private void confirmExit() {
+        int choice = JOptionPane.showConfirmDialog(
+                mainWindow,
+                "Are you sure you want to exit the Tracker?",
+                "Exit Confirmation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
 
-            @Override
-            public String getDescription() {
-                return "Save Files (*.sav)";
-            }
-        });
-        fileMenu.setCurrentDirectory(FileManager.getSaveDirectory());
-        return fileMenu;
+        if (choice == JOptionPane.YES_OPTION) {
+            ConfigManager.saveConfig();
+            System.exit(0);
+        }
     }
 
     private void initialiseListeners() {
@@ -97,9 +93,13 @@ public class UIController {
         menuBar.addOpenItemListener(e -> loadList());
         menuBar.addSaveItemListener(e -> saveList());
         menuBar.addSaveAsItemListener(e -> saveListAs());
-        menuBar.addExitListener(e -> mainWindow.confirmExit());
+        menuBar.addExitListener(e -> confirmExit());
 
-
+        mainWindow.addAddCharacterListener(e -> openAddCharacterMenu());
+        mainWindow.addEditCharacterListener(e -> openEditCharacterMenu());
+        mainWindow.addEditNpcListener(e -> openEditNPCHealthMenu());
+        mainWindow.addRemoveCharacterListener(e -> openRemoveCharacterMenu());
+        mainWindow.addNextTurnListener(e -> nextTurn());
     }
 
     /**
@@ -157,7 +157,7 @@ public class UIController {
      * Opens the modal dialogue to create and add a new character.
      * Refreshes the initiative list if the user confirms creation.
      */
-    public void openAddCharacterMenu() {
+    private void openAddCharacterMenu() {
         updateCharacterMap();
         AddCharacterDialog addCharacterDialog = new AddCharacterDialog(mainWindow, characterMap);
         addCharacterDialog.setVisible(true);
@@ -177,7 +177,7 @@ public class UIController {
      * Opens the modal dialogue to modify attributes of an existing character.
      * Refreshes the initiative queue when changes are saved.
      */
-    public void openEditCharacterMenu() {
+    private void openEditCharacterMenu() {
         updateCharacterMap();
 
         EditPlayerDialog editPlayerDialog = new EditPlayerDialog(mainWindow, characterMap);
@@ -190,7 +190,7 @@ public class UIController {
     /**
      * Opens the modal dialogue to modify existing NPC health values.
      */
-    public void openEditNPCHealthMenu() {
+    private void openEditNPCHealthMenu() {
         updateCharacterMap();
 
         EditNPCDialog editNPCDialog = new EditNPCDialog(mainWindow, npcMap);
@@ -203,7 +203,7 @@ public class UIController {
     /**
      * Opens the modal dialogue to remove selected or all characters from the combat session.
      */
-    public void openRemoveCharacterMenu() {
+    private void openRemoveCharacterMenu() {
         updateCharacterMap();
         RemoveCharacterDialog removeCharacterDialog = new RemoveCharacterDialog(mainWindow, characterManager, characterMap, npcMap);
         removeCharacterDialog.setVisible(true);
@@ -214,7 +214,7 @@ public class UIController {
     /**
      * Opens the modal dialogue to browse the bestiary database and add monsters to tracker.
      */
-    public void openBestiaryMenu() {
+    private void openBestiaryMenu() {
         BestiaryMenu bestiaryMenu = new BestiaryMenu(mainWindow, characterManager);
         bestiaryMenu.setVisible(true);
 
@@ -225,7 +225,7 @@ public class UIController {
     /**
      * Advances the game to the next participant's turn and repaints the initiative order.
      */
-    public void nextTurn() {
+    private void nextTurn() {
         characterManager.newTurn();
         updateInitiativeList();
     }
@@ -235,7 +235,7 @@ public class UIController {
      *
      * @param passed {@code true} to record a success; {@code false} to record a failure.
      */
-    public void passDeathSave(boolean passed) {
+    private void passDeathSave(boolean passed) {
         Character currentCharacter = initiativeListPanel.getCurrentCharacter();
         if (currentCharacter != null) {
             currentCharacter.deathSave(passed);
@@ -244,30 +244,16 @@ public class UIController {
     }
 
     /**
-     * Changes the colour mode of the ui (Light/Dark)
-     *
-     * @param darkMode boolean {@code true} for dark mode, {@code false} for light mode
-     */
-    public static void setDarkMode(boolean darkMode) {
-        if (darkMode) {
-            FlatDarkLaf.setup();
-        } else {
-            FlatLightLaf.setup();
-        }
-        FlatLaf.updateUI();
-    }
-
-    /**
      * Calls the {@link SaveLoadManager} to save the current Initiative list
      */
-    public void saveList() {
+    private void saveList() {
         SaveLoadManager.save(characterManager);
     }
 
     /**
      * Opens a {@link JFileChooser} to save the current list to a new file
      */
-    public void saveListAs() {
+    private void saveListAs() {
 
         JFileChooser saveAsMenu = createFileMenu();
         int isConfirmed = saveAsMenu.showSaveDialog(mainWindow);
@@ -284,7 +270,7 @@ public class UIController {
     /**
      * Opens a {@link JFileChooser} to load a list from an existing file
      */
-    public void loadList() {
+    private void loadList() {
         JFileChooser loadMenu = createFileMenu();
         int isConfirmed = loadMenu.showOpenDialog(mainWindow);
 
@@ -293,5 +279,42 @@ public class UIController {
             SaveLoadManager.load(characterManager, file, true);
             updateInitiativeList();
         }
+    }
+
+    private static JFileChooser createFileMenu() {
+        JFileChooser fileMenu = new JFileChooser();
+        fileMenu.setFileHidingEnabled(false);
+        fileMenu.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                if (file.isDirectory()) {
+                    return true;
+                } else {
+                    String filename = file.getName().toLowerCase();
+                    return filename.endsWith(".sav");
+                }
+            }
+
+            @Override
+            public String getDescription() {
+                return "Save Files (*.sav)";
+            }
+        });
+        fileMenu.setCurrentDirectory(FileManager.getSaveDirectory());
+        return fileMenu;
+    }
+
+    /**
+     * Changes the colour mode of the ui (Light/Dark)
+     *
+     * @param darkMode boolean {@code true} for dark mode, {@code false} for light mode
+     */
+    public static void setDarkMode(boolean darkMode) {
+        if (darkMode) {
+            FlatDarkLaf.setup();
+        } else {
+            FlatLightLaf.setup();
+        }
+        FlatLaf.updateUI();
     }
 }

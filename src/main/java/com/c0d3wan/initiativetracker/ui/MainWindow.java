@@ -4,15 +4,14 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
-import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.ui.components.CharacterDetailsPanel;
 import com.c0d3wan.initiativetracker.ui.components.DeathSavesPanel;
 import com.c0d3wan.initiativetracker.ui.components.InitiativeListPanel;
 import com.c0d3wan.initiativetracker.ui.components.MainMenuBar;
-import com.formdev.flatlaf.FlatLaf;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -34,15 +33,13 @@ public class MainWindow extends JFrame {
 
     /**
      * Constructs and initialises the main application window.
-     *
-     * @param characterManager The {@link CharacterManager} maintaining combat data.
      */
-    public MainWindow(CharacterManager characterManager) {
+    public MainWindow() {
         initiativeListPanel = new InitiativeListPanel();
         characterDetailsPanel = new CharacterDetailsPanel();
         deathSavesPanel = new DeathSavesPanel();
+        menuBar = new MainMenuBar();
 
-        menuBar = new MainMenuBar(this);
         //uiController.openBestiaryMenu();
         setupMainMenu();
 
@@ -52,12 +49,6 @@ public class MainWindow extends JFrame {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
-
-        addCharacterButton.addActionListener(e -> uiController.openAddCharacterMenu());
-        editCharacterButton.addActionListener(e -> uiController.openEditCharacterMenu());
-        editNPCHealthButton.addActionListener(e -> uiController.openEditNPCHealthMenu());
-        removeCharacterButton.addActionListener(e -> uiController.openRemoveCharacterMenu());
-        nextTurnButton.addActionListener(e -> uiController.nextTurn());
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -105,10 +96,30 @@ public class MainWindow extends JFrame {
         deathSavesPanel.setVisible(false);
     }
 
+    public void addAddCharacterListener(ActionListener listener) {
+        addCharacterButton.addActionListener(listener);
+    }
+
+    public void addEditCharacterListener(ActionListener listener) {
+        editCharacterButton.addActionListener(listener);
+    }
+
+    public void addEditNpcListener(ActionListener listener) {
+        editNPCHealthButton.addActionListener(listener);
+    }
+
+    public void addRemoveCharacterListener(ActionListener listener) {
+        removeCharacterButton.addActionListener(listener);
+    }
+
+    public void addNextTurnListener(ActionListener listener) {
+        nextTurnButton.addActionListener(listener);
+    }
+
     /**
      * prompts the user to ensure they want to exit the application
      */
-    public void confirmExit() {
+    private void confirmExit() {
         int choice = JOptionPane.showConfirmDialog(
                 this,
                 "Are you sure you want to exit the Tracker?",

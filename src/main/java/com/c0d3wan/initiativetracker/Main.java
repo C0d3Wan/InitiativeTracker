@@ -39,16 +39,12 @@ public class Main {
      * @param args Command-line arguments passed during startup (unused).
      */
     public static void main(String[] args) {
-
-
-
-
-
         SwingUtilities.invokeLater(() -> {
             CharacterManager characterManager = new CharacterManager();
             ConfigManager.loadConfig();
-            MainWindow window = new MainWindow();
-            UIController uiController = new UIController(window, characterManager);
+            MainWindow mainWindow = new MainWindow();
+            UIController uiController = new UIController(mainWindow, characterManager);
+            mainWindow.setVisible(true);
 
             BestiarySyncManager.syncOfficialMonsters();
         });
