@@ -4,10 +4,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
-import com.c0d3wan.initiativetracker.ui.components.CharacterDetailsPanel;
-import com.c0d3wan.initiativetracker.ui.components.DeathSavesPanel;
-import com.c0d3wan.initiativetracker.ui.components.InitiativeListPanel;
-import com.c0d3wan.initiativetracker.ui.components.MainMenuBar;
+import com.c0d3wan.initiativetracker.ui.components.*;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
@@ -20,13 +17,10 @@ import java.awt.event.WindowEvent;
  */
 public class MainWindow extends JFrame {
     private final JPanel mainMenuPane = new JPanel();
-    private final JButton addCharacterButton = new JButton("Add Character");
     private final JButton nextTurnButton = new JButton("Next Turn");
-    private final JButton removeCharacterButton = new JButton("Remove Character");
-    private final JButton editCharacterButton = new JButton("Edit Character");
-    private final JButton editNPCHealthButton = new JButton("Edit NPC Health");
 
     private final MainMenuBar menuBar;
+    private final OptionsBarPanel optionsBarPanel;
     private final InitiativeListPanel initiativeListPanel;
     private final CharacterDetailsPanel characterDetailsPanel;
     private final DeathSavesPanel deathSavesPanel;
@@ -39,6 +33,7 @@ public class MainWindow extends JFrame {
         characterDetailsPanel = new CharacterDetailsPanel();
         deathSavesPanel = new DeathSavesPanel();
         menuBar = new MainMenuBar();
+        optionsBarPanel = new OptionsBarPanel();
         setupMainMenu();
 
         setJMenuBar(menuBar);
@@ -65,11 +60,6 @@ public class MainWindow extends JFrame {
         mainMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);
 
-        addCharacterButton.setFocusPainted(false);
-        editCharacterButton.setFocusPainted(false);
-        editNPCHealthButton.setFocusPainted(false);
-        removeCharacterButton.setFocusPainted(false);
-
         final JSeparator separator1 = new JSeparator();
         final JLabel label1 = new JLabel("Initiative Order");
 
@@ -78,10 +68,7 @@ public class MainWindow extends JFrame {
         final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, initiativeListPanel, characterDetailsPanel);
         characterDetailsPanel.setVisible(false);
 
-        mainMenuPane.add(addCharacterButton, "cell 0 0, growx");
-        mainMenuPane.add(editCharacterButton, "cell 1 0, growx");
-        mainMenuPane.add(editNPCHealthButton, "cell 2 0, growx");
-        mainMenuPane.add(removeCharacterButton, "cell 3 0, growx");
+        mainMenuPane.add(optionsBarPanel, "cell 0 0, span");
 
         mainMenuPane.add(separator1, "cell 0 1, span, growx");
         mainMenuPane.add(label1, "cell 0 2, span");
@@ -92,22 +79,6 @@ public class MainWindow extends JFrame {
         mainMenuPane.add(splitPane, "cell 0 4, span, grow, pushy");
 
         deathSavesPanel.setVisible(false);
-    }
-
-    public void addAddCharacterListener(ActionListener listener) {
-        addCharacterButton.addActionListener(listener);
-    }
-
-    public void addEditCharacterListener(ActionListener listener) {
-        editCharacterButton.addActionListener(listener);
-    }
-
-    public void addEditNpcListener(ActionListener listener) {
-        editNPCHealthButton.addActionListener(listener);
-    }
-
-    public void addRemoveCharacterListener(ActionListener listener) {
-        removeCharacterButton.addActionListener(listener);
     }
 
     public void addNextTurnListener(ActionListener listener) {
@@ -146,5 +117,9 @@ public class MainWindow extends JFrame {
 
     public MainMenuBar getMainMenuBar() {
         return menuBar;
+    }
+
+    public OptionsBarPanel getOptionsBarPanel() {
+        return optionsBarPanel;
     }
 }

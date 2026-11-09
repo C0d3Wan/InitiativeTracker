@@ -5,17 +5,10 @@ import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.SaveLoadManager;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.*;
-import com.c0d3wan.initiativetracker.characters.data.CharacterType;
-import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
+import com.c0d3wan.initiativetracker.characters.data.*;
 import com.c0d3wan.initiativetracker.ui.bestiary.BestiaryMenu;
-import com.c0d3wan.initiativetracker.ui.components.CharacterDetailsPanel;
-import com.c0d3wan.initiativetracker.ui.components.DeathSavesPanel;
-import com.c0d3wan.initiativetracker.ui.components.InitiativeListPanel;
-import com.c0d3wan.initiativetracker.ui.components.MainMenuBar;
-import com.c0d3wan.initiativetracker.ui.dialogs.AddCharacterDialog;
-import com.c0d3wan.initiativetracker.ui.dialogs.EditNPCDialog;
-import com.c0d3wan.initiativetracker.ui.dialogs.EditPlayerDialog;
-import com.c0d3wan.initiativetracker.ui.dialogs.RemoveCharacterDialog;
+import com.c0d3wan.initiativetracker.ui.components.*;
+import com.c0d3wan.initiativetracker.ui.dialogs.*;
 import com.formdev.flatlaf.*;
 
 import javax.swing.*;
@@ -39,6 +32,7 @@ public class UIController {
     private final CharacterDetailsPanel characterDetailsPanel;
     private final DeathSavesPanel deathSavesPanel;
     private final MainMenuBar menuBar;
+    private final OptionsBarPanel optionsBarPanel;
 
     /**
      * Constructs a new UIManager instance and attaches views and cell renderers.
@@ -53,6 +47,7 @@ public class UIController {
         characterDetailsPanel = mainWindow.getCharacterDetailsPanel();
         deathSavesPanel = mainWindow.getDeathSavesPanel();
         menuBar = mainWindow.getMainMenuBar();
+        optionsBarPanel = mainWindow.getOptionsBarPanel();
 
         initialiseListeners();
     }
@@ -99,10 +94,10 @@ public class UIController {
         menuBar.addSaveAsItemListener(e -> saveListAs());
         menuBar.addExitListener(e -> confirmExit());
 
-        mainWindow.addAddCharacterListener(e -> openAddCharacterMenu());
-        mainWindow.addEditCharacterListener(e -> openEditCharacterMenu());
-        mainWindow.addEditNpcListener(e -> openEditNPCHealthMenu());
-        mainWindow.addRemoveCharacterListener(e -> openRemoveCharacterMenu());
+        optionsBarPanel.addAddCharacterListener(e -> openAddCharacterMenu());
+        optionsBarPanel.addEditCharacterListener(e -> openEditCharacterMenu());
+        optionsBarPanel.addEditNpcListener(e -> openEditNPCHealthMenu());
+        optionsBarPanel.addRemoveCharacterListener(e -> openRemoveCharacterMenu());
         mainWindow.addNextTurnListener(e -> nextTurn());
     }
 

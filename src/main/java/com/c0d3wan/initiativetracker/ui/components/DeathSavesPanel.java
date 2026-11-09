@@ -6,10 +6,13 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 
 public class DeathSavesPanel extends JPanel {
-    private final JButton passButton = new JButton("Pass");
-    private final JButton failButton = new JButton("Fail");
+    private final JButton passButton;
+    private final JButton failButton;
 
     public DeathSavesPanel() {
+        passButton = new JButton("Pass");
+        failButton = new JButton("Fail");
+
         buildUI();
     }
 
