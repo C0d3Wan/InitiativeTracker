@@ -41,7 +41,7 @@ public class Main {
         CharacterManager characterManager = new CharacterManager();
         ConfigManager.loadConfig();
 
-        BestiarySyncManager.syncOfficialMonsters();
+        //BestiarySyncManager.syncOfficialMonsters();
 
         SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
     }
