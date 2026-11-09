@@ -23,6 +23,7 @@ public class MainWindow extends JFrame {
     private final InitiativeListPanel initiativeListPanel;
     private final CharacterDetailsPanel characterDetailsPanel;
     private final DeathSavesPanel deathSavesPanel;
+    private final JTabbedPane tabs = new JTabbedPane();
 
     /**
      * Constructs and initialises the main application window.
@@ -59,7 +60,6 @@ public class MainWindow extends JFrame {
         mainMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);
 
-        JTabbedPane tabs = new JTabbedPane();
         tabs.addTab("Initiative Order", initiativeListPanel);
         tabs.addTab("Details", characterDetailsPanel);
         tabs.addTab("Character Options", characterOptionsPanel);
@@ -103,5 +103,9 @@ public class MainWindow extends JFrame {
 
     public CharacterOptionsPanel getOptionsBarPanel() {
         return characterOptionsPanel;
+    }
+
+    public JTabbedPane getTabs() {
+        return tabs;
     }
 }
