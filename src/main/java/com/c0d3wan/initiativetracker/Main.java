@@ -21,6 +21,7 @@ import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiarySyncManager
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.ui.MainWindow;
+import com.c0d3wan.initiativetracker.ui.UIController;
 
 import javax.swing.*;
 
@@ -38,11 +39,18 @@ public class Main {
      * @param args Command-line arguments passed during startup (unused).
      */
     public static void main(String[] args) {
-        CharacterManager characterManager = new CharacterManager();
-        ConfigManager.loadConfig();
 
-        BestiarySyncManager.syncOfficialMonsters();
 
-        SwingUtilities.invokeLater(() -> new MainWindow(characterManager).setVisible(true));
+
+
+
+        SwingUtilities.invokeLater(() -> {
+            CharacterManager characterManager = new CharacterManager();
+            ConfigManager.loadConfig();
+            MainWindow window = new MainWindow();
+            UIController uiController = new UIController(window, characterManager);
+
+            BestiarySyncManager.syncOfficialMonsters();
+        });
     }
 }

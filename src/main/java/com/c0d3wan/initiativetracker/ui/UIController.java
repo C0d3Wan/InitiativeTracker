@@ -7,6 +7,8 @@ import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.data.CharacterType;
 import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
 import com.c0d3wan.initiativetracker.ui.bestiary.BestiaryMenu;
+import com.c0d3wan.initiativetracker.ui.components.CharacterDetailsPanel;
+import com.c0d3wan.initiativetracker.ui.components.DeathSavesPanel;
 import com.c0d3wan.initiativetracker.ui.components.InitiativeListPanel;
 import com.c0d3wan.initiativetracker.ui.dialogs.AddCharacterDialog;
 import com.c0d3wan.initiativetracker.ui.dialogs.EditNPCDialog;
@@ -30,35 +32,105 @@ public class UIController {
     private final MainWindow parentFrame;
     private final Map<String, Character> characterMap = new HashMap<>();
     private final Map<String, NonePlayerCharacter> npcMap = new HashMap<>();
-    private final InitiativeListPanel initiativeListPanel;
 
-    private JButton passSaveButton;
-    private JButton failSaveButton;
-    private JLabel deathSaveLabel;
+    private final InitiativeListPanel initiativeListPanel;
+    private final CharacterDetailsPanel characterDetailsPanel;
+    private final DeathSavesPanel deathSavesPanel;
 
     /**
      * Constructs a new UIManager instance and attaches views and cell renderers.
      *
      * @param parentFrame      The primary {@link JFrame} hosting the interface.
      * @param characterManager The {@link CharacterManager} providing domain logic.
-     * @param initiativeListPanel   The {@link JList} visual component displaying initiative order.
      */
-    public UIController(MainWindow parentFrame, CharacterManager characterManager, InitiativeListPanel initiativeListPanel) {
+    public UIController(MainWindow parentFrame, CharacterManager characterManager) {
         this.characterManager = characterManager;
         this.parentFrame = parentFrame;
-        this.initiativeListPanel = initiativeListPanel;
+        this.initiativeListPanel = parentFrame.getInitiativeListPanel();
+        this.characterDetailsPanel = parentFrame.getCharacterDetailsPanel();
+        this.deathSavesPanel = parentFrame.getDeathSavesPanel();
+    }
+
+    private static JFileChooser createFileMenu() {
+        JFileChooser fileMenu = new JFileChooser();
+        fileMenu.setFileHidingEnabled(false);
+        fileMenu.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                if (file.isDirectory()) {
+                    return true;
+                } else {
+                    String filename = file.getName().toLowerCase();
+                    return filename.endsWith(".sav");
+                }
+            }
+
+            @Override
+            public String getDescription() {
+                return "Save Files (*.sav)";
+            }
+        });
+        fileMenu.setCurrentDirectory(FileManager.getSaveDirectory());
+        return fileMenu;
+    }
+
+    private void initialiseListeners() {
+        initiativeListPanel.addSelectionListener(e -> {
+            Character selectedCharacter = initiativeListPanel.getSelectedCharacter();
+        });
+        deathSavesPanel.addPassListener(e -> passDeathSave(true));
+        deathSavesPanel.addFailListener(e -> passDeathSave(false));
     }
 
     /**
-     * Adds the death save items to the uiManager
-     * @param passSaveButton   The {@link JButton} triggered when a death save succeeds.
-     * @param failSaveButton   The {@link JButton} triggered when a death save fails.
-     * @param deathSaveLabel   The {@link JLabel} displayed when death saves are applicable.
+     * Synchronises the internal name-to-character lookup table with the character manager.
      */
-    public void shareDeathSaveItems(JButton passSaveButton, JButton failSaveButton, JLabel deathSaveLabel) {
-        this.passSaveButton = passSaveButton;
-        this.failSaveButton = failSaveButton;
-        this.deathSaveLabel = deathSaveLabel;
+    private void updateCharacterMap() {
+        characterMap.clear();
+        npcMap.clear();
+        for (Character character : characterManager.getCharacterList()) {
+            if (character.getCharacterType() != CharacterType.PLAYER) {
+                npcMap.put(character.getName(), (NonePlayerCharacter) character);
+            } else {
+                characterMap.put(character.getName(), character);
+            }
+        }
+    }
+
+    /**
+     * Adjusts the visibility and text of death save UI controls based on whether
+     * the active character at the top of the initiative order is downed.
+     */
+    private void updateDeathSaveButtons() {
+        if (deathSavesPanel == null) {
+            return;
+        }
+        deathSavesPanel.setVisible(false);
+
+        Character currentCharacter = initiativeListPanel.getCurrentCharacter();
+
+        if (currentCharacter == null) {
+            parentFrame.revalidate();
+            parentFrame.repaint();
+            return;
+        }
+
+        if (currentCharacter.getDeathStatus() == DeathStatus.DOWN) {
+            deathSavesPanel.setVisible(true);
+        }
+
+        parentFrame.revalidate();
+        parentFrame.repaint();
+    }
+
+    /**
+     * Clears and repopulates the initiative list model from the manager's active order,
+     * subsequently updating the death save control buttons.
+     */
+    private void updateInitiativeList() {
+        initiativeListPanel.refreshCharacters(characterManager.getInitiativeOrder());
+
+        updateDeathSaveButtons();
     }
 
     /**
@@ -131,31 +203,6 @@ public class UIController {
     }
 
     /**
-     * Synchronises the internal name-to-character lookup table with the character manager.
-     */
-    private void updateCharacterMap() {
-        characterMap.clear();
-        npcMap.clear();
-        for (Character character : characterManager.getCharacterList()) {
-            if (character.getCharacterType() != CharacterType.PLAYER) {
-                npcMap.put(character.getName(), (NonePlayerCharacter) character);
-            } else {
-                characterMap.put(character.getName(), character);
-            }
-        }
-    }
-
-    /**
-     * Clears and repopulates the initiative list model from the manager's active order,
-     * subsequently updating the death save control buttons.
-     */
-    private void updateInitiativeList() {
-        initiativeListPanel.refreshCharacters(characterManager.getInitiativeOrder());
-
-        updateDeathSaveButtons();
-    }
-
-    /**
      * Advances the game to the next participant's turn and repaints the initiative order.
      */
     public void nextTurn() {
@@ -174,38 +221,6 @@ public class UIController {
             currentCharacter.deathSave(passed);
             updateInitiativeList();
         }
-    }
-
-    /**
-     * Adjusts the visibility and text of death save UI controls based on whether
-     * the active character at the top of the initiative order is downed.
-     */
-    private void updateDeathSaveButtons() {
-        if (passSaveButton == null ||
-                failSaveButton == null ||
-                deathSaveLabel == null) {
-            return;
-        }
-        passSaveButton.setVisible(false);
-        failSaveButton.setVisible(false);
-        deathSaveLabel.setVisible(false);
-
-        Character currentCharacter = initiativeListPanel.getCurrentCharacter();
-
-        if (currentCharacter == null) {
-            parentFrame.revalidate();
-            parentFrame.repaint();
-            return;
-        }
-
-        if (currentCharacter.getDeathStatus() == DeathStatus.DOWN) {
-            passSaveButton.setVisible(true);
-            failSaveButton.setVisible(true);
-            deathSaveLabel.setVisible(true);
-        }
-
-        parentFrame.revalidate();
-        parentFrame.repaint();
     }
 
     /**
@@ -258,28 +273,5 @@ public class UIController {
             SaveLoadManager.load(characterManager, file, true);
             updateInitiativeList();
         }
-    }
-
-    private static JFileChooser createFileMenu() {
-        JFileChooser fileMenu = new JFileChooser();
-        fileMenu.setFileHidingEnabled(false);
-        fileMenu.setFileFilter(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                if (file.isDirectory()) {
-                    return true;
-                } else {
-                    String filename = file.getName().toLowerCase();
-                    return filename.endsWith(".sav");
-                }
-            }
-
-            @Override
-            public String getDescription() {
-                return "Save Files (*.sav)";
-            }
-        });
-        fileMenu.setCurrentDirectory(FileManager.getSaveDirectory());
-        return fileMenu;
     }
 }

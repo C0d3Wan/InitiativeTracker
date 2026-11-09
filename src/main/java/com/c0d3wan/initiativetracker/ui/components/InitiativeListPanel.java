@@ -5,6 +5,7 @@ import com.c0d3wan.initiativetracker.ui.renderers.CharacterCellRenderer;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 import java.util.List;
 
 public class InitiativeListPanel extends JPanel {
@@ -39,5 +40,13 @@ public class InitiativeListPanel extends JPanel {
         } else {
             return listModel.get(0);
         }
+    }
+
+    public void addSelectionListener(ListSelectionListener listener) {
+        initiativeList.addListSelectionListener(listener);
+    }
+
+    public Character getSelectedCharacter() {
+        return initiativeList.getSelectedValue();
     }
 }

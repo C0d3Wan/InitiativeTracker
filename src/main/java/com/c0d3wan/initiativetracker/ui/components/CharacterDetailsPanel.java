@@ -15,4 +15,6 @@ public class CharacterDetailsPanel extends JPanel {
     private void buildUI() {
         setLayout(new MigLayout("fill", "[]", "[]"));
     }
+
+
 }

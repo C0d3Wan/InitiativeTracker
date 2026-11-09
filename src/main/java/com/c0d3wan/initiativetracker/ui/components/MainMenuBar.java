@@ -7,7 +7,6 @@ import com.formdev.flatlaf.FlatLaf;
 import javax.swing.*;
 
 public class MainMenuBar extends JMenuBar {
-    private final UIController uiController;
     private final MainWindow parentFrame;
 
     private final JMenuItem openItem;
@@ -18,8 +17,7 @@ public class MainMenuBar extends JMenuBar {
     private final JMenuItem lightMode;
     private final JMenuItem darkMode;
 
-    public MainMenuBar(MainWindow parent, UIController manager) {
-        uiController = manager;
+    public MainMenuBar(MainWindow parent) {
         parentFrame = parent;
 
         openItem = new JMenuItem("Open");

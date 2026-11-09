@@ -6,6 +6,7 @@ import javax.swing.border.TitledBorder;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.ui.components.CharacterDetailsPanel;
+import com.c0d3wan.initiativetracker.ui.components.DeathSavesPanel;
 import com.c0d3wan.initiativetracker.ui.components.InitiativeListPanel;
 import com.c0d3wan.initiativetracker.ui.components.MainMenuBar;
 import com.formdev.flatlaf.FlatLaf;
@@ -23,17 +24,13 @@ public class MainWindow extends JFrame {
     private final JButton addCharacterButton = new JButton("Add Character");
     private final JButton nextTurnButton = new JButton("Next Turn");
     private final JButton removeCharacterButton = new JButton("Remove Character");
-    private final InitiativeListPanel initiativeListPanel;
-    private final CharacterDetailsPanel characterDetailsPanel;
     private final JButton editCharacterButton = new JButton("Edit Character");
-    private final JButton passButton = new JButton("Pass");
-    private final JButton failButton = new JButton("Fail");
-    private final JLabel deathSaveLabel = new JLabel("Death Saves:");
     private final JButton editNPCHealthButton = new JButton("Edit NPC Health");
 
     private final JMenuBar menuBar;
-
-    private final UIController uiController;
+    private final InitiativeListPanel initiativeListPanel;
+    private final CharacterDetailsPanel characterDetailsPanel;
+    private final DeathSavesPanel deathSavesPanel;
 
     /**
      * Constructs and initialises the main application window.
@@ -43,10 +40,10 @@ public class MainWindow extends JFrame {
     public MainWindow(CharacterManager characterManager) {
         initiativeListPanel = new InitiativeListPanel();
         characterDetailsPanel = new CharacterDetailsPanel();
-        uiController = new UIController(this, characterManager, initiativeListPanel);
-        menuBar = new MainMenuBar(this, uiController);
+        deathSavesPanel = new DeathSavesPanel();
+
+        menuBar = new MainMenuBar(this);
         //uiController.openBestiaryMenu();
-        uiController.shareDeathSaveItems(passButton, failButton, deathSaveLabel);
         setupMainMenu();
 
         setJMenuBar(menuBar);
@@ -91,8 +88,6 @@ public class MainWindow extends JFrame {
         final JLabel label1 = new JLabel("Initiative Order");
 
         nextTurnButton.setFocusPainted(false);
-        passButton.setFocusPainted(false);
-        failButton.setFocusPainted(false);
 
         final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, initiativeListPanel, characterDetailsPanel);
         characterDetailsPanel.setVisible(false);
@@ -106,15 +101,11 @@ public class MainWindow extends JFrame {
         mainMenuPane.add(label1, "cell 0 2, span");
 
         mainMenuPane.add(nextTurnButton, "cell 0 3, growx");
-        mainMenuPane.add(deathSaveLabel, "cell 1 3, align right");
-        mainMenuPane.add(passButton, "cell 2 3, growx");
-        mainMenuPane.add(failButton, "cell 3 3, growx");
+        mainMenuPane.add(deathSavesPanel, "cell 1 3, align right, span");
 
         mainMenuPane.add(splitPane, "cell 0 4, span, grow, pushy");
 
-        deathSaveLabel.setVisible(false);
-        passButton.setVisible(false);
-        failButton.setVisible(false);
+        deathSavesPanel.setVisible(false);
     }
 
     /**
@@ -133,5 +124,17 @@ public class MainWindow extends JFrame {
             ConfigManager.saveConfig();
             System.exit(0);
         }
+    }
+
+    public InitiativeListPanel getInitiativeListPanel() {
+        return initiativeListPanel;
+    }
+
+    public CharacterDetailsPanel getCharacterDetailsPanel() {
+        return characterDetailsPanel;
+    }
+
+    public DeathSavesPanel getDeathSavesPanel() {
+        return deathSavesPanel;
     }
 }
