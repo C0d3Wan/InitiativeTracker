@@ -10,6 +10,7 @@ import com.c0d3wan.initiativetracker.ui.bestiary.BestiaryMenu;
 import com.c0d3wan.initiativetracker.ui.components.CharacterDetailsPanel;
 import com.c0d3wan.initiativetracker.ui.components.DeathSavesPanel;
 import com.c0d3wan.initiativetracker.ui.components.InitiativeListPanel;
+import com.c0d3wan.initiativetracker.ui.components.MainMenuBar;
 import com.c0d3wan.initiativetracker.ui.dialogs.AddCharacterDialog;
 import com.c0d3wan.initiativetracker.ui.dialogs.EditNPCDialog;
 import com.c0d3wan.initiativetracker.ui.dialogs.EditPlayerDialog;
@@ -29,13 +30,14 @@ import java.util.Map;
  */
 public class UIController {
     private final CharacterManager characterManager;
-    private final MainWindow parentFrame;
+    private final MainWindow mainWindow;
     private final Map<String, Character> characterMap = new HashMap<>();
     private final Map<String, NonePlayerCharacter> npcMap = new HashMap<>();
 
     private final InitiativeListPanel initiativeListPanel;
     private final CharacterDetailsPanel characterDetailsPanel;
     private final DeathSavesPanel deathSavesPanel;
+    private final MainMenuBar menuBar;
 
     /**
      * Constructs a new UIManager instance and attaches views and cell renderers.
@@ -45,10 +47,13 @@ public class UIController {
      */
     public UIController(MainWindow parentFrame, CharacterManager characterManager) {
         this.characterManager = characterManager;
-        this.parentFrame = parentFrame;
-        this.initiativeListPanel = parentFrame.getInitiativeListPanel();
-        this.characterDetailsPanel = parentFrame.getCharacterDetailsPanel();
-        this.deathSavesPanel = parentFrame.getDeathSavesPanel();
+        this.mainWindow = parentFrame;
+        initiativeListPanel = mainWindow.getInitiativeListPanel();
+        characterDetailsPanel = mainWindow.getCharacterDetailsPanel();
+        deathSavesPanel = mainWindow.getDeathSavesPanel();
+        menuBar = mainWindow.getMainMenuBar();
+
+        initialiseListeners();
     }
 
     private static JFileChooser createFileMenu() {
@@ -80,6 +85,21 @@ public class UIController {
         });
         deathSavesPanel.addPassListener(e -> passDeathSave(true));
         deathSavesPanel.addFailListener(e -> passDeathSave(false));
+
+        menuBar.addLightModeListener(e -> {
+            setDarkMode(false);
+            menuBar.enableDarkButton(false);
+        });
+        menuBar.addDarkModeListener(e -> {
+            setDarkMode(true);
+            menuBar.enableDarkButton(true);
+        });
+        menuBar.addOpenItemListener(e -> loadList());
+        menuBar.addSaveItemListener(e -> saveList());
+        menuBar.addSaveAsItemListener(e -> saveListAs());
+        menuBar.addExitListener(e -> mainWindow.confirmExit());
+
+
     }
 
     /**
@@ -110,8 +130,8 @@ public class UIController {
         Character currentCharacter = initiativeListPanel.getCurrentCharacter();
 
         if (currentCharacter == null) {
-            parentFrame.revalidate();
-            parentFrame.repaint();
+            mainWindow.revalidate();
+            mainWindow.repaint();
             return;
         }
 
@@ -119,8 +139,8 @@ public class UIController {
             deathSavesPanel.setVisible(true);
         }
 
-        parentFrame.revalidate();
-        parentFrame.repaint();
+        mainWindow.revalidate();
+        mainWindow.repaint();
     }
 
     /**
@@ -139,7 +159,7 @@ public class UIController {
      */
     public void openAddCharacterMenu() {
         updateCharacterMap();
-        AddCharacterDialog addCharacterDialog = new AddCharacterDialog(parentFrame, characterMap);
+        AddCharacterDialog addCharacterDialog = new AddCharacterDialog(mainWindow, characterMap);
         addCharacterDialog.setVisible(true);
 
         if (addCharacterDialog.isConfirmed()) {
@@ -160,7 +180,7 @@ public class UIController {
     public void openEditCharacterMenu() {
         updateCharacterMap();
 
-        EditPlayerDialog editPlayerDialog = new EditPlayerDialog(parentFrame, characterMap);
+        EditPlayerDialog editPlayerDialog = new EditPlayerDialog(mainWindow, characterMap);
         editPlayerDialog.setVisible(true);
 
         characterManager.updateCharacters();
@@ -173,7 +193,7 @@ public class UIController {
     public void openEditNPCHealthMenu() {
         updateCharacterMap();
 
-        EditNPCDialog editNPCDialog = new EditNPCDialog(parentFrame, npcMap);
+        EditNPCDialog editNPCDialog = new EditNPCDialog(mainWindow, npcMap);
         editNPCDialog.setVisible(true);
 
         characterManager.updateCharacters();
@@ -185,7 +205,7 @@ public class UIController {
      */
     public void openRemoveCharacterMenu() {
         updateCharacterMap();
-        RemoveCharacterDialog removeCharacterDialog = new RemoveCharacterDialog(parentFrame, characterManager, characterMap, npcMap);
+        RemoveCharacterDialog removeCharacterDialog = new RemoveCharacterDialog(mainWindow, characterManager, characterMap, npcMap);
         removeCharacterDialog.setVisible(true);
 
         updateInitiativeList();
@@ -195,7 +215,7 @@ public class UIController {
      * Opens the modal dialogue to browse the bestiary database and add monsters to tracker.
      */
     public void openBestiaryMenu() {
-        BestiaryMenu bestiaryMenu = new BestiaryMenu(parentFrame, characterManager);
+        BestiaryMenu bestiaryMenu = new BestiaryMenu(mainWindow, characterManager);
         bestiaryMenu.setVisible(true);
 
         characterManager.updateCharacters();
@@ -250,7 +270,7 @@ public class UIController {
     public void saveListAs() {
 
         JFileChooser saveAsMenu = createFileMenu();
-        int isConfirmed = saveAsMenu.showSaveDialog(parentFrame);
+        int isConfirmed = saveAsMenu.showSaveDialog(mainWindow);
 
         if (isConfirmed == JFileChooser.APPROVE_OPTION) {
             File file = saveAsMenu.getSelectedFile();
@@ -266,7 +286,7 @@ public class UIController {
      */
     public void loadList() {
         JFileChooser loadMenu = createFileMenu();
-        int isConfirmed = loadMenu.showOpenDialog(parentFrame);
+        int isConfirmed = loadMenu.showOpenDialog(mainWindow);
 
         if (isConfirmed == JFileChooser.APPROVE_OPTION) {
             File file = loadMenu.getSelectedFile();

@@ -27,7 +27,7 @@ public class MainWindow extends JFrame {
     private final JButton editCharacterButton = new JButton("Edit Character");
     private final JButton editNPCHealthButton = new JButton("Edit NPC Health");
 
-    private final JMenuBar menuBar;
+    private final MainMenuBar menuBar;
     private final InitiativeListPanel initiativeListPanel;
     private final CharacterDetailsPanel characterDetailsPanel;
     private final DeathSavesPanel deathSavesPanel;
@@ -58,9 +58,6 @@ public class MainWindow extends JFrame {
         editNPCHealthButton.addActionListener(e -> uiController.openEditNPCHealthMenu());
         removeCharacterButton.addActionListener(e -> uiController.openRemoveCharacterMenu());
         nextTurnButton.addActionListener(e -> uiController.nextTurn());
-
-        passButton.addActionListener(e -> uiController.passDeathSave(true));
-        failButton.addActionListener(e -> uiController.passDeathSave(false));
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -136,5 +133,9 @@ public class MainWindow extends JFrame {
 
     public DeathSavesPanel getDeathSavesPanel() {
         return deathSavesPanel;
+    }
+
+    public MainMenuBar getMainMenuBar() {
+        return menuBar;
     }
 }

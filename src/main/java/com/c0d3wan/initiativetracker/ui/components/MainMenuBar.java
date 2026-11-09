@@ -5,6 +5,8 @@ import com.c0d3wan.initiativetracker.ui.UIController;
 import com.formdev.flatlaf.FlatLaf;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainMenuBar extends JMenuBar {
     private final MainWindow parentFrame;
@@ -56,19 +58,40 @@ public class MainMenuBar extends JMenuBar {
     }
 
     private void addActionListeners() {
-        lightMode.addActionListener(e -> {
-            UIController.setDarkMode(false);
+        exitItem.addActionListener(e -> parentFrame.confirmExit());
+    }
+
+    public void enableDarkButton(boolean enableDark) {
+        if (enableDark) {
             lightMode.setEnabled(false);
             darkMode.setEnabled(true);
-        });
-        darkMode.addActionListener(e -> {
-            UIController.setDarkMode(true);
+        } else {
             lightMode.setEnabled(true);
             darkMode.setEnabled(false);
-        });
-        openItem.addActionListener(e -> uiController.loadList());
-        saveItem.addActionListener(e -> uiController.saveList());
-        saveAsItem.addActionListener(e -> uiController.saveListAs());
-        exitItem.addActionListener(e -> parentFrame.confirmExit());
+        }
+    }
+
+    public void addLightModeListener(ActionListener listener) {
+        lightMode.addActionListener(listener);
+    }
+
+    public void addDarkModeListener(ActionListener listener) {
+        darkMode.addActionListener(listener);
+    }
+
+    public void addOpenItemListener(ActionListener listener) {
+        openItem.addActionListener(listener);
+    }
+
+    public void addSaveItemListener(ActionListener listener) {
+        saveItem.addActionListener(listener);
+    }
+
+    public void addSaveAsItemListener(ActionListener listener) {
+        saveAsItem.addActionListener(listener);
+    }
+
+    public void addExitListener(ActionListener listener) {
+        exitItem.addActionListener(listener);
     }
 }
