@@ -18,6 +18,6 @@ public class CharacterDetailsPanel extends JPanel {
     }
 
     public void displayCharacter(Character character) {
-        return;
+
     }
 }

@@ -16,13 +16,11 @@ import java.awt.event.WindowEvent;
  */
 public class MainWindow extends JFrame {
     private final JPanel mainMenuPane = new JPanel();
-    private final JButton nextTurnButton = new JButton("Next Turn");
 
     private final MainMenuBar menuBar;
     private final CharacterOptionsPanel characterOptionsPanel;
     private final InitiativeListPanel initiativeListPanel;
     private final CharacterDetailsPanel characterDetailsPanel;
-    private final DeathSavesPanel deathSavesPanel;
     private final JTabbedPane tabs = new JTabbedPane();
 
     /**
@@ -31,7 +29,6 @@ public class MainWindow extends JFrame {
     public MainWindow() {
         initiativeListPanel = new InitiativeListPanel();
         characterDetailsPanel = new CharacterDetailsPanel();
-        deathSavesPanel = new DeathSavesPanel();
         menuBar = new MainMenuBar();
         characterOptionsPanel = new CharacterOptionsPanel();
         setupMainMenu();
@@ -93,19 +90,11 @@ public class MainWindow extends JFrame {
         return characterDetailsPanel;
     }
 
-    public DeathSavesPanel getDeathSavesPanel() {
-        return deathSavesPanel;
-    }
-
     public MainMenuBar getMainMenuBar() {
         return menuBar;
     }
 
     public CharacterOptionsPanel getOptionsBarPanel() {
         return characterOptionsPanel;
-    }
-
-    public JTabbedPane getTabs() {
-        return tabs;
     }
 }

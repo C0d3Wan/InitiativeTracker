@@ -11,7 +11,6 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * Custom {@link ListCellRenderer} panel responsible for rendering character summary rows
