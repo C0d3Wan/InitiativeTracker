@@ -1,14 +1,15 @@
 package com.c0d3wan.initiativetracker.ui;
 
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
-import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
-import com.c0d3wan.initiativetracker.filemanagement.saveload.SaveLoadManager;
+import com.c0d3wan.initiativetracker.filemanagement.saveload.*;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.data.*;
 import com.c0d3wan.initiativetracker.ui.bestiary.BestiaryMenu;
 import com.c0d3wan.initiativetracker.ui.components.*;
-import com.c0d3wan.initiativetracker.ui.dialogs.*;
+import com.c0d3wan.initiativetracker.ui.dialogs.RemoveCharacterDialog;
+import com.c0d3wan.initiativetracker.ui.dialogs.adders.*;
+import com.c0d3wan.initiativetracker.ui.dialogs.editers.*;
 import com.formdev.flatlaf.*;
 
 import javax.swing.*;
