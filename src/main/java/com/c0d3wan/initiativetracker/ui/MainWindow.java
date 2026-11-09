@@ -39,8 +39,6 @@ public class MainWindow extends JFrame {
         characterDetailsPanel = new CharacterDetailsPanel();
         deathSavesPanel = new DeathSavesPanel();
         menuBar = new MainMenuBar();
-
-        //uiController.openBestiaryMenu();
         setupMainMenu();
 
         setJMenuBar(menuBar);

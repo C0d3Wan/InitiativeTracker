@@ -45,8 +45,6 @@ public class Main {
             MainWindow mainWindow = new MainWindow();
             UIController uiController = new UIController(mainWindow, characterManager);
             mainWindow.setVisible(true);
-
-            BestiarySyncManager.syncOfficialMonsters();
         });
     }
 }

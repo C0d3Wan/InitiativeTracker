@@ -48,7 +48,7 @@ public class UIController {
      */
     public UIController(MainWindow parentFrame, CharacterManager characterManager) {
         this.characterManager = characterManager;
-        this.mainWindow = parentFrame;
+        mainWindow = parentFrame;
         initiativeListPanel = mainWindow.getInitiativeListPanel();
         characterDetailsPanel = mainWindow.getCharacterDetailsPanel();
         deathSavesPanel = mainWindow.getDeathSavesPanel();
