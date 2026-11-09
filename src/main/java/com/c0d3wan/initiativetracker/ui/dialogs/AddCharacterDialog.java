@@ -85,10 +85,6 @@ public class AddCharacterDialog extends JDialog {
         CharacterType type = (CharacterType) characterTypeCombo.getSelectedItem();
         DeathStatus status = (DeathStatus) deathStatusCombo.getSelectedItem();
 
-        if (name.length() > 16) {
-            name = name.substring(0, 16) + "...";
-        }
-
         if (type == null) {return;}
         Character newCharacter;
         if (type != CharacterType.PLAYER) {
@@ -123,8 +119,6 @@ public class AddCharacterDialog extends JDialog {
         setMinimumSize(windowSize);
 
         setContentPane(addCharacterPane);
-
-        characterName.setColumns(16);
 
         final JLabel characterNameLabel = new JLabel("Character Name:");
         final JLabel initiativeLabel = new JLabel("Initiative:");

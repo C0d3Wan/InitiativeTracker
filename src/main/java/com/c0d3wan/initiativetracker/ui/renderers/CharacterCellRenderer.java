@@ -11,6 +11,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Custom {@link ListCellRenderer} panel responsible for rendering character summary rows
@@ -115,7 +116,8 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
             boolean isSelected,
             boolean cellHasFocus) {
         CharacterData characterData = character.getCharacterData();
-        nameLabel.setText(character.getName());
+        String name = character.getName();
+        //nameLabel.setText(character.getName());
         conditionLabel.setText(listConditions(character));
         initiativeLabel.setText(String.valueOf(character.getInitiativeValue()));
         characterTypeLabel.setText(character.getCharacterType().toString());
@@ -129,6 +131,10 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         } else {
             npcHealth.setText("N/A");
         }
+        if (name.length() > 16) {
+            name = name.substring(0, 16) + "...";
+        }
+        nameLabel.setText(name);
 
         if (index == 0) {
             setBackground(ACTIVE_TURN_COLOR);

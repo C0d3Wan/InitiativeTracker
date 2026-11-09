@@ -8,7 +8,6 @@ import com.c0d3wan.initiativetracker.ui.components.*;
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -20,7 +19,7 @@ public class MainWindow extends JFrame {
     private final JButton nextTurnButton = new JButton("Next Turn");
 
     private final MainMenuBar menuBar;
-    private final OptionsBarPanel optionsBarPanel;
+    private final CharacterOptionsPanel characterOptionsPanel;
     private final InitiativeListPanel initiativeListPanel;
     private final CharacterDetailsPanel characterDetailsPanel;
     private final DeathSavesPanel deathSavesPanel;
@@ -33,7 +32,7 @@ public class MainWindow extends JFrame {
         characterDetailsPanel = new CharacterDetailsPanel();
         deathSavesPanel = new DeathSavesPanel();
         menuBar = new MainMenuBar();
-        optionsBarPanel = new OptionsBarPanel();
+        characterOptionsPanel = new CharacterOptionsPanel();
         setupMainMenu();
 
         setJMenuBar(menuBar);
@@ -63,7 +62,7 @@ public class MainWindow extends JFrame {
         JTabbedPane tabs = new JTabbedPane();
         tabs.addTab("Initiative Order", initiativeListPanel);
         tabs.addTab("Details", characterDetailsPanel);
-        tabs.addTab("Character Options", optionsBarPanel);
+        tabs.addTab("Character Options", characterOptionsPanel);
 
         mainMenuPane.add(tabs, "span, grow, push");
     }
@@ -102,7 +101,7 @@ public class MainWindow extends JFrame {
         return menuBar;
     }
 
-    public OptionsBarPanel getOptionsBarPanel() {
-        return optionsBarPanel;
+    public CharacterOptionsPanel getOptionsBarPanel() {
+        return characterOptionsPanel;
     }
 }

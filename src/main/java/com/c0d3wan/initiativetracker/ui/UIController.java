@@ -32,7 +32,7 @@ public class UIController {
     private final CharacterDetailsPanel characterDetailsPanel;
     private final DeathSavesPanel deathSavesPanel;
     private final MainMenuBar menuBar;
-    private final OptionsBarPanel optionsBarPanel;
+    private final CharacterOptionsPanel characterOptionsPanel;
 
     /**
      * Constructs a new UIManager instance and attaches views and cell renderers.
@@ -47,7 +47,7 @@ public class UIController {
         characterDetailsPanel = mainWindow.getCharacterDetailsPanel();
         deathSavesPanel = initiativeListPanel.getDeathSavesPanel();
         menuBar = mainWindow.getMainMenuBar();
-        optionsBarPanel = mainWindow.getOptionsBarPanel();
+        characterOptionsPanel = mainWindow.getOptionsBarPanel();
 
         initialiseListeners();
     }
@@ -96,10 +96,10 @@ public class UIController {
         menuBar.addSaveAsItemListener(e -> saveListAs());
         menuBar.addExitListener(e -> confirmExit());
 
-        optionsBarPanel.addAddCharacterListener(e -> openAddCharacterMenu());
-        optionsBarPanel.addEditCharacterListener(e -> openEditCharacterMenu());
-        optionsBarPanel.addEditNpcListener(e -> openEditNPCHealthMenu());
-        optionsBarPanel.addRemoveCharacterListener(e -> openRemoveCharacterMenu());
+        characterOptionsPanel.addAddCharacterListener(e -> openAddCharacterMenu());
+        characterOptionsPanel.addEditCharacterListener(e -> openEditCharacterMenu());
+        characterOptionsPanel.addEditNpcListener(e -> openEditNPCHealthMenu());
+        characterOptionsPanel.addRemoveCharacterListener(e -> openRemoveCharacterMenu());
         initiativeListPanel.addNextTurnListener(e -> nextTurn());
     }
 

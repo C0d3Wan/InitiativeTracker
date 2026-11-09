@@ -5,13 +5,13 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
-public class OptionsBarPanel extends JPanel{
+public class CharacterOptionsPanel extends JPanel{
     private final JButton addCharacterButton;
     private final JButton removeCharacterButton;
     private final JButton editCharacterButton;
     private final JButton editNPCHealthButton;
 
-    public OptionsBarPanel() {
+    public CharacterOptionsPanel() {
         addCharacterButton = new JButton("Add Character");
         editCharacterButton = new JButton("Edit Character");
         editNPCHealthButton = new JButton("Edit NPC Health");
