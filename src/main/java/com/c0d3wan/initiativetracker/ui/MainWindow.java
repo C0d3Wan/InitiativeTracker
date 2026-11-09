@@ -55,7 +55,7 @@ public class MainWindow extends JFrame {
      */
     private void setupMainMenu() {
         Dimension windowSize = new Dimension(650, 400);
-        mainMenuPane.setLayout(new MigLayout("insets 2 0 2 0, fill", "[l][center][center][center]", "[center][center][center][center][center]"));
+        mainMenuPane.setLayout(new MigLayout("insets 2 0 2 0, fill", "[c][c][c][c]", "[center][center][center][center][center]"));
         mainMenuPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         setMinimumSize(windowSize);
 
