@@ -69,7 +69,6 @@ public class DatabaseToJsonExporter {
 
             rootJson.add("monsters", monstersArray);
 
-            // Ensure resources directory exists, then write directly into src/main/resources/
             File outputFile = new File("src/main/resources/bestiary_export.json");
             outputFile.getParentFile().mkdirs();
 

@@ -291,7 +291,6 @@ public class BestiaryMenu extends JDialog {
                     })
                     .toList();
 
-            // Group by Main Group
             Map<String, List<BestiaryDTO.Monster>> groupedByMain = filteredList.stream()
                     .collect(Collectors.groupingBy(m -> m.getGroupName() != null ? m.getGroupName() : "Uncategorized"));
 

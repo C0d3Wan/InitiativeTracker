@@ -48,7 +48,6 @@ public class BestiaryDTO {
         private ActionGroup legendaryActions;
         private ActionGroup lairActions;
 
-        // Nested Support Classes
         public static class HitPoints {
             private int average;
             private String formula;
@@ -82,7 +81,6 @@ public class BestiaryDTO {
             public void setActions(List<Feature> actions) { this.actions = actions; }
         }
 
-        // Standard Getters and Setters
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
 

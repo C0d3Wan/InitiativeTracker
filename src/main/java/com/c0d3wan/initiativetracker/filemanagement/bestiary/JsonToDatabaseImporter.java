@@ -197,7 +197,6 @@ public class JsonToDatabaseImporter {
             }
         }
 
-        // Insert Stats
         if (m.has("stats") && !m.get("stats").isJsonNull()) {
             JsonObject stats = m.getAsJsonObject("stats");
             String statsSql = "INSERT OR REPLACE INTO MonsterStats (monster_id, strength, dexterity, constitution, intelligence, wisdom, charisma) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -213,7 +212,6 @@ public class JsonToDatabaseImporter {
             }
         }
 
-        // Insert Speeds
         if (m.has("speeds") && m.get("speeds").isJsonArray()) {
             JsonArray speedsArray = m.getAsJsonArray("speeds");
             String speedTypeInsertSql = "INSERT OR IGNORE INTO SpeedType (name) VALUES (?)";
@@ -239,7 +237,6 @@ public class JsonToDatabaseImporter {
             }
         }
 
-        // Insert Tags
         if (m.has("tags") && m.get("tags").isJsonArray()) {
             JsonArray tagsArray = m.getAsJsonArray("tags");
             String tagInsertSql = "INSERT OR IGNORE INTO Tag (name) VALUES (?)";
@@ -261,7 +258,6 @@ public class JsonToDatabaseImporter {
             }
         }
 
-        // Insert Abilities
         if (m.has("abilities") && m.get("abilities").isJsonArray()) {
             JsonArray abilitiesArray = m.getAsJsonArray("abilities");
             String abilityInsertSql = "INSERT INTO MonsterAbility (monster_id, ability_type, display_order, name, description, recharge) VALUES (?, ?, ?, ?, ?, ?)";

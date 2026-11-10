@@ -215,7 +215,7 @@ public class AddHomebrewMonsterMenu extends JDialog {
         BestiaryDTO.Monster monster = new BestiaryDTO.Monster();
         monster.setName(name);
         monster.setGroupName(groupField.getText().trim().isBlank() ? "Homebrew" : groupField.getText().trim());
-        monster.setOfficial(false); // Mark as custom user homebrew
+        monster.setOfficial(false);
 
         String sub = subgroupField.getText().trim();
         if (!sub.isBlank()) {
@@ -243,7 +243,6 @@ public class AddHomebrewMonsterMenu extends JDialog {
         stats.put("charisma", ((Number) chaSpinner.getValue()).intValue());
         monster.setStats(stats);
 
-        // Parse Skills
         String skillsText = skillsField.getText().trim();
         if (!skillsText.isBlank()) {
             Map<String, Integer> skillsMap = new HashMap<>();
@@ -258,7 +257,6 @@ public class AddHomebrewMonsterMenu extends JDialog {
             if (!skillsMap.isEmpty()) monster.setSkills(skillsMap);
         }
 
-        // Parse Saving Throws
         String savesText = savesField.getText().trim();
         if (!savesText.isBlank()) {
             Map<String, Integer> savesMap = new HashMap<>();
@@ -273,7 +271,6 @@ public class AddHomebrewMonsterMenu extends JDialog {
             if (!savesMap.isEmpty()) monster.setSavingThrows(savesMap);
         }
 
-        // Parse Defences & Immunities
         if (!resistancesField.getText().isBlank()) {
             monster.setDamageResistances(List.of(resistancesField.getText().trim().split("\\s*,\\s*")));
         }
@@ -284,7 +281,6 @@ public class AddHomebrewMonsterMenu extends JDialog {
             monster.setConditionImmunities(List.of(conditionImmunitiesField.getText().trim().split("\\s*,\\s*")));
         }
 
-        // Parse Speed
         Map<String, Integer> speed = new HashMap<>();
         String speedText = speedField.getText().trim();
         if (!speedText.isBlank()) {
@@ -328,7 +324,6 @@ public class AddHomebrewMonsterMenu extends JDialog {
         List<BestiaryDTO.Monster.Feature> actions = parseFeatures(actionsArea.getText());
         if (!actions.isEmpty()) monster.setActions(actions);
 
-        // Legendary Actions
         String legText = legendaryArea.getText().trim();
         if (!legText.isBlank()) {
             BestiaryDTO.Monster.ActionGroup leg = new BestiaryDTO.Monster.ActionGroup();
@@ -336,7 +331,6 @@ public class AddHomebrewMonsterMenu extends JDialog {
             monster.setLegendaryActions(leg);
         }
 
-        // Lair Actions
         String lairText = lairArea.getText().trim();
         if (!lairText.isBlank()) {
             BestiaryDTO.Monster.ActionGroup lair = new BestiaryDTO.Monster.ActionGroup();

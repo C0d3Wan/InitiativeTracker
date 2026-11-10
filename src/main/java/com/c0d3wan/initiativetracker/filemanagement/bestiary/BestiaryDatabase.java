@@ -58,7 +58,7 @@ public class BestiaryDatabase {
                 monster.setSpeed(loadSpeeds(conn, monsterId));
                 monster.setSenses(loadSenses(conn, monsterId));
                 monster.setLanguages(loadLanguages(conn, monsterId));
-                monster.setTags(loadTags(conn, monsterId)); // <-- Populates tags so tree sub-headers appear!
+                monster.setTags(loadTags(conn, monsterId));
                 monster.setTraits(loadAbilities(conn, monsterId, "Trait"));
                 monster.setActions(loadAbilities(conn, monsterId, "Action"));
                 monster.setReactions(loadAbilities(conn, monsterId, "Reaction"));
