@@ -20,7 +20,8 @@ package com.c0d3wan.initiativetracker;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.JsonToDatabaseImporter;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
-import com.c0d3wan.initiativetracker.swingui.MainMenu;
+import com.c0d3wan.initiativetracker.ui.MainWindow;
+import com.c0d3wan.initiativetracker.ui.UIController;
 
 import javax.swing.*;
 
@@ -38,15 +39,18 @@ public class Main {
      * @param args Command-line arguments passed during startup (unused).
      */
     public static void main(String[] args) {
-        CharacterManager characterManager = new CharacterManager();
-        ConfigManager.loadConfig();
-
         try {
             JsonToDatabaseImporter.main(new String[0]);
         } catch (Exception e) {
             System.err.println("Warning: Failed to initialize bestiary database from resources: " + e.getMessage());
         }
 
-        SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            CharacterManager characterManager = new CharacterManager();
+            ConfigManager.loadConfig();
+            MainWindow mainWindow = new MainWindow();
+            UIController uiController = new UIController(mainWindow, characterManager);
+            uiController.displayMainWindow();
+        });
     }
 }

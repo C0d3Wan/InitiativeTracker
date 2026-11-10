@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui;
+package com.c0d3wan.initiativetracker.ui.dialogs.adders;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -17,7 +17,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Modal {@link JDialog} interface for creating and adding a new character to the initiative tracker.
  */
-public class AddCharacterMenu extends JDialog {
+public class AddCharacterDialog extends JDialog {
     private final JPanel addCharacterPane = new JPanel();
     private final JTextField characterName = new JTextField();
     private final JSpinner initiativeSpinner = new JSpinner();
@@ -41,7 +41,7 @@ public class AddCharacterMenu extends JDialog {
      * @param parent       The parent {@link Frame} window binding this dialogue.
      * @param characterMap The existing map of characters used to prevent duplicate names.
      */
-    public AddCharacterMenu(Frame parent, Map<String, Character> characterMap) {
+    public AddCharacterDialog(Frame parent, Map<String, Character> characterMap) {
         super(parent, "Add Character", true);
         this.characterMap = characterMap;
         setupMenu();
@@ -84,10 +84,6 @@ public class AddCharacterMenu extends JDialog {
         int dexterity = (int) dexteritySpinner.getValue();
         CharacterType type = (CharacterType) characterTypeCombo.getSelectedItem();
         DeathStatus status = (DeathStatus) deathStatusCombo.getSelectedItem();
-
-        if (name.length() > 16) {
-            name = name.substring(0, 16) + "...";
-        }
 
         if (type == null) {return;}
         Character newCharacter;

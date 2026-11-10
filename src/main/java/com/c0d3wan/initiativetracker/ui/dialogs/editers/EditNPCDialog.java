@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui;
+package com.c0d3wan.initiativetracker.ui.dialogs.editers;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -13,7 +13,7 @@ import net.miginfocom.swing.MigLayout;
 /**
  * Modal {@link JDialog} interface for editing the health of an existing NPC
  */
-public class EditNPCHealth extends JDialog {
+public class EditNPCDialog extends JDialog {
 
     private final JPanel editNPCHealth = new JPanel();
     private final JComboBox<String> characterCombo = new JComboBox<>();
@@ -33,7 +33,7 @@ public class EditNPCHealth extends JDialog {
      * @param parent        The parent {@link Frame} window binding this dialogue.
      * @param characterMap  Lookup map containing all registered characters keyed by name.
      */
-    public EditNPCHealth(Frame parent, Map<String, NonePlayerCharacter> characterMap) {
+    public EditNPCDialog(Frame parent, Map<String, NonePlayerCharacter> characterMap) {
         super(parent, "Edit NPC Health", true);
         npcMap = new HashMap<>(characterMap);
         setupMenu();

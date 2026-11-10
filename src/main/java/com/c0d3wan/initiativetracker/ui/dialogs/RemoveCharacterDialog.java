@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui;
+package com.c0d3wan.initiativetracker.ui.dialogs;
 
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Modal dialogue interface for selecting and removing single or all characters from tracking.
  */
-public class RemoveCharacterMenu extends JDialog {
+public class RemoveCharacterDialog extends JDialog {
     private final JPanel removeCharacterPane = new JPanel();
     private final JComboBox<String> characterSelectionCombo = new JComboBox<>();
     private final JButton removeCharacterButton = new JButton("Remove Character");
@@ -31,7 +31,7 @@ public class RemoveCharacterMenu extends JDialog {
      * @param parent           The parent {@link Frame} window.
      * @param characterManager The {@link CharacterManager} maintaining combatants.
      */
-    public RemoveCharacterMenu(Frame parent, CharacterManager characterManager, Map<String, Character> characterMap, Map<String, NonePlayerCharacter> npcMap) {
+    public RemoveCharacterDialog(Frame parent, CharacterManager characterManager, Map<String, Character> characterMap, Map<String, NonePlayerCharacter> npcMap) {
         super(parent, "Remove Character", true);
         this.characterManager = characterManager;
         this.characterMap = new HashMap<>(characterMap);
