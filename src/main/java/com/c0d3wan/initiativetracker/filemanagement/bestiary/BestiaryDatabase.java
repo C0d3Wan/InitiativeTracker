@@ -1,290 +1,206 @@
 package com.c0d3wan.initiativetracker.filemanagement.bestiary;
 
-import com.c0d3wan.initiativetracker.filemanagement.bestiary.data.BestiaryDTO;
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
-
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.c0d3wan.initiativetracker.filemanagement.bestiary.data.BestiaryDTO;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.*;
 
-/**
- * Manages SQLite database operations for the D&D 5e bestiary system.
- * Handles table initialisation, upserting official and homebrew monster records,
- * querying database rows, and mapping SQL result sets back into data transfer objects.
- */
 public class BestiaryDatabase {
 
-    /**
-     * Shared Gson instance configured with lower-case with underscores field naming policy
-     * to seamlessly map JSON snake_case fields to Java DTO properties.
-     */
-    public static final Gson GSON = new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create();
-
-    private static final String DB_NAME = "initiativetracker.db";
-    private static final String DB_URL;
-
-    private static final Type LIST_STRING_TYPE = new TypeToken<List<String>>() {}.getType();
-    private static final Type MAP_STRING_INT_TYPE = new TypeToken<>() {}.getType();
-    private static final Type LIST_FEATURE_TYPE = new TypeToken<List<BestiaryDTO.Feature>>() {}.getType();
-
-    static {
-        File configDir = FileManager.getDirectory();
-        File dbFile = new File(configDir, DB_NAME);
-
-        DB_URL = "jdbc:sqlite:" + dbFile.getAbsolutePath();
-
-        initTable();
+    private static String getDbUrl() {
+        File dbFile = new File(FileManager.getDirectory(), "bestiary.db");
+        return "jdbc:sqlite:" + dbFile.getAbsolutePath();
     }
 
-    /**
-     * Initialises the SQLite monsters table and applies schema updates if columns are missing.
-     */
-    public static void initTable(){
-        String createTableSql = "CREATE TABLE IF NOT EXISTS monsters (" +
-                "name TEXT PRIMARY KEY COLLATE NOCASE," +
-                "group_name TEXT," +
-                "type TEXT," +
-                "size TEXT," +
-                "alignment TEXT," +
-                "armor_class INTEGER," +
-                "hit_points TEXT," +
-                "speed TEXT," +
-                "stats TEXT," +
-                "challenge_rating TEXT," +
-                "experience_points INTEGER," +
-                "saving_throws TEXT," +
-                "skills TEXT," +
-                "damage_resistances TEXT," +
-                "damage_vulnerabilities TEXT," +
-                "damage_immunities TEXT," +
-                "condition_immunities TEXT," +
-                "senses TEXT," +
-                "languages TEXT," +
-                "traits TEXT," +
-                "actions TEXT," +
-                "reactions TEXT," +
-                "legendary_actions TEXT," +
-                "lair_actions TEXT," +
-                "is_official INTEGER DEFAULT 1" +
-                ");";
-
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(createTableSql);
-
-            addColumnIfNotExists(conn, "reactions");
-            addColumnIfNotExists(conn, "legendary_actions");
-            addColumnIfNotExists(conn, "lair_actions");
-
-        } catch (SQLException e) {
-            System.err.println("Failed to initialize bestiary database table: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Safely checks and adds a column to the monsters table if it does not already exist.
-     *
-     * @param conn       the active SQLite database connection
-     * @param columnName the name of the column to add
-     */
-    private static void addColumnIfNotExists(Connection conn, String columnName) {
+    public static Connection connect() throws SQLException {
+        Connection conn = DriverManager.getConnection(getDbUrl());
         try (Statement stmt = conn.createStatement()) {
-            stmt.execute("ALTER TABLE monsters ADD COLUMN " + columnName + " TEXT;");
-        } catch (SQLException ignored) {
-            // Column likely already exists, safe to ignore
+            stmt.execute("PRAGMA foreign_keys = ON;");
         }
+        return conn;
     }
 
-    /**
-     * Saves a user-created homebrew monster record into the database with official flag set to 0.
-     *
-     * @param monster the monster DTO to save
-     */
-    public static void saveUserMonster(BestiaryDTO.Monster monster) {
-        saveMonster(monster, 0);
-    }
-
-    /**
-     * Saves an official SRD monster record into the database with official flag set to 1.
-     *
-     * @param monster the monster DTO to save
-     */
-    public static void saveOfficialMonster(BestiaryDTO.Monster monster) {
-        saveMonster(monster, 1);
-    }
-
-    /**
-     * Inserts or updates a monster record in the SQLite database using an upsert operation.
-     *
-     * @param monster    the monster data transfer object
-     * @param isOfficial integer flag (1 for official, 0 for user homebrew)
-     */
-    private static void saveMonster(BestiaryDTO.Monster monster, int isOfficial) {
-        if (monster == null || monster.getName() == null || monster.getName().isBlank()) return;
-
-        String sql = "INSERT INTO monsters (" +
-                "name, group_name, type, size, alignment, armor_class, hit_points, speed, stats, " +
-                "challenge_rating, experience_points, saving_throws, skills, " +
-                "damage_resistances, damage_vulnerabilities, damage_immunities, " +
-                "condition_immunities, senses, languages, traits, actions, reactions, legendary_actions, lair_actions, is_official" +
-                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-                "ON CONFLICT(name) DO UPDATE SET " +
-                "group_name=excluded.group_name, type=excluded.type, size=excluded.size, alignment=excluded.alignment, " +
-                "armor_class=excluded.armor_class, hit_points=excluded.hit_points, speed=excluded.speed, stats=excluded.stats, " +
-                "challenge_rating=excluded.challenge_rating, experience_points=excluded.experience_points, " +
-                "saving_throws=excluded.saving_throws, skills=excluded.skills, damage_resistances=excluded.damage_resistances, " +
-                "damage_vulnerabilities=excluded.damage_vulnerabilities, damage_immunities=excluded.damage_immunities, " +
-                "condition_immunities=excluded.condition_immunities, senses=excluded.senses, languages=excluded.languages, " +
-                "traits=excluded.traits, actions=excluded.actions, reactions=excluded.reactions, " +
-                "legendary_actions=excluded.legendary_actions, lair_actions=excluded.lair_actions, is_official=excluded.is_official;";
-
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1, monster.getName().trim());
-            pstmt.setString(2, monster.getGroupName());
-            pstmt.setString(3, monster.getType());
-            pstmt.setString(4, monster.getSize());
-            pstmt.setString(5, monster.getAlignment());
-            pstmt.setInt(6, monster.getArmorClass());
-            pstmt.setString(7, GSON.toJson(monster.getHitPoints()));
-            pstmt.setString(8, GSON.toJson(monster.getSpeed()));
-            pstmt.setString(9, GSON.toJson(monster.getStats()));
-            pstmt.setString(10, monster.getChallengeRating());
-            pstmt.setInt(11, monster.getExperiencePoints());
-            pstmt.setString(12, GSON.toJson(monster.getSavingThrows()));
-            pstmt.setString(13, GSON.toJson(monster.getSkills()));
-            pstmt.setString(14, GSON.toJson(monster.getDamageResistances()));
-            pstmt.setString(15, GSON.toJson(monster.getDamageVulnerabilities()));
-            pstmt.setString(16, GSON.toJson(monster.getDamageImmunities()));
-            pstmt.setString(17, GSON.toJson(monster.getConditionImmunities()));
-            pstmt.setString(18, GSON.toJson(monster.getSenses()));
-            pstmt.setString(19, GSON.toJson(monster.getLanguages()));
-            pstmt.setString(20, GSON.toJson(monster.getTraits()));
-            pstmt.setString(21, GSON.toJson(monster.getActions()));
-            pstmt.setString(22, GSON.toJson(monster.getReactions()));
-            pstmt.setString(23, GSON.toJson(monster.getLegendaryActions()));
-            pstmt.setString(24, GSON.toJson(monster.getLairActions()));
-            pstmt.setInt(25, isOfficial);
-
-            pstmt.executeUpdate();
-        } catch (SQLException e){
-            System.err.println("Failed to save monster '" + monster.getName() + "': " + e.getMessage());
-        }
-    }
-
-    /**
-     * Deletes a user-created homebrew monster from the database by name. Official monsters cannot be deleted.
-     *
-     * @param name the name of the monster to delete
-     * @return true if a row was successfully deleted, false otherwise
-     */
-    public static boolean deleteMonster(String name) {
-        if (name == null || name.isBlank()) return false;
-
-        String sql = "DELETE FROM monsters WHERE name = ? AND is_official = 0";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, name.trim());
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
-        } catch (SQLException e) {
-            System.err.println("Failed to delete monster '" + name + "': " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Loads all monster records stored in the database.
-     *
-     * @return a list of all monster DTOs
-     */
     public static List<BestiaryDTO.Monster> loadAllMonsters() {
         List<BestiaryDTO.Monster> monsters = new ArrayList<>();
-        String sql = "SELECT * FROM monsters";
+        String query = "SELECT m.*, g.name AS group_name, t.name AS type_name, s.name AS size_name, a.name AS alignment_id_name " +
+                "FROM Monster m " +
+                "LEFT JOIN MonsterGroup g ON m.group_id = g.id " +
+                "LEFT JOIN MonsterType t ON m.type_id = t.id " +
+                "LEFT JOIN Size s ON m.size_id = s.id " +
+                "LEFT JOIN Alignment a ON m.alignment_id = a.id";
 
-        try (Connection conn = DriverManager.getConnection(DB_URL);
+        try (Connection conn = connect();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                monsters.add(mapResultSetToMonster(rs));
+                BestiaryDTO.Monster monster = new BestiaryDTO.Monster();
+                long monsterId = rs.getLong("id");
+
+                monster.setName(rs.getString("name"));
+                monster.setGroupName(rs.getString("group_name"));
+                monster.setType(rs.getString("type_name"));
+                monster.setSize(rs.getString("size_name"));
+                monster.setAlignment(rs.getString("alignment_id_name"));
+                monster.setArmorClass(rs.getInt("armor_class"));
+                monster.setChallengeRating(String.valueOf(rs.getDouble("challenge_rating")));
+                monster.setExperiencePoints(rs.getInt("experience_points"));
+                monster.setOfficial(rs.getInt("is_official") == 1);
+
+                BestiaryDTO.Monster.HitPoints hp = new BestiaryDTO.Monster.HitPoints();
+                hp.setAverage(rs.getInt("hp_average"));
+                hp.setFormula(rs.getString("hp_formula"));
+                monster.setHitPoints(hp);
+
+                monster.setStats(loadStats(conn, monsterId));
+                monster.setSpeed(loadSpeeds(conn, monsterId));
+                monster.setSenses(loadSenses(conn, monsterId));
+                monster.setLanguages(loadLanguages(conn, monsterId));
+                monster.setTags(loadTags(conn, monsterId)); // <-- Populates tags so tree sub-headers appear!
+                monster.setTraits(loadAbilities(conn, monsterId, "Trait"));
+                monster.setActions(loadAbilities(conn, monsterId, "Action"));
+                monster.setReactions(loadAbilities(conn, monsterId, "Reaction"));
+
+                monsters.add(monster);
             }
         } catch (SQLException e) {
-            System.err.println("Failed to load monsters from database: " + e.getMessage());
+            System.err.println("Error loading monsters from database: " + e.getMessage());
         }
         return monsters;
     }
 
-    /**
-     * Queries the database for a specific monster by its name.
-     *
-     * @param name the name of the monster to find
-     * @return an Optional containing the monster DTO if found, or Optional.empty() otherwise
-     */
     public static Optional<BestiaryDTO.Monster> findMonsterByName(String name) {
-        if (name == null || name.isBlank()) return Optional.empty();
-
-        String sql = "SELECT * FROM monsters WHERE name = ?";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, name.trim());
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(mapResultSetToMonster(rs));
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Failed to query monster by name: " + e.getMessage());
-        }
-        return Optional.empty();
+        return loadAllMonsters().stream()
+                .filter(m -> m.getName().equalsIgnoreCase(name))
+                .findFirst();
     }
 
-    /**
-     * Maps a current SQL ResultSet row into a fully populated BestiaryDTO.Monster object.
-     *
-     * @param rs the active ResultSet cursor
-     * @return the populated Monster instance
-     * @throws SQLException if a database access error occurs
-     */
-    private static BestiaryDTO.Monster mapResultSetToMonster(ResultSet rs) throws SQLException {
-        BestiaryDTO.Monster m = new BestiaryDTO.Monster();
+    public static void saveUserMonster(BestiaryDTO.Monster monster) {
+        String insertSql = "INSERT OR REPLACE INTO Monster (name, group_id, type_id, size_id, alignment_id, challenge_rating, armor_class, hp_average, hp_formula, experience_points, is_official) " +
+                "VALUES (?, (SELECT id FROM MonsterGroup WHERE name = ?), (SELECT id FROM MonsterType WHERE name = ?), (SELECT id FROM Size WHERE name = ?), (SELECT id FROM Alignment WHERE name = ?), ?, ?, ?, ?, ?, 0)";
 
-        m.setName(rs.getString("name"));
-        m.setGroup(rs.getString("group_name"));
-        m.setType(rs.getString("type"));
-        m.setSize(rs.getString("size"));
-        m.setAlignment(rs.getString("alignment"));
-        m.setArmorClass(rs.getInt("armor_class"));
-        m.setChallengeRating(rs.getString("challenge_rating"));
-        m.setExperiencePoints(rs.getInt("experience_points"));
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+            pstmt.setString(1, monster.getName());
+            pstmt.setString(2, monster.getGroupName() != null ? monster.getGroupName() : "Homebrew");
+            pstmt.setString(3, monster.getType());
+            pstmt.setString(4, monster.getSize());
+            pstmt.setString(5, monster.getAlignment());
+            pstmt.setDouble(6, Double.parseDouble(monster.getChallengeRating()));
+            pstmt.setInt(7, monster.getArmorClass());
+            pstmt.setInt(8, monster.getHitPoints() != null ? monster.getHitPoints().getAverage() : 10);
+            pstmt.setString(9, monster.getHitPoints() != null ? monster.getHitPoints().getFormula() : "2d8");
+            pstmt.setInt(10, monster.getExperiencePoints());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error saving user homebrew monster: " + e.getMessage());
+        }
+    }
 
-        m.setHitPoints(GSON.fromJson(rs.getString("hit_points"), BestiaryDTO.HitPoints.class));
-        m.setSpeed(GSON.fromJson(rs.getString("speed"), MAP_STRING_INT_TYPE));
-        m.setStats(GSON.fromJson(rs.getString("stats"), MAP_STRING_INT_TYPE));
-        m.setSavingThrows(GSON.fromJson(rs.getString("saving_throws"), MAP_STRING_INT_TYPE));
-        m.setSkills(GSON.fromJson(rs.getString("skills"), MAP_STRING_INT_TYPE));
+    public static boolean deleteMonster(String name) {
+        String query = "DELETE FROM Monster WHERE name = ? AND is_official = 0";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, name);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error deleting monster: " + e.getMessage());
+            return false;
+        }
+    }
 
-        m.setDamageResistances(GSON.fromJson(rs.getString("damage_resistances"), LIST_STRING_TYPE));
-        m.setDamageVulnerabilities(GSON.fromJson(rs.getString("damage_vulnerabilities"), LIST_STRING_TYPE));
-        m.setDamageImmunities(GSON.fromJson(rs.getString("damage_immunities"), LIST_STRING_TYPE));
-        m.setConditionImmunities(GSON.fromJson(rs.getString("condition_immunities"), LIST_STRING_TYPE));
-        m.setSenses(GSON.fromJson(rs.getString("senses"), LIST_STRING_TYPE));
-        m.setLanguages(GSON.fromJson(rs.getString("languages"), LIST_STRING_TYPE));
+    private static Map<String, Integer> loadStats(Connection conn, long monsterId) throws SQLException {
+        Map<String, Integer> stats = new HashMap<>();
+        String query = "SELECT strength, dexterity, constitution, intelligence, wisdom, charisma FROM MonsterStats WHERE monster_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, monsterId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    stats.put("strength", rs.getInt("strength"));
+                    stats.put("dexterity", rs.getInt("dexterity"));
+                    stats.put("constitution", rs.getInt("constitution"));
+                    stats.put("intelligence", rs.getInt("intelligence"));
+                    stats.put("wisdom", rs.getInt("wisdom"));
+                    stats.put("charisma", rs.getInt("charisma"));
+                }
+            }
+        }
+        return stats;
+    }
 
-        m.setTraits(GSON.fromJson(rs.getString("traits"), LIST_FEATURE_TYPE));
-        m.setActions(GSON.fromJson(rs.getString("actions"), LIST_FEATURE_TYPE));
-        m.setReactions(GSON.fromJson(rs.getString("reactions"), LIST_FEATURE_TYPE));
-        m.setLegendaryActions(GSON.fromJson(rs.getString("legendary_actions"), BestiaryDTO.ActionGroup.class));
-        m.setLairActions(GSON.fromJson(rs.getString("lair_actions"), BestiaryDTO.ActionGroup.class));
+    private static Map<String, Integer> loadSpeeds(Connection conn, long monsterId) throws SQLException {
+        Map<String, Integer> speeds = new HashMap<>();
+        String query = "SELECT st.name AS type, ms.speed_ft FROM MonsterSpeed ms JOIN SpeedType st ON ms.speed_type_id = st.id WHERE ms.monster_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, monsterId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    speeds.put(rs.getString("type").toLowerCase(), rs.getInt("speed_ft"));
+                }
+            }
+        }
+        return speeds;
+    }
 
-        return m;
+    private static List<String> loadSenses(Connection conn, long monsterId) throws SQLException {
+        List<String> senses = new ArrayList<>();
+        String query = "SELECT st.name AS type, ms.range_ft FROM MonsterSense ms JOIN SenseType st ON ms.sense_type_id = st.id WHERE ms.monster_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, monsterId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    senses.add(rs.getString("type") + " " + rs.getInt("range_ft") + " ft.");
+                }
+            }
+        }
+        return senses;
+    }
+
+    private static List<String> loadLanguages(Connection conn, long monsterId) throws SQLException {
+        List<String> langs = new ArrayList<>();
+        String query = "SELECT l.name FROM MonsterLanguage ml JOIN Language l ON ml.language_id = l.id WHERE ml.monster_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, monsterId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    langs.add(rs.getString("name"));
+                }
+            }
+        }
+        return langs;
+    }
+
+    private static List<String> loadTags(Connection conn, long monsterId) throws SQLException {
+        List<String> tags = new ArrayList<>();
+        String query = "SELECT t.name FROM MonsterTag mt JOIN Tag t ON mt.tag_id = t.id WHERE mt.monster_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, monsterId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    tags.add(rs.getString("name"));
+                }
+            }
+        }
+        return tags;
+    }
+
+    private static List<BestiaryDTO.Monster.Feature> loadAbilities(Connection conn, long monsterId, String abilityType) throws SQLException {
+        List<BestiaryDTO.Monster.Feature> features = new ArrayList<>();
+        String query = "SELECT name, description FROM MonsterAbility WHERE monster_id = ? AND ability_type = ? ORDER BY display_order";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, monsterId);
+            pstmt.setString(2, abilityType);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    BestiaryDTO.Monster.Feature f = new BestiaryDTO.Monster.Feature();
+                    f.setName(rs.getString("name"));
+                    f.setDescription(rs.getString("description"));
+                    features.add(f);
+                }
+            }
+        }
+        return features;
     }
 }
