@@ -39,7 +39,7 @@ public class ConfigManager {
     public static void loadConfig() {
         File targetFile = new File(FileManager.getDirectory(), "Config.sav");
         if (!targetFile.exists()) {
-            UIController.setDarkMode(true);
+            UIController.setDarkMode(0);
             return;
         }
 

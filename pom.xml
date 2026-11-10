@@ -13,6 +13,7 @@
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>com.c0d3wan.initiativetracker.Main</main.class>
+        <!--suppress UnresolvedMavenProperty -->
         <save.encryption.key>${env.ENCRYPTKEY}</save.encryption.key>
     </properties>
 
@@ -21,6 +22,11 @@
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>3.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-intellij-themes</artifactId>
+            <version>3.8</version>
         </dependency>
         <dependency>
             <groupId>com.miglayout</groupId>

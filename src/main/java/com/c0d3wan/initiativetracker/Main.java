@@ -46,10 +46,10 @@ public class Main {
         }
 
         SwingUtilities.invokeLater(() -> {
+            ConfigManager.loadConfig();
             CharacterManager characterManager = new CharacterManager();
             MainWindow mainWindow = new MainWindow();
             UIController uiController = new UIController(mainWindow, characterManager);
-            ConfigManager.loadConfig(uiController);
             uiController.displayMainWindow();
         });
     }

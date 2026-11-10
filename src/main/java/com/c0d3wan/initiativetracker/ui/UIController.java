@@ -11,6 +11,7 @@ import com.c0d3wan.initiativetracker.ui.dialogs.RemoveCharacterDialog;
 import com.c0d3wan.initiativetracker.ui.dialogs.adders.*;
 import com.c0d3wan.initiativetracker.ui.dialogs.editers.*;
 import com.formdev.flatlaf.*;
+import com.formdev.flatlaf.intellijthemes.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -34,6 +35,8 @@ public class UIController {
     private final DeathSavesPanel deathSavesPanel;
     private final MainMenuBar menuBar;
     private final CharacterOptionsPanel characterOptionsPanel;
+
+    private static int currentColourMode = 0;
 
     /**
      * Constructs a new UIManager instance and attaches views and cell renderers.
@@ -86,13 +89,30 @@ public class UIController {
         deathSavesPanel.addPassListener(e -> passDeathSave(true));
         deathSavesPanel.addFailListener(e -> passDeathSave(false));
 
-        menuBar.addLightModeListener(e -> {
-            setDarkMode(false);
-            menuBar.enableDarkButton(false);
+        menuBar.disableThemeButton(currentColourMode);
+        menuBar.addBasicLightListener(e -> {
+            setDarkMode(0);
+            menuBar.disableThemeButton(0);
         });
-        menuBar.addDarkModeListener(e -> {
-            setDarkMode(true);
-            menuBar.enableDarkButton(true);
+        menuBar.addBasicDarkListener(e -> {
+            setDarkMode(1);
+            menuBar.disableThemeButton(1);
+        });
+        menuBar.addArcLightListener(e -> {
+            setDarkMode(2);
+            menuBar.disableThemeButton(2);
+        });
+        menuBar.addArcLightOrangeListener(e -> {
+            setDarkMode(3);
+            menuBar.disableThemeButton(3);
+        });
+        menuBar.addArcDarkListener(e -> {
+            setDarkMode(4);
+            menuBar.disableThemeButton(4);
+        });
+        menuBar.addArcDarkOrangeListener(e -> {
+            setDarkMode(5);
+            menuBar.disableThemeButton(5);
         });
         menuBar.addOpenItemListener(e -> loadList());
         menuBar.addSaveItemListener(e -> saveList());
@@ -311,14 +331,30 @@ public class UIController {
     /**
      * Changes the colour mode of the ui (Light/Dark)
      *
-     * @param darkMode boolean {@code true} for dark mode, {@code false} for light mode
+     * @param colourValue int:
+     * <ul>
+     *     <li>{@code 0} - basic Light mode</li>
+     *     <li>{@code 1} - basic Dark mode</li>
+     *     <li>{@code 2} - Arc Light</li>
+     *     <li>{@code 3} - Arc Light (Orange)</li>
+     *     <li>{@code 4} - Arc Dark</li>
+     *     <li>{@code 5} - Arc Dark (Orange)</li>
+     * </ul>
      */
-    public static void setDarkMode(boolean darkMode) {
-        if (darkMode) {
-            FlatDarkLaf.setup();
-        } else {
-            FlatLightLaf.setup();
+    public static void setDarkMode(int colourValue) {
+        currentColourMode = colourValue;
+        switch (colourValue) {
+            case 0 -> FlatLightLaf.setup();
+            case 1 -> FlatDarkLaf.setup();
+            case 2 -> FlatArcIJTheme.setup();
+            case 3 -> FlatArcOrangeIJTheme.setup();
+            case 4 -> FlatArcDarkIJTheme.setup();
+            case 5 -> FlatArcDarkOrangeIJTheme.setup();
         }
         FlatLaf.updateUI();
+    }
+
+    public static int getCurrentColourMode() {
+        return currentColourMode;
     }
 }
