@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.ui.bestiary;
+package com.c0d3wan.initiativetracker.ui.dialogs.bestiary;
 
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiaryDatabase;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Modal {@link JDialog} interface for browsing, searching, viewing full extended stat details,
  * managing homebrew, and adding monsters from the bestiary database into the initiative tracker.
  */
-public class BestiaryMenu extends JDialog {
+public class BestiaryDialog extends JDialog {
     private final JPanel pane = new JPanel();
     private final CharacterManager characterManager;
 
@@ -68,7 +68,7 @@ public class BestiaryMenu extends JDialog {
      * @param parent           the parent frame window
      * @param characterManager the active character manager to receive added combatants
      */
-    public BestiaryMenu(Frame parent, CharacterManager characterManager) {
+    public BestiaryDialog(Frame parent, CharacterManager characterManager) {
         super(parent, "Bestiary Database", true);
         this.characterManager = characterManager;
         setupMenu();
@@ -98,9 +98,9 @@ public class BestiaryMenu extends JDialog {
         });
 
         addHomebrewButton.addActionListener(e -> {
-            AddHomebrewMonsterMenu homebrewMenu = new AddHomebrewMonsterMenu((Frame) getOwner());
-            homebrewMenu.setVisible(true);
-            if (homebrewMenu.isConfirmed()) {
+            AddHomebrewMonsterDialog homebrewDialog = new AddHomebrewMonsterDialog((Frame) getOwner());
+            homebrewDialog.setVisible(true);
+            if (homebrewDialog.isConfirmed()) {
                 loadMonsters();
             }
         });

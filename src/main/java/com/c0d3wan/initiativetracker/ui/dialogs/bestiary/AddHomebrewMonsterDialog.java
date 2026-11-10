@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.ui.bestiary;
+package com.c0d3wan.initiativetracker.ui.dialogs.bestiary;
 
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiaryDatabase;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.data.BestiaryDTO;
@@ -16,7 +16,7 @@ import java.util.Map;
  * and save custom homebrew monster records into the bestiary database,
  * supporting the full extended D&D 5e data schema.
  */
-public class AddHomebrewMonsterMenu extends JDialog {
+public class AddHomebrewMonsterDialog extends JDialog {
     private final JPanel pane = new JPanel();
 
     private final JTextField nameField = new JTextField(12);
@@ -63,7 +63,7 @@ public class AddHomebrewMonsterMenu extends JDialog {
      *
      * @param parent the parent frame window
      */
-    public AddHomebrewMonsterMenu(Frame parent) {
+    public AddHomebrewMonsterDialog(Frame parent) {
         super(parent, "Create Homebrew Monster", true);
         setupMenu();
 

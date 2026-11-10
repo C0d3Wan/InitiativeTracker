@@ -5,7 +5,7 @@ import com.c0d3wan.initiativetracker.filemanagement.saveload.*;
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.data.*;
-import com.c0d3wan.initiativetracker.ui.bestiary.BestiaryMenu;
+import com.c0d3wan.initiativetracker.ui.dialogs.bestiary.BestiaryDialog;
 import com.c0d3wan.initiativetracker.ui.components.*;
 import com.c0d3wan.initiativetracker.ui.dialogs.RemoveCharacterDialog;
 import com.c0d3wan.initiativetracker.ui.dialogs.adders.*;
@@ -82,6 +82,9 @@ public class UIController {
         initiativeListPanel.addSelectionListener(e -> {
             Character selectedCharacter = initiativeListPanel.getSelectedCharacter();
             characterDetailsPanel.setVisible(true);
+            if (selectedCharacter == null) {
+                return;
+            }
             characterDetailsPanel.displayCharacter(selectedCharacter);
         });
         initiativeListPanel.addNextTurnListener(e -> nextTurn());
@@ -239,8 +242,8 @@ public class UIController {
      * Opens the modal dialogue to browse the bestiary database and add monsters to tracker.
      */
     private void openBestiaryMenu() {
-        BestiaryMenu bestiaryMenu = new BestiaryMenu(mainWindow, characterManager);
-        bestiaryMenu.setVisible(true);
+        BestiaryDialog bestiaryDialog = new BestiaryDialog(mainWindow, characterManager);
+        bestiaryDialog.setVisible(true);
 
         characterManager.updateCharacters();
         updateInitiativeList();
