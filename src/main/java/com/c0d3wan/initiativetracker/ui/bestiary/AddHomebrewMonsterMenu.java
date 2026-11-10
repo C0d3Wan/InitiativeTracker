@@ -59,7 +59,7 @@ public class AddHomebrewMonsterMenu extends JDialog {
     private boolean confirmed = false;
 
     /**
-     * Constructs a new AddHomebrewMonsterMenu dialog.
+     * Constructs a new AddHomebrewMonsterMenu dialogue.
      *
      * @param parent the parent frame window
      */
@@ -273,7 +273,7 @@ public class AddHomebrewMonsterMenu extends JDialog {
             if (!savesMap.isEmpty()) monster.setSavingThrows(savesMap);
         }
 
-        // Parse Defenses & Immunities
+        // Parse Defences & Immunities
         if (!resistancesField.getText().isBlank()) {
             monster.setDamageResistances(List.of(resistancesField.getText().trim().split("\\s*,\\s*")));
         }
