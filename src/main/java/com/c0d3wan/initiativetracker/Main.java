@@ -17,7 +17,7 @@
  */
 package com.c0d3wan.initiativetracker;
 
-import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiarySyncManager;
+import com.c0d3wan.initiativetracker.filemanagement.bestiary.JsonToDatabaseImporter;
 import com.c0d3wan.initiativetracker.filemanagement.saveload.ConfigManager;
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
 import com.c0d3wan.initiativetracker.swingui.MainMenu;
@@ -41,7 +41,11 @@ public class Main {
         CharacterManager characterManager = new CharacterManager();
         ConfigManager.loadConfig();
 
-        //BestiarySyncManager.syncOfficialMonsters();
+        try {
+            JsonToDatabaseImporter.main(new String[0]);
+        } catch (Exception e) {
+            System.err.println("Warning: Failed to initialize bestiary database from resources: " + e.getMessage());
+        }
 
         SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
     }

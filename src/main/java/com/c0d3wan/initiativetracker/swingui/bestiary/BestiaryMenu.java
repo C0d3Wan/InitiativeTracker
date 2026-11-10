@@ -8,7 +8,6 @@ import com.c0d3wan.initiativetracker.filemanagement.bestiary.data.HPMode;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -19,7 +18,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
- * Modal {@link JDialog} interface for browsing, searching, viewing details,
+ * Modal {@link JDialog} interface for browsing, searching, viewing full extended stat details,
  * managing homebrew, and adding monsters from the bestiary database into the initiative tracker.
  */
 public class BestiaryMenu extends JDialog {
@@ -40,6 +39,7 @@ public class BestiaryMenu extends JDialog {
     private final JLabel hpLabel = new JLabel("");
     private final JLabel speedLabel = new JLabel("");
     private final JLabel sensesLanguagesLabel = new JLabel("");
+    private final JLabel defenseLabel = new JLabel("");
     private final JLabel crLabel = new JLabel("");
     private final JTextArea statsArea = new JTextArea();
     private final JTextArea abilitiesArea = new JTextArea();
@@ -76,8 +76,8 @@ public class BestiaryMenu extends JDialog {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(parent);
 
-        setMinimumSize(new Dimension(1000, 720));
-        setSize(1000, 720);
+        setMinimumSize(new Dimension(1050, 780));
+        setSize(1050, 780);
         pack();
 
         loadMonsters();
@@ -153,8 +153,7 @@ public class BestiaryMenu extends JDialog {
      * Initializes and lays out all UI components within the dialog pane.
      */
     private void setupMenu() {
-        pane.setLayout(new MigLayout("insets 6 6 6 6, fill", "[320px::320px, fill][grow, fill]", "[][grow]"));
-        pane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        pane.setLayout(new MigLayout("insets 6, fill", "[320px::320px, fill][grow, fill]", "[][grow]"));
         setContentPane(pane);
 
         JPanel leftPanel = new JPanel(new MigLayout("insets 0, fill", "[grow]", "[][grow][][]"));
@@ -178,7 +177,7 @@ public class BestiaryMenu extends JDialog {
         leftPanel.add(addHomebrewButton, "cell 0 2, growx, gaptop 4, wrap");
         leftPanel.add(deleteMonsterButton, "cell 0 3, growx, gaptop 2");
 
-        JPanel rightPanel = new JPanel(new MigLayout("insets 4 10 4 4, fill", "[grow]", "[][][][][][][grow, fill][pref!]"));
+        JPanel rightPanel = new JPanel(new MigLayout("insets 4 10 4 4, fill", "[grow]", "[][][][][][][][grow, fill][pref!]"));
         rightPanel.setOpaque(false);
 
         nameLabel.setFont(nameLabel.getFont().deriveFont(Font.BOLD, 18f));
@@ -208,8 +207,9 @@ public class BestiaryMenu extends JDialog {
 
         rightPanel.add(speedLabel, "cell 0 3, wrap");
         rightPanel.add(sensesLanguagesLabel, "cell 0 4, wrap");
-        rightPanel.add(statsArea, "cell 0 5, wrap, growx");
-        rightPanel.add(abilitiesScroll, "cell 0 6, grow, wrap");
+        rightPanel.add(defenseLabel, "cell 0 5, wrap");
+        rightPanel.add(statsArea, "cell 0 6, wrap, growx");
+        rightPanel.add(abilitiesScroll, "cell 0 7, grow, wrap");
 
         JPanel trackerControlPanel = new JPanel(new MigLayout("insets 8, fillx, gap 8 6", "[l][grow, 120lp!][l][60lp!][grow, push]", "[][][]"));
         trackerControlPanel.setBorder(BorderFactory.createTitledBorder("Add to Initiative Tracker"));
@@ -264,27 +264,17 @@ public class BestiaryMenu extends JDialog {
 
         trackerControlPanel.add(actionPanel, "cell 4 2, align right");
 
-        rightPanel.add(trackerControlPanel, "cell 0 7, growx");
+        rightPanel.add(trackerControlPanel, "cell 0 8, growx");
 
         pane.add(leftPanel, "cell 0 0 1 2, grow");
         pane.add(rightPanel, "cell 1 0 1 2, grow");
     }
 
-    /**
-     * Loads all monsters from the database and updates the tree view.
-     */
     private void loadMonsters() {
         allMonsters = BestiaryDatabase.loadAllMonsters();
         filterMonsters();
     }
 
-    /**
-     * Filters and populates the tree view based on the current search input.
-     */
-    /**
-     * Filters and populates the tree view based on the current search input,
-     * supporting dynamic multi-category subgroup nesting.
-     */
     private void filterMonsters() {
         String filter = searchField.getText().trim().toLowerCase();
         rootNode.removeAllChildren();
@@ -295,47 +285,82 @@ public class BestiaryMenu extends JDialog {
                         if (filter.isEmpty()) return true;
                         boolean matchesName = m.getName().toLowerCase().contains(filter);
                         boolean matchesGroup = m.getGroupName() != null && m.getGroupName().toLowerCase().contains(filter);
-                        boolean matchesSubgroup = m.getSubgroups() != null && m.getSubgroups().stream()
-                                .anyMatch(sub -> sub.toLowerCase().contains(filter));
-                        return matchesName || matchesGroup || matchesSubgroup;
+                        boolean matchesTag = m.getTags() != null && m.getTags().stream()
+                                .anyMatch(tag -> tag.toLowerCase().contains(filter));
+                        return matchesName || matchesGroup || matchesTag;
                     })
-                    .collect(Collectors.toList());
+                    .toList();
 
+            // Group by Main Group
             Map<String, List<BestiaryDTO.Monster>> groupedByMain = filteredList.stream()
                     .collect(Collectors.groupingBy(m -> m.getGroupName() != null ? m.getGroupName() : "Uncategorized"));
 
             groupedByMain.entrySet().stream()
                     .sorted(Map.Entry.comparingByKey())
                     .forEach(mainEntry -> {
-                        DefaultMutableTreeNode mainGroupNode = new DefaultMutableTreeNode(mainEntry.getKey());
+                        String mainGroupName = mainEntry.getKey();
+                        DefaultMutableTreeNode mainGroupNode = new DefaultMutableTreeNode(mainGroupName);
 
-                        Map<String, List<BestiaryDTO.Monster>> groupedBySub = new TreeMap<>();
-                        List<BestiaryDTO.Monster> directMonsters = new java.util.ArrayList<>();
+                        boolean isDragonGroup = mainGroupName.equalsIgnoreCase("Dragon");
+
+                        Map<String, List<BestiaryDTO.Monster>> groupedByFirstTag = new TreeMap<>();
+                        List<BestiaryDTO.Monster> untaggedMonsters = new java.util.ArrayList<>();
 
                         for (BestiaryDTO.Monster m : mainEntry.getValue()) {
-                            List<String> subs = m.getSubgroups();
-                            if (subs == null || subs.isEmpty()) {
-                                directMonsters.add(m);
+                            List<String> tags = m.getTags();
+                            if (tags == null || tags.isEmpty()) {
+                                untaggedMonsters.add(m);
                             } else {
-                                for (String sub : subs) {
-                                    groupedBySub.computeIfAbsent(sub, k -> new java.util.ArrayList<>()).add(m);
-                                }
+                                String firstTag = tags.getFirst();
+                                groupedByFirstTag.computeIfAbsent(firstTag, k -> new java.util.ArrayList<>()).add(m);
                             }
                         }
 
-                        // Add subgroup folders
-                        groupedBySub.entrySet().forEach(subEntry -> {
-                            DefaultMutableTreeNode subGroupNode = new DefaultMutableTreeNode(subEntry.getKey());
-                            subEntry.getValue().stream()
-                                    .map(BestiaryDTO.Monster::getName)
-                                    .sorted()
-                                    .distinct()
-                                    .forEach(monsterName -> subGroupNode.add(new DefaultMutableTreeNode(monsterName)));
-                            mainGroupNode.add(subGroupNode);
+                        groupedByFirstTag.forEach((firstTagKey, firstTagList) -> {
+                            DefaultMutableTreeNode firstTagNode = new DefaultMutableTreeNode(firstTagKey);
+
+                            if (isDragonGroup) {
+                                Map<String, List<BestiaryDTO.Monster>> groupedBySecondTag = new TreeMap<>();
+                                List<BestiaryDTO.Monster> unnestedInFirst = new java.util.ArrayList<>();
+
+                                for (BestiaryDTO.Monster m : firstTagList) {
+                                    List<String> tags = m.getTags();
+                                    if (tags != null && tags.size() >= 2) {
+                                        String secondTag = tags.get(1);
+                                        groupedBySecondTag.computeIfAbsent(secondTag, k -> new java.util.ArrayList<>()).add(m);
+                                    } else {
+                                        unnestedInFirst.add(m);
+                                    }
+                                }
+
+                                groupedBySecondTag.forEach((secondTagKey, secondTagList) -> {
+                                    DefaultMutableTreeNode secondTagNode = new DefaultMutableTreeNode(secondTagKey);
+                                    secondTagList.stream()
+                                            .map(BestiaryDTO.Monster::getName)
+                                            .sorted()
+                                            .distinct()
+                                            .forEach(monsterName -> secondTagNode.add(new DefaultMutableTreeNode(monsterName)));
+                                    firstTagNode.add(secondTagNode);
+                                });
+
+                                unnestedInFirst.stream()
+                                        .map(BestiaryDTO.Monster::getName)
+                                        .sorted()
+                                        .distinct()
+                                        .forEach(monsterName -> firstTagNode.add(new DefaultMutableTreeNode(monsterName)));
+
+                            } else {
+                                firstTagList.stream()
+                                        .map(BestiaryDTO.Monster::getName)
+                                        .sorted()
+                                        .distinct()
+                                        .forEach(monsterName -> firstTagNode.add(new DefaultMutableTreeNode(monsterName)));
+                            }
+
+                            mainGroupNode.add(firstTagNode);
                         });
 
-                        // Add monsters with no subgroups directly under the main group folder
-                        directMonsters.stream()
+                        untaggedMonsters.stream()
                                 .map(BestiaryDTO.Monster::getName)
                                 .sorted()
                                 .distinct()
@@ -351,11 +376,6 @@ public class BestiaryMenu extends JDialog {
         }
     }
 
-    /**
-     * Displays the complete stat block details for the selected monster.
-     *
-     * @param selectedName the name of the monster to display
-     */
     private void displaySelectedMonsterDetails(String selectedName) {
         successLabel.setVisible(false);
         BestiaryDatabase.findMonsterByName(selectedName).ifPresent(m -> {
@@ -396,6 +416,30 @@ public class BestiaryMenu extends JDialog {
             }
             sensesLanguagesLabel.setText(sensesLangs.toString());
 
+            StringBuilder defBuilder = new StringBuilder();
+            if (m.getSkills() != null && !m.getSkills().isEmpty()) {
+                String sk = m.getSkills().entrySet().stream()
+                        .map(e -> e.getKey() + " " + (e.getValue() >= 0 ? "+" + e.getValue() : e.getValue()))
+                        .collect(Collectors.joining(", "));
+                defBuilder.append("🎯 Skills: ").append(sk);
+            }
+            if (m.getSavingThrows() != null && !m.getSavingThrows().isEmpty()) {
+                if (defBuilder.length() > 0) defBuilder.append(" | ");
+                String sv = m.getSavingThrows().entrySet().stream()
+                        .map(e -> e.getKey() + " " + (e.getValue() >= 0 ? "+" + e.getValue() : e.getValue()))
+                        .collect(Collectors.joining(", "));
+                defBuilder.append("🛡️ Saves: ").append(sv);
+            }
+            if (m.getDamageResistances() != null && !m.getDamageResistances().isEmpty()) {
+                if (defBuilder.length() > 0) defBuilder.append(" | ");
+                defBuilder.append("⚡ Resistances: ").append(String.join(", ", m.getDamageResistances()));
+            }
+            if (m.getDamageImmunities() != null && !m.getDamageImmunities().isEmpty()) {
+                if (defBuilder.length() > 0) defBuilder.append(" | ");
+                defBuilder.append("🛡 Immunities: ").append(String.join(", ", m.getDamageImmunities()));
+            }
+            defenseLabel.setText(defBuilder.toString());
+
             if (m.getStats() != null) {
                 StringBuilder sb = new StringBuilder();
                 String[] statsKeys = {"strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"};
@@ -415,44 +459,32 @@ public class BestiaryMenu extends JDialog {
             StringBuilder abilities = new StringBuilder();
             if (m.getTraits() != null && !m.getTraits().isEmpty()) {
                 abilities.append("--- TRAITS ---\n");
-                for (BestiaryDTO.Feature t : m.getTraits()) {
+                for (BestiaryDTO.Monster.Feature t : m.getTraits()) {
                     abilities.append("• ").append(t.getName()).append(": ").append(t.getDescription()).append("\n\n");
                 }
             }
             if (m.getReactions() != null && !m.getReactions().isEmpty()) {
                 abilities.append("--- REACTIONS ---\n");
-                for (BestiaryDTO.Feature r : m.getReactions()) {
+                for (BestiaryDTO.Monster.Feature r : m.getReactions()) {
                     abilities.append("• ").append(r.getName()).append(": ").append(r.getDescription()).append("\n\n");
                 }
             }
             if (m.getActions() != null && !m.getActions().isEmpty()) {
                 abilities.append("--- ACTIONS ---\n");
-                for (BestiaryDTO.Feature a : m.getActions()) {
+                for (BestiaryDTO.Monster.Feature a : m.getActions()) {
                     abilities.append("• ").append(a.getName()).append(": ").append(a.getDescription()).append("\n\n");
                 }
             }
-
-            if (m.getLegendaryActions() != null) {
+            if (m.getLegendaryActions() != null && m.getLegendaryActions().getActions() != null) {
                 abilities.append("--- LEGENDARY ACTIONS ---\n");
-                if (m.getLegendaryActions().getDescription() != null && !m.getLegendaryActions().getDescription().isBlank()) {
-                    abilities.append(m.getLegendaryActions().getDescription()).append("\n\n");
-                }
-                if (m.getLegendaryActions().getActions() != null) {
-                    for (BestiaryDTO.Feature la : m.getLegendaryActions().getActions()) {
-                        abilities.append("• ").append(la.getName()).append(": ").append(la.getDescription()).append("\n\n");
-                    }
+                for (BestiaryDTO.Monster.Feature la : m.getLegendaryActions().getActions()) {
+                    abilities.append("• ").append(la.getName()).append(": ").append(la.getDescription()).append("\n\n");
                 }
             }
-
-            if (m.getLairActions() != null) {
+            if (m.getLairActions() != null && m.getLairActions().getActions() != null) {
                 abilities.append("--- LAIR ACTIONS ---\n");
-                if (m.getLairActions().getDescription() != null && !m.getLairActions().getDescription().isBlank()) {
-                    abilities.append(m.getLairActions().getDescription()).append("\n\n");
-                }
-                if (m.getLairActions().getActions() != null) {
-                    for (BestiaryDTO.Feature lra : m.getLairActions().getActions()) {
-                        abilities.append("• ").append(lra.getName()).append(": ").append(lra.getDescription()).append("\n\n");
-                    }
+                for (BestiaryDTO.Monster.Feature lra : m.getLairActions().getActions()) {
+                    abilities.append("• ").append(lra.getName()).append(": ").append(lra.getDescription()).append("\n\n");
                 }
             }
 
@@ -461,9 +493,6 @@ public class BestiaryMenu extends JDialog {
         });
     }
 
-    /**
-     * Clears all fields in the monster detail view.
-     */
     private void clearMonsterDetails() {
         nameLabel.setText("Select a monster");
         typeSizeAlignmentLabel.setText("");
@@ -471,15 +500,13 @@ public class BestiaryMenu extends JDialog {
         hpLabel.setText("");
         speedLabel.setText("");
         sensesLanguagesLabel.setText("");
+        defenseLabel.setText("");
         crLabel.setText("");
         statsArea.setText("");
         abilitiesArea.setText("");
         addToTrackerButton.setEnabled(false);
     }
 
-    /**
-     * Adds the currently selected monster to the initiative tracker based on configured parameters.
-     */
     private void addCurrentMonsterToTracker() {
         if (selectedMonsterName == null || selectedMonsterName.isBlank()) return;
 
@@ -492,7 +519,7 @@ public class BestiaryMenu extends JDialog {
         } else if (rollHpButton.isSelected()) {
             hpMode = HPMode.ROLL;
         } else {
-            hpMode = HPMode.MANUAL;
+            hpMode = HPMode.CUSTOM;
         }
 
         int manualHp = (int) manualHpSpinner.getValue();

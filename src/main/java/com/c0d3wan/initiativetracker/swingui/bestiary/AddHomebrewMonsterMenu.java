@@ -13,13 +13,15 @@ import java.util.Map;
 
 /**
  * Modal {@link JDialog} interface allowing users to create, configure,
- * and save custom homebrew monster records into the bestiary database.
+ * and save custom homebrew monster records into the bestiary database,
+ * supporting the full extended D&D 5e data schema.
  */
 public class AddHomebrewMonsterMenu extends JDialog {
     private final JPanel pane = new JPanel();
 
     private final JTextField nameField = new JTextField(12);
     private final JTextField groupField = new JTextField(12);
+    private final JTextField subgroupField = new JTextField(12);
     private final JTextField typeField = new JTextField(12);
     private final JComboBox<String> sizeCombo = new JComboBox<>(new String[]{"Tiny", "Small", "Medium", "Large", "Huge", "Gargantuan"});
     private final JTextField alignmentField = new JTextField(12);
@@ -34,6 +36,12 @@ public class AddHomebrewMonsterMenu extends JDialog {
     private final JTextField sensesField = new JTextField("passive Perception 10", 12);
     private final JTextField languagesField = new JTextField("Common", 12);
 
+    private final JTextField skillsField = new JTextField(12);
+    private final JTextField savesField = new JTextField(12);
+    private final JTextField resistancesField = new JTextField(12);
+    private final JTextField immunitiesField = new JTextField(12);
+    private final JTextField conditionImmunitiesField = new JTextField(12);
+
     private final JSpinner strSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 30, 1));
     private final JSpinner dexSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 30, 1));
     private final JSpinner conSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 30, 1));
@@ -41,9 +49,11 @@ public class AddHomebrewMonsterMenu extends JDialog {
     private final JSpinner wisSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 30, 1));
     private final JSpinner chaSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 30, 1));
 
-    private final JTextArea traitsArea = new JTextArea(4, 20);
-    private final JTextArea reactionsArea = new JTextArea(4, 20);
-    private final JTextArea actionsArea = new JTextArea(4, 20);
+    private final JTextArea traitsArea = new JTextArea(3, 20);
+    private final JTextArea actionsArea = new JTextArea(3, 20);
+    private final JTextArea reactionsArea = new JTextArea(3, 20);
+    private final JTextArea legendaryArea = new JTextArea(3, 20);
+    private final JTextArea lairArea = new JTextArea(3, 20);
 
     private final JButton saveButton = new JButton("Save Homebrew");
     private boolean confirmed = false;
@@ -60,20 +70,20 @@ public class AddHomebrewMonsterMenu extends JDialog {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(parent);
 
-        setMinimumSize(new Dimension(750, 880));
-        setSize(750, 880);
+        setMinimumSize(new Dimension(850, 920));
+        setSize(850, 920);
         pack();
 
         saveButton.addActionListener(e -> saveMonster());
     }
 
     /**
-     * Lays out all form inputs, ability score spinners, and action areas.
+     * Lays out all form inputs, extended stats, defensive attributes, and action areas.
      */
     private void setupMenu() {
         pane.setLayout(new MigLayout("insets 4, fill", "[grow]", "[grow][]"));
 
-        JPanel container = new JPanel(new MigLayout("insets 8, fill", "[grow]", "[][][grow, fill][grow, fill][grow, fill][]"));
+        JPanel container = new JPanel(new MigLayout("insets 8, fill", "[grow]", "[][][][grow, fill][]"));
         container.setOpaque(false);
 
         JPanel formPanel = new JPanel(new MigLayout("insets 4, fillx, gap 6 8", "[l][grow, fill][l][grow, fill]", ""));
@@ -84,33 +94,48 @@ public class AddHomebrewMonsterMenu extends JDialog {
         formPanel.add(new JLabel("Group:"), "cell 2 0");
         formPanel.add(groupField, "cell 3 0");
 
-        formPanel.add(new JLabel("Type:"), "cell 0 1");
-        formPanel.add(typeField, "cell 1 1");
-        formPanel.add(new JLabel("Size:"), "cell 2 1");
-        formPanel.add(sizeCombo, "cell 3 1");
+        formPanel.add(new JLabel("Subgroup:"), "cell 0 1");
+        formPanel.add(subgroupField, "cell 1 1");
+        formPanel.add(new JLabel("Type:"), "cell 2 1");
+        formPanel.add(typeField, "cell 3 1");
 
-        formPanel.add(new JLabel("Alignment:"), "cell 0 2");
-        formPanel.add(alignmentField, "cell 1 2");
-        formPanel.add(new JLabel("Armor Class:"), "cell 2 2");
-        formPanel.add(acSpinner, "cell 3 2");
+        formPanel.add(new JLabel("Size:"), "cell 0 2");
+        formPanel.add(sizeCombo, "cell 1 2");
+        formPanel.add(new JLabel("Alignment:"), "cell 2 2");
+        formPanel.add(alignmentField, "cell 3 2");
 
-        formPanel.add(new JLabel("Avg HP:"), "cell 0 3");
-        formPanel.add(hpAvgSpinner, "cell 1 3");
-        formPanel.add(new JLabel("HP Formula:"), "cell 2 3");
-        formPanel.add(hpFormulaField, "cell 3 3");
+        formPanel.add(new JLabel("Armor Class:"), "cell 0 3");
+        formPanel.add(acSpinner, "cell 1 3");
+        formPanel.add(new JLabel("Avg HP:"), "cell 2 3");
+        formPanel.add(hpAvgSpinner, "cell 3 3");
 
-        formPanel.add(new JLabel("Challenge (CR):"), "cell 0 4");
-        formPanel.add(crField, "cell 1 4");
-        formPanel.add(new JLabel("XP:"), "cell 2 4");
-        formPanel.add(xpSpinner, "cell 3 4");
+        formPanel.add(new JLabel("HP Formula:"), "cell 0 4");
+        formPanel.add(hpFormulaField, "cell 1 4");
+        formPanel.add(new JLabel("Challenge (CR):"), "cell 2 4");
+        formPanel.add(crField, "cell 3 4");
 
-        formPanel.add(new JLabel("Speed (e.g. walk 30, fly 60):"), "cell 0 5");
-        formPanel.add(speedField, "cell 1 5");
-        formPanel.add(new JLabel("Senses (comma separated):"), "cell 2 5");
-        formPanel.add(sensesField, "cell 3 5");
+        formPanel.add(new JLabel("XP:"), "cell 0 5");
+        formPanel.add(xpSpinner, "cell 1 5");
+        formPanel.add(new JLabel("Speed:"), "cell 2 5");
+        formPanel.add(speedField, "cell 3 5");
 
-        formPanel.add(new JLabel("Languages (comma separated):"), "cell 0 6");
-        formPanel.add(languagesField, "cell 1 6, span 3, growx");
+        formPanel.add(new JLabel("Senses:"), "cell 0 6");
+        formPanel.add(sensesField, "cell 1 6");
+        formPanel.add(new JLabel("Languages:"), "cell 2 6");
+        formPanel.add(languagesField, "cell 3 6");
+
+        formPanel.add(new JLabel("Skills (e.g. Perception +5):"), "cell 0 7");
+        formPanel.add(skillsField, "cell 1 7");
+        formPanel.add(new JLabel("Saving Throws:"), "cell 2 7");
+        formPanel.add(savesField, "cell 3 7");
+
+        formPanel.add(new JLabel("Resistances:"), "cell 0 8");
+        formPanel.add(resistancesField, "cell 1 8");
+        formPanel.add(new JLabel("Immunities:"), "cell 2 8");
+        formPanel.add(immunitiesField, "cell 3 8");
+
+        formPanel.add(new JLabel("Condition Immunities:"), "cell 0 9");
+        formPanel.add(conditionImmunitiesField, "cell 1 9, span 3, growx");
 
         JPanel statsPanel = new JPanel(new MigLayout("insets 6, fillx, gap 4 2", "[][50lp, fill][][50lp, fill][][50lp, fill][][50lp, fill][][50lp, fill][][50lp, fill]", "[50lp!]"));
         statsPanel.setBorder(BorderFactory.createTitledBorder("Ability Scores"));
@@ -129,29 +154,46 @@ public class AddHomebrewMonsterMenu extends JDialog {
         statsPanel.add(new JLabel("CHA:"), "cell 10 0, center");
         statsPanel.add(chaSpinner, "cell 11 0, center");
 
+        JPanel actionsPanel = new JPanel(new MigLayout("insets 4, fill", "[grow][grow]", "[grow][grow][grow]"));
+        actionsPanel.setOpaque(false);
+
         traitsArea.setLineWrap(true);
         traitsArea.setWrapStyleWord(true);
         JScrollPane traitsScroll = new JScrollPane(traitsArea);
-        traitsScroll.setBorder(BorderFactory.createTitledBorder("Traits (Format: Name: Description)"));
-
-        reactionsArea.setLineWrap(true);
-        reactionsArea.setWrapStyleWord(true);
-        JScrollPane reactionsScroll = new JScrollPane(reactionsArea);
-        reactionsScroll.setBorder(BorderFactory.createTitledBorder("Reactions (Format: Name: Description)"));
+        traitsScroll.setBorder(BorderFactory.createTitledBorder("Traits (Name: Description)"));
 
         actionsArea.setLineWrap(true);
         actionsArea.setWrapStyleWord(true);
         JScrollPane actionsScroll = new JScrollPane(actionsArea);
-        actionsScroll.setBorder(BorderFactory.createTitledBorder("Actions (Format: Name: Description)"));
+        actionsScroll.setBorder(BorderFactory.createTitledBorder("Actions (Name: Description)"));
+
+        reactionsArea.setLineWrap(true);
+        reactionsArea.setWrapStyleWord(true);
+        JScrollPane reactionsScroll = new JScrollPane(reactionsArea);
+        reactionsScroll.setBorder(BorderFactory.createTitledBorder("Reactions (Name: Description)"));
+
+        legendaryArea.setLineWrap(true);
+        legendaryArea.setWrapStyleWord(true);
+        JScrollPane legendaryScroll = new JScrollPane(legendaryArea);
+        legendaryScroll.setBorder(BorderFactory.createTitledBorder("Legendary Actions"));
+
+        lairArea.setLineWrap(true);
+        lairArea.setWrapStyleWord(true);
+        JScrollPane lairScroll = new JScrollPane(lairArea);
+        lairScroll.setBorder(BorderFactory.createTitledBorder("Lair Actions"));
+
+        actionsPanel.add(traitsScroll, "cell 0 0, grow, wrap");
+        actionsPanel.add(actionsScroll, "cell 0 1, grow, wrap");
+        actionsPanel.add(reactionsScroll, "cell 0 2, grow, wrap");
+        actionsPanel.add(legendaryScroll, "cell 1 0, grow, wrap");
+        actionsPanel.add(lairScroll, "cell 1 1, grow, span 1 2");
 
         container.add(formPanel, "growx, wrap");
         container.add(statsPanel, "growx, wrap");
-        container.add(traitsScroll, "grow, wrap");
-        container.add(reactionsScroll, "grow, wrap");
-        container.add(actionsScroll, "grow, wrap");
+        container.add(actionsPanel, "grow, wrap");
 
         saveButton.setFocusPainted(false);
-        container.add(saveButton, "align right, gaptop 8");
+        container.add(saveButton, "cell 0 7 2 1, growx, height 38!");
 
         JScrollPane scrollPane = new JScrollPane(container);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -161,7 +203,7 @@ public class AddHomebrewMonsterMenu extends JDialog {
     }
 
     /**
-     * Validates input fields, packages the data into a Monster DTO, and saves it to the database as user homebrew.
+     * Validates input fields, packages extended attributes into a Monster DTO, and saves it to the database.
      */
     private void saveMonster() {
         String name = nameField.getText().trim();
@@ -173,6 +215,13 @@ public class AddHomebrewMonsterMenu extends JDialog {
         BestiaryDTO.Monster monster = new BestiaryDTO.Monster();
         monster.setName(name);
         monster.setGroupName(groupField.getText().trim().isBlank() ? "Homebrew" : groupField.getText().trim());
+        monster.setOfficial(false); // Mark as custom user homebrew
+
+        String sub = subgroupField.getText().trim();
+        if (!sub.isBlank()) {
+            monster.setSubgroups(List.of(sub.split("\\s*,\\s*")));
+        }
+
         monster.setType(typeField.getText().trim());
         monster.setSize((String) sizeCombo.getSelectedItem());
         monster.setAlignment(alignmentField.getText().trim());
@@ -180,7 +229,7 @@ public class AddHomebrewMonsterMenu extends JDialog {
         monster.setChallengeRating(crField.getText().trim());
         monster.setExperiencePoints(((Number) xpSpinner.getValue()).intValue());
 
-        BestiaryDTO.HitPoints hp = new BestiaryDTO.HitPoints();
+        BestiaryDTO.Monster.HitPoints hp = new BestiaryDTO.Monster.HitPoints();
         hp.setAverage(((Number) hpAvgSpinner.getValue()).intValue());
         hp.setFormula(hpFormulaField.getText().trim());
         monster.setHitPoints(hp);
@@ -194,11 +243,52 @@ public class AddHomebrewMonsterMenu extends JDialog {
         stats.put("charisma", ((Number) chaSpinner.getValue()).intValue());
         monster.setStats(stats);
 
+        // Parse Skills
+        String skillsText = skillsField.getText().trim();
+        if (!skillsText.isBlank()) {
+            Map<String, Integer> skillsMap = new HashMap<>();
+            for (String part : skillsText.split(",")) {
+                String[] kv = part.trim().split("\\s+");
+                if (kv.length >= 2) {
+                    try {
+                        skillsMap.put(kv[0], Integer.parseInt(kv[1].replaceAll("[^0-9+-]", "")));
+                    } catch (Exception ignored) {}
+                }
+            }
+            if (!skillsMap.isEmpty()) monster.setSkills(skillsMap);
+        }
+
+        // Parse Saving Throws
+        String savesText = savesField.getText().trim();
+        if (!savesText.isBlank()) {
+            Map<String, Integer> savesMap = new HashMap<>();
+            for (String part : savesText.split(",")) {
+                String[] kv = part.trim().split("\\s+");
+                if (kv.length >= 2) {
+                    try {
+                        savesMap.put(kv[0], Integer.parseInt(kv[1].replaceAll("[^0-9+-]", "")));
+                    } catch (Exception ignored) {}
+                }
+            }
+            if (!savesMap.isEmpty()) monster.setSavingThrows(savesMap);
+        }
+
+        // Parse Defenses & Immunities
+        if (!resistancesField.getText().isBlank()) {
+            monster.setDamageResistances(List.of(resistancesField.getText().trim().split("\\s*,\\s*")));
+        }
+        if (!immunitiesField.getText().isBlank()) {
+            monster.setDamageImmunities(List.of(immunitiesField.getText().trim().split("\\s*,\\s*")));
+        }
+        if (!conditionImmunitiesField.getText().isBlank()) {
+            monster.setConditionImmunities(List.of(conditionImmunitiesField.getText().trim().split("\\s*,\\s*")));
+        }
+
+        // Parse Speed
         Map<String, Integer> speed = new HashMap<>();
         String speedText = speedField.getText().trim();
         if (!speedText.isBlank()) {
-            String[] speedEntries = speedText.split(",");
-            for (String entry : speedEntries) {
+            for (String entry : speedText.split(",")) {
                 String[] parts = entry.trim().split("\\s+");
                 if (parts.length >= 2) {
                     try {
@@ -229,35 +319,44 @@ public class AddHomebrewMonsterMenu extends JDialog {
         }
         monster.setLanguages(langs);
 
-        List<BestiaryDTO.Feature> traits = parseFeatures(traitsArea.getText());
+        List<BestiaryDTO.Monster.Feature> traits = parseFeatures(traitsArea.getText());
         if (!traits.isEmpty()) monster.setTraits(traits);
 
-        List<BestiaryDTO.Feature> reactions = parseFeatures(reactionsArea.getText());
+        List<BestiaryDTO.Monster.Feature> reactions = parseFeatures(reactionsArea.getText());
         if (!reactions.isEmpty()) monster.setReactions(reactions);
 
-        List<BestiaryDTO.Feature> actions = parseFeatures(actionsArea.getText());
+        List<BestiaryDTO.Monster.Feature> actions = parseFeatures(actionsArea.getText());
         if (!actions.isEmpty()) monster.setActions(actions);
+
+        // Legendary Actions
+        String legText = legendaryArea.getText().trim();
+        if (!legText.isBlank()) {
+            BestiaryDTO.Monster.ActionGroup leg = new BestiaryDTO.Monster.ActionGroup();
+            leg.setActions(parseFeatures(legText));
+            monster.setLegendaryActions(leg);
+        }
+
+        // Lair Actions
+        String lairText = lairArea.getText().trim();
+        if (!lairText.isBlank()) {
+            BestiaryDTO.Monster.ActionGroup lair = new BestiaryDTO.Monster.ActionGroup();
+            lair.setActions(parseFeatures(lairText));
+            monster.setLairActions(lair);
+        }
 
         BestiaryDatabase.saveUserMonster(monster);
         confirmed = true;
         dispose();
     }
 
-    /**
-     * Parses raw text input lines into structured Feature DTO objects.
-     *
-     * @param text raw multi-line text input
-     * @return a list of parsed Feature objects
-     */
-    private List<BestiaryDTO.Feature> parseFeatures(String text) {
-        List<BestiaryDTO.Feature> features = new ArrayList<>();
+    private List<BestiaryDTO.Monster.Feature> parseFeatures(String text) {
+        List<BestiaryDTO.Monster.Feature> features = new ArrayList<>();
         if (text == null || text.isBlank()) return features;
 
-        String[] lines = text.split("\n");
-        for (String line : lines) {
+        for (String line : text.split("\n")) {
             if (line.isBlank()) continue;
             String[] parts = line.split(":", 2);
-            BestiaryDTO.Feature feature = new BestiaryDTO.Feature();
+            BestiaryDTO.Monster.Feature feature = new BestiaryDTO.Monster.Feature();
             if (parts.length == 2) {
                 feature.setName(parts[0].trim());
                 feature.setDescription(parts[1].trim());
@@ -270,11 +369,6 @@ public class AddHomebrewMonsterMenu extends JDialog {
         return features;
     }
 
-    /**
-     * Checks whether the user successfully saved a new homebrew monster.
-     *
-     * @return true if confirmed and saved, false otherwise
-     */
     public boolean isConfirmed() {
         return confirmed;
     }
