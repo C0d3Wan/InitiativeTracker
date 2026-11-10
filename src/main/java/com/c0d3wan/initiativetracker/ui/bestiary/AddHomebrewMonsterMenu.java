@@ -70,10 +70,6 @@ public class AddHomebrewMonsterMenu extends JDialog {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(parent);
 
-        setMinimumSize(new Dimension(850, 920));
-        setSize(850, 920);
-        pack();
-
         saveButton.addActionListener(e -> saveMonster());
     }
 
@@ -82,6 +78,8 @@ public class AddHomebrewMonsterMenu extends JDialog {
      */
     private void setupMenu() {
         pane.setLayout(new MigLayout("insets 4, fill", "[grow]", "[grow][]"));
+        setMinimumSize(new Dimension(850, 920));
+        setSize(850, 920);
 
         JPanel container = new JPanel(new MigLayout("insets 8, fill", "[grow]", "[][][][grow, fill][]"));
         container.setOpaque(false);
@@ -200,6 +198,8 @@ public class AddHomebrewMonsterMenu extends JDialog {
         pane.add(scrollPane, "cell 0 0, grow");
 
         setContentPane(pane);
+
+        pack();
     }
 
     /**
