@@ -103,6 +103,7 @@ public class UIController {
         characterOptionsPanel.addEditCharacterListener(e -> openEditCharacterMenu());
         characterOptionsPanel.addEditNpcListener(e -> openEditNPCHealthMenu());
         characterOptionsPanel.addRemoveCharacterListener(e -> openRemoveCharacterMenu());
+        characterOptionsPanel.addAddBeastButtonListener(e -> openBestiaryMenu());
     }
 
     /**

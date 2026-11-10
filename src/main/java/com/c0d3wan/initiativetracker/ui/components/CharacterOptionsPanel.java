@@ -48,7 +48,7 @@ public class CharacterOptionsPanel extends JPanel{
         add(hSeparator, "cell 0 1, spanx, grow");
 
         add(addCharacterButton, "cell 0 2, grow");
-        add(addBeastButton, "cell 1 2, grow");
+        add(addBeastButton, "cell 0 3, grow");
         add(editCharacterButton, "cell 2 2, grow");
         add(editNPCHealthButton, "cell 2 3, grow");
         add(removeCharacterButton, "cell 4 2, grow");
@@ -68,5 +68,9 @@ public class CharacterOptionsPanel extends JPanel{
 
     public void addRemoveCharacterListener(ActionListener listener) {
         removeCharacterButton.addActionListener(listener);
+    }
+
+    public void addAddBeastButtonListener(ActionListener listener) {
+        addBeastButton.addActionListener(listener);
     }
 }
