@@ -76,10 +76,6 @@ public class BestiaryMenu extends JDialog {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(parent);
 
-        setMinimumSize(new Dimension(1050, 780));
-        setSize(1050, 780);
-        pack();
-
         loadMonsters();
 
         searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
@@ -155,6 +151,8 @@ public class BestiaryMenu extends JDialog {
     private void setupMenu() {
         pane.setLayout(new MigLayout("insets 6, fill", "[320px::320px, fill][grow, fill]", "[][grow]"));
         setContentPane(pane);
+        setMinimumSize(new Dimension(1050, 780));
+        setSize(1050, 780);
 
         JPanel leftPanel = new JPanel(new MigLayout("insets 0, fill", "[grow]", "[][grow][][]"));
         leftPanel.setOpaque(false);
@@ -268,6 +266,8 @@ public class BestiaryMenu extends JDialog {
 
         pane.add(leftPanel, "cell 0 0 1 2, grow");
         pane.add(rightPanel, "cell 1 0 1 2, grow");
+
+        pack();
     }
 
     private void loadMonsters() {

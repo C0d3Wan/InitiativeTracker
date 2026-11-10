@@ -120,6 +120,8 @@ public class AddCharacterDialog extends JDialog {
 
         setContentPane(addCharacterPane);
 
+        characterName.setToolTipText("hello");
+
         final JLabel characterNameLabel = new JLabel("Character Name:");
         final JLabel initiativeLabel = new JLabel("Initiative:");
         final JLabel dexterityLabel = new JLabel("Dexterity (0-30):");
