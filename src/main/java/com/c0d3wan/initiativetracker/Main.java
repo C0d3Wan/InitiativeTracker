@@ -39,6 +39,12 @@ public class Main {
      * @param args Command-line arguments passed during startup (unused).
      */
     public static void main(String[] args) {
+        try {
+            JsonToDatabaseImporter.main(new String[0]);
+        } catch (Exception e) {
+            System.err.println("Warning: Failed to initialize bestiary database from resources: " + e.getMessage());
+        }
+
         SwingUtilities.invokeLater(() -> {
             CharacterManager characterManager = new CharacterManager();
             ConfigManager.loadConfig();
@@ -46,15 +52,5 @@ public class Main {
             UIController uiController = new UIController(mainWindow, characterManager);
             uiController.displayMainWindow();
         });
-        CharacterManager characterManager = new CharacterManager();
-        ConfigManager.loadConfig();
-
-        try {
-            JsonToDatabaseImporter.main(new String[0]);
-        } catch (Exception e) {
-            System.err.println("Warning: Failed to initialize bestiary database from resources: " + e.getMessage());
-        }
-
-        SwingUtilities.invokeLater(() -> new MainMenu(characterManager).setVisible(true));
     }
 }
