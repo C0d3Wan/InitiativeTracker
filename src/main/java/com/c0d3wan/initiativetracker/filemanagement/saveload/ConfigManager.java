@@ -18,10 +18,12 @@ import com.formdev.flatlaf.*;
 public class ConfigManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+
     /**
      * Saves the current application settings to {@code Config.json} in the configuration directory.
      */
     public static void saveConfig() {
+
         File targetFile = new File(FileManager.getDirectory(), "Config.sav");
         try {
             saveToFile(targetFile);
@@ -56,7 +58,7 @@ public class ConfigManager {
      */
     private static void saveToFile(File file) throws IOException {
         ConfigDTO configs = new ConfigDTO();
-        configs.darkMode = FlatLaf.isLafDark();
+        configs.darkMode = UIController.getCurrentColourMode();
 
         try (FileWriter writer = new FileWriter(file)) {
             GSON.toJson(configs, writer);
