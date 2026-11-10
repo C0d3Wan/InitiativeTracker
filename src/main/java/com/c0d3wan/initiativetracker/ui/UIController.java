@@ -81,6 +81,8 @@ public class UIController {
             characterDetailsPanel.setVisible(true);
             characterDetailsPanel.displayCharacter(selectedCharacter);
         });
+        initiativeListPanel.addNextTurnListener(e -> nextTurn());
+
         deathSavesPanel.addPassListener(e -> passDeathSave(true));
         deathSavesPanel.addFailListener(e -> passDeathSave(false));
 
@@ -101,7 +103,6 @@ public class UIController {
         characterOptionsPanel.addEditCharacterListener(e -> openEditCharacterMenu());
         characterOptionsPanel.addEditNpcListener(e -> openEditNPCHealthMenu());
         characterOptionsPanel.addRemoveCharacterListener(e -> openRemoveCharacterMenu());
-        initiativeListPanel.addNextTurnListener(e -> nextTurn());
     }
 
     /**
@@ -283,7 +284,7 @@ public class UIController {
         }
     }
 
-    private static JFileChooser createFileMenu() {
+    private JFileChooser createFileMenu() {
         JFileChooser fileMenu = new JFileChooser();
         fileMenu.setFileHidingEnabled(false);
         fileMenu.setFileFilter(new FileFilter() {
