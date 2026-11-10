@@ -1,4 +1,4 @@
-package com.c0d3wan.initiativetracker.swingui.renderers;
+package com.c0d3wan.initiativetracker.ui.renderers;
 
 import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.data.CharacterData;
@@ -19,7 +19,7 @@ import java.util.*;
 @SuppressWarnings({"SameParameterValue"})
 public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Character> {
     private final JLabel nameLabel = new JLabel();
-    private final JLabel conditionLabel = new JLabel("Held");
+    private final JLabel conditionLabel = new JLabel();
     private final JLabel initiativeLabel = new JLabel();
     private final JLabel characterTypeLabel = new JLabel();
     private final JLabel deathStatusLabel = new JLabel();
@@ -115,7 +115,8 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
             boolean isSelected,
             boolean cellHasFocus) {
         CharacterData characterData = character.getCharacterData();
-        nameLabel.setText(character.getName());
+        String name = character.getName();
+        //nameLabel.setText(character.getName());
         conditionLabel.setText(listConditions(character));
         initiativeLabel.setText(String.valueOf(character.getInitiativeValue()));
         characterTypeLabel.setText(character.getCharacterType().toString());
@@ -129,6 +130,10 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
         } else {
             npcHealth.setText("N/A");
         }
+        if (name.length() > 16) {
+            name = name.substring(0, 16) + "...";
+        }
+        nameLabel.setText(name);
 
         if (index == 0) {
             setBackground(ACTIVE_TURN_COLOR);
@@ -206,7 +211,7 @@ public class CharacterCellRenderer extends JPanel implements ListCellRenderer<Ch
             }
         }
         if (hasConditions.isEmpty()) return "";
-        else if (hasConditions.size() > 5) return hasConditions.size() + " Conditions";
+        else if (hasConditions.size() > 1) return hasConditions.size() + " Conditions";
         else return hasConditions.toString();
     }
 }
