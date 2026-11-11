@@ -128,6 +128,7 @@ public class JsonToDatabaseImporter {
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "monster_id INTEGER, ability_type TEXT, display_order INTEGER, " +
                     "name TEXT, description TEXT, recharge TEXT, " +
+                    "UNIQUE(monster_id, ability_type, name), " +
                     "FOREIGN KEY (monster_id) REFERENCES Monster(id) ON DELETE CASCADE);");
 
             stmt.execute("CREATE TABLE IF NOT EXISTS MonsterTag (" +
@@ -142,14 +143,17 @@ public class JsonToDatabaseImporter {
         String name = m.get("name").getAsString();
         boolean isOfficial = !m.has("isOfficial") || m.get("isOfficial").getAsBoolean();
 
-        String checkSql = "SELECT is_official FROM Monster WHERE name = ?";
+        // Check if monster already exists and whether it is user homebrew (is_official = 0)
+        long existingId = -1;
+        String checkSql = "SELECT id, is_official FROM Monster WHERE name = ?";
         try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
             checkStmt.setString(1, name);
             try (ResultSet rs = checkStmt.executeQuery()) {
                 if (rs.next()) {
                     if (rs.getInt("is_official") == 0) {
-                        return;
+                        return; // Skip overwriting user homebrew records
                     }
+                    existingId = rs.getLong("id");
                 }
             }
         }
@@ -164,35 +168,60 @@ public class JsonToDatabaseImporter {
         Long sizeId = ensureAndResolveId(conn, "Size", sizeName);
         Long alignmentId = ensureAndResolveId(conn, "Alignment", alignmentName);
 
-        String insertMonsterSql = "INSERT OR REPLACE INTO Monster (" +
-                "name, group_id, type_id, size_id, alignment_id, challenge_rating, " +
-                "armor_class, hp_average, hp_formula, experience_points, " +
-                "passive_perception, proficiency_bonus, description, is_official) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
         long monsterId;
-        try (PreparedStatement pstmt = conn.prepareStatement(insertMonsterSql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setString(1, name);
-            if (groupId != null) pstmt.setLong(2, groupId); else pstmt.setNull(2, Types.INTEGER);
-            if (typeId != null) pstmt.setLong(3, typeId); else pstmt.setNull(3, Types.INTEGER);
-            if (sizeId != null) pstmt.setLong(4, sizeId); else pstmt.setNull(4, Types.INTEGER);
-            if (alignmentId != null) pstmt.setLong(5, alignmentId); else pstmt.setNull(5, Types.INTEGER);
-            pstmt.setDouble(6, m.has("challengeRating") ? m.get("challengeRating").getAsDouble() : 0.0);
-            pstmt.setInt(7, m.has("armorClass") ? m.get("armorClass").getAsInt() : 10);
-            pstmt.setInt(8, m.has("hpAverage") ? m.get("hpAverage").getAsInt() : 10);
-            pstmt.setString(9, m.has("hpFormula") ? m.get("hpFormula").getAsString() : "2d8");
-            pstmt.setInt(10, m.has("experiencePoints") ? m.get("experiencePoints").getAsInt() : 0);
-            pstmt.setInt(11, m.has("passivePerception") ? m.get("passivePerception").getAsInt() : 10);
-            pstmt.setInt(12, m.has("proficiencyBonus") ? m.get("proficiencyBonus").getAsInt() : 2);
-            pstmt.setString(13, m.has("description") && !m.get("description").isJsonNull() ? m.get("description").getAsString() : "");
-            pstmt.setInt(14, isOfficial ? 1 : 0);
+        if (existingId != -1) {
+            // Update existing official monster without changing its stable primary key ID
+            String updateSql = "UPDATE Monster SET group_id = ?, type_id = ?, size_id = ?, alignment_id = ?, " +
+                    "challenge_rating = ?, armor_class = ?, hp_average = ?, hp_formula = ?, experience_points = ?, " +
+                    "passive_perception = ?, proficiency_bonus = ?, description = ?, is_official = ? WHERE id = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
+                if (groupId != null) pstmt.setLong(1, groupId); else pstmt.setNull(1, Types.INTEGER);
+                if (typeId != null) pstmt.setLong(2, typeId); else pstmt.setNull(2, Types.INTEGER);
+                if (sizeId != null) pstmt.setLong(3, sizeId); else pstmt.setNull(3, Types.INTEGER);
+                if (alignmentId != null) pstmt.setLong(4, alignmentId); else pstmt.setNull(4, Types.INTEGER);
+                pstmt.setDouble(5, m.has("challengeRating") ? m.get("challengeRating").getAsDouble() : 0.0);
+                pstmt.setInt(6, m.has("armorClass") ? m.get("armorClass").getAsInt() : 10);
+                pstmt.setInt(7, m.has("hpAverage") ? m.get("hpAverage").getAsInt() : 10);
+                pstmt.setString(8, m.has("hpFormula") ? m.get("hpFormula").getAsString() : "2d8");
+                pstmt.setInt(9, m.has("experiencePoints") ? m.get("experiencePoints").getAsInt() : 0);
+                pstmt.setInt(10, m.has("passivePerception") ? m.get("passivePerception").getAsInt() : 10);
+                pstmt.setInt(11, m.has("proficiencyBonus") ? m.get("proficiencyBonus").getAsInt() : 2);
+                pstmt.setString(12, m.has("description") && !m.get("description").isJsonNull() ? m.get("description").getAsString() : "");
+                pstmt.setInt(13, isOfficial ? 1 : 0);
+                pstmt.setLong(14, existingId);
+                pstmt.executeUpdate();
+            }
+            monsterId = existingId;
+        } else {
+            // Insert new official monster record
+            String insertMonsterSql = "INSERT INTO Monster (" +
+                    "name, group_id, type_id, size_id, alignment_id, challenge_rating, " +
+                    "armor_class, hp_average, hp_formula, experience_points, " +
+                    "passive_perception, proficiency_bonus, description, is_official) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement pstmt = conn.prepareStatement(insertMonsterSql, Statement.RETURN_GENERATED_KEYS)) {
+                pstmt.setString(1, name);
+                if (groupId != null) pstmt.setLong(2, groupId); else pstmt.setNull(2, Types.INTEGER);
+                if (typeId != null) pstmt.setLong(3, typeId); else pstmt.setNull(3, Types.INTEGER);
+                if (sizeId != null) pstmt.setLong(4, sizeId); else pstmt.setNull(4, Types.INTEGER);
+                if (alignmentId != null) pstmt.setLong(5, alignmentId); else pstmt.setNull(5, Types.INTEGER);
+                pstmt.setDouble(6, m.has("challengeRating") ? m.get("challengeRating").getAsDouble() : 0.0);
+                pstmt.setInt(7, m.has("armorClass") ? m.get("armorClass").getAsInt() : 10);
+                pstmt.setInt(8, m.has("hpAverage") ? m.get("hpAverage").getAsInt() : 10);
+                pstmt.setString(9, m.has("hpFormula") ? m.get("hpFormula").getAsString() : "2d8");
+                pstmt.setInt(10, m.has("experiencePoints") ? m.get("experiencePoints").getAsInt() : 0);
+                pstmt.setInt(11, m.has("passivePerception") ? m.get("passivePerception").getAsInt() : 10);
+                pstmt.setInt(12, m.has("proficiencyBonus") ? m.get("proficiencyBonus").getAsInt() : 2);
+                pstmt.setString(13, m.has("description") && !m.get("description").isJsonNull() ? m.get("description").getAsString() : "");
+                pstmt.setInt(14, isOfficial ? 1 : 0);
 
-            pstmt.executeUpdate();
-            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    monsterId = generatedKeys.getLong(1);
-                } else {
-                    monsterId = getMonsterIdByName(conn, name);
+                pstmt.executeUpdate();
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        monsterId = generatedKeys.getLong(1);
+                    } else {
+                        monsterId = getMonsterIdByName(conn, name);
+                    }
                 }
             }
         }
@@ -288,16 +317,10 @@ public class JsonToDatabaseImporter {
             }
         }
 
-        // Clear existing abilities before inserting to avoid duplicates on re-import
-        try (PreparedStatement delAbStmt = conn.prepareStatement("DELETE FROM MonsterAbility WHERE monster_id = ?")) {
-            delAbStmt.setLong(1, monsterId);
-            delAbStmt.executeUpdate();
-        }
-
-        // Insert Abilities (Traits, Actions, Reactions, Legendary Actions, Lair Actions)
+        // Insert Abilities using INSERT OR REPLACE to keep stable IDs and stop auto-increment bloat
         if (m.has("abilities") && m.get("abilities").isJsonArray()) {
             JsonArray abilitiesArray = m.getAsJsonArray("abilities");
-            String abilityInsertSql = "INSERT INTO MonsterAbility (monster_id, ability_type, display_order, name, description, recharge) VALUES (?, ?, ?, ?, ?, ?)";
+            String abilityInsertSql = "INSERT OR REPLACE INTO MonsterAbility (monster_id, ability_type, display_order, name, description, recharge) VALUES (?, ?, ?, ?, ?, ?)";
 
             int order = 0;
             for (JsonElement abElement : abilitiesArray) {

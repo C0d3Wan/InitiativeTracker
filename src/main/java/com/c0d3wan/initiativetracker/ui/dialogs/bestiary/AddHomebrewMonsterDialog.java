@@ -1,5 +1,6 @@
 package com.c0d3wan.initiativetracker.ui.dialogs.bestiary;
 
+import com.c0d3wan.initiativetracker.filemanagement.FileManager;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiaryDatabase;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.data.BestiaryDTO;
 import com.formdev.flatlaf.FlatClientProperties;
@@ -11,6 +12,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.File;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +36,7 @@ public class AddHomebrewMonsterDialog extends JDialog {
 
     private final JSpinner acSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 30, 1));
     private final JSpinner hpAvgSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 2000, 1));
-    private final JTextField hpFormulaField = new JTextField(10);
+    private final JTextField hpFormulaField = new JTextField("2d8 + 2", 10);
     private final JTextField crField = new JTextField("1", 6);
 
     private final JRadioButton autoXpRadio = new JRadioButton("Auto (CR)", true);
@@ -59,7 +62,6 @@ public class AddHomebrewMonsterDialog extends JDialog {
 
     private final JTextArea traitsArea = new JTextArea(8, 28);
     private final JTextArea actionsArea = new JTextArea(8, 28);
-
     private final JTextArea reactionsArea = new JTextArea(4, 20);
     private final JTextArea legendaryArea = new JTextArea(4, 20);
     private final JTextArea lairArea = new JTextArea(4, 20);
@@ -189,9 +191,6 @@ public class AddHomebrewMonsterDialog extends JDialog {
         };
     }
 
-    /**
-     * Configures inline ghost placeholders and tooltips so users know the exact expected format for every field.
-     */
     private void setupPlaceholdersAndTooltips() {
         setFieldHint(nameField, "e.g. Dire Goblin (Required)", "Required: The unique name of the monster.");
         setFieldHint(groupField, "e.g. Goblinoids (blank = Homebrew)", "Main category folder in the Bestiary tree.");
@@ -213,25 +212,11 @@ public class AddHomebrewMonsterDialog extends JDialog {
 
         String featureTooltip = "Enter one ability per line using 'Name: Description'. Press Enter for a new ability.";
 
-        setTextAreaPlaceholder(traitsArea,
-                "Format: Name: Description (one trait per line)\nExample:\nPack Tactics: Advantage on attack rolls if an ally is within 5 ft.\nAmphibious: Can breathe air and water.",
-                featureTooltip);
-
-        setTextAreaPlaceholder(actionsArea,
-                "Format: Name: Description (one action per line)\nExample:\nMultiattack: Makes two scimitar attacks.\nScimitar: Melee Weapon Attack: +4 to hit, reach 5 ft., Hit: 5 (1d6 + 2) slashing damage.",
-                featureTooltip);
-
-        setTextAreaPlaceholder(reactionsArea,
-                "Format: Name: Description (1 per line)\nExample:\nParry: Adds 2 to AC against one melee attack.",
-                featureTooltip);
-
-        setTextAreaPlaceholder(legendaryArea,
-                "Format: Name: Description (1 per line)\nExample:\nDetect: Makes a Wisdom (Perception) check.",
-                featureTooltip);
-
-        setTextAreaPlaceholder(lairArea,
-                "Format: Name: Description (1 per line)\nExample:\nTremor: Ground shakes within a 60-ft. radius...",
-                featureTooltip);
+        setTextAreaPlaceholder(traitsArea, "Format: Name: Description (one trait per line)\nExample:\nPack Tactics: Advantage on attack rolls if an ally is within 5 ft.", featureTooltip);
+        setTextAreaPlaceholder(actionsArea, "Format: Name: Description (one action per line)\nExample:\nMultiattack: Makes two scimitar attacks.", featureTooltip);
+        setTextAreaPlaceholder(reactionsArea, "Format: Name: Description (1 per line)\nExample:\nParry: Adds 2 to AC against one melee attack.", featureTooltip);
+        setTextAreaPlaceholder(legendaryArea, "Format: Name: Description (1 per line)\nExample:\nDetect: Makes a Wisdom (Perception) check.", featureTooltip);
+        setTextAreaPlaceholder(lairArea, "Format: Name: Description (1 per line)\nExample:\nTremor: Ground shakes within a 60-ft. radius...", featureTooltip);
     }
 
     private void setFieldHint(JTextField field, String placeholder, String tooltip) {
@@ -241,10 +226,8 @@ public class AddHomebrewMonsterDialog extends JDialog {
 
     private void setTextAreaPlaceholder(JTextArea area, String placeholder, String tooltip) {
         area.setToolTipText(tooltip);
-        Color normalFg = UIManager.getColor("TextArea.foreground") != null
-                ? UIManager.getColor("TextArea.foreground") : Color.LIGHT_GRAY;
-        Color hintFg = UIManager.getColor("Component.placeholderForeground") != null
-                ? UIManager.getColor("Component.placeholderForeground") : Color.GRAY;
+        Color normalFg = UIManager.getColor("TextArea.foreground") != null ? UIManager.getColor("TextArea.foreground") : Color.LIGHT_GRAY;
+        Color hintFg = UIManager.getColor("Component.placeholderForeground") != null ? UIManager.getColor("Component.placeholderForeground") : Color.GRAY;
         Font normalFont = area.getFont();
         Font italicFont = normalFont.deriveFont(Font.ITALIC);
 
@@ -283,9 +266,6 @@ public class AddHomebrewMonsterDialog extends JDialog {
         return area.getText().trim();
     }
 
-    /**
-     * Lays out all form inputs, extended stats, defensive attributes, and action areas.
-     */
     private void setupMenu() {
         pane.setLayout(new MigLayout("insets 4, fill", "[grow]", "[grow]"));
         setMinimumSize(new Dimension(920, 960));
@@ -411,7 +391,6 @@ public class AddHomebrewMonsterDialog extends JDialog {
 
         actionsPanel.add(traitsScroll, "cell 0 0 3 1, grow");
         actionsPanel.add(actionsScroll, "cell 3 0 3 1, grow");
-
         actionsPanel.add(reactionsScroll, "cell 0 1 2 1, grow");
         actionsPanel.add(legendaryScroll, "cell 2 1 2 1, grow");
         actionsPanel.add(lairScroll, "cell 4 1 2 1, grow");
@@ -435,13 +414,50 @@ public class AddHomebrewMonsterDialog extends JDialog {
     }
 
     /**
-     * Validates input fields, packages extended attributes into a Monster DTO, and saves it to the database.
+     * Checks the database for an existing monster with the given name and determines if it is Official or Homebrew.
+     */
+    private Integer checkExistingMonsterType(String name) {
+        File dbFile = new File(FileManager.getDirectory(), "bestiary.db");
+        if (!dbFile.exists()) return null;
+
+        String dbUrl = "jdbc:sqlite:" + dbFile.getAbsolutePath();
+        String query = "SELECT is_official FROM Monster WHERE name = ?";
+        try (Connection conn = DriverManager.getConnection(dbUrl);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, name);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("is_official"); // 1 = Official, 0 = Homebrew
+                }
+            }
+        } catch (SQLException ignored) {}
+        return null;
+    }
+
+    /**
+     * Validates input fields, checks for name conflicts, and saves the homebrew record.
      */
     private void saveMonster() {
         String name = nameField.getText().trim();
         if (name.isBlank()) {
             JOptionPane.showMessageDialog(this, "Monster name cannot be blank.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
+        }
+
+        // Check for duplicate name conflicts in the database
+        Integer existingStatus = checkExistingMonsterType(name);
+        if (existingStatus != null) {
+            String originType = (existingStatus == 1) ? "an Official Monster Manual" : "an existing Homebrew";
+            int choice = JOptionPane.showConfirmDialog(
+                    this,
+                    "A monster named '" + name + "' already exists in the database as " + originType + " record.\n\nDo you want to overwrite it?",
+                    "Name Conflict Warning",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+            if (choice != JOptionPane.YES_OPTION) {
+                return;
+            }
         }
 
         BestiaryDTO.Monster monster = new BestiaryDTO.Monster();
