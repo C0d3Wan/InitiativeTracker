@@ -197,6 +197,7 @@ public class JsonToDatabaseImporter {
             }
         }
 
+        // Insert Stats
         if (m.has("stats") && !m.get("stats").isJsonNull()) {
             JsonObject stats = m.getAsJsonObject("stats");
             String statsSql = "INSERT OR REPLACE INTO MonsterStats (monster_id, strength, dexterity, constitution, intelligence, wisdom, charisma) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -212,6 +213,7 @@ public class JsonToDatabaseImporter {
             }
         }
 
+        // Insert Speeds
         if (m.has("speeds") && m.get("speeds").isJsonArray()) {
             JsonArray speedsArray = m.getAsJsonArray("speeds");
             String speedTypeInsertSql = "INSERT OR IGNORE INTO SpeedType (name) VALUES (?)";
@@ -237,6 +239,34 @@ public class JsonToDatabaseImporter {
             }
         }
 
+        // Insert Senses
+        if (m.has("senses") && m.get("senses").isJsonArray()) {
+            JsonArray sensesArray = m.getAsJsonArray("senses");
+            String senseTypeInsertSql = "INSERT OR IGNORE INTO SenseType (name) VALUES (?)";
+            String senseLinkSql = "INSERT OR REPLACE INTO MonsterSense (monster_id, sense_type_id, range_ft) VALUES (?, (SELECT id FROM SenseType WHERE name = ?), ?)";
+
+            for (JsonElement senseElement : sensesArray) {
+                if (senseElement.isJsonObject()) {
+                    JsonObject senseObj = senseElement.getAsJsonObject();
+                    if (senseObj.has("sense") && senseObj.has("rangeFt")) {
+                        String senseName = senseObj.get("sense").getAsString();
+                        int rangeFt = senseObj.get("rangeFt").getAsInt();
+                        try (PreparedStatement typeStmt = conn.prepareStatement(senseTypeInsertSql);
+                             PreparedStatement linkStmt = conn.prepareStatement(senseLinkSql)) {
+                            typeStmt.setString(1, senseName);
+                            typeStmt.executeUpdate();
+
+                            linkStmt.setLong(1, monsterId);
+                            linkStmt.setString(2, senseName);
+                            linkStmt.setInt(3, rangeFt);
+                            linkStmt.executeUpdate();
+                        }
+                    }
+                }
+            }
+        }
+
+        // Insert Tags
         if (m.has("tags") && m.get("tags").isJsonArray()) {
             JsonArray tagsArray = m.getAsJsonArray("tags");
             String tagInsertSql = "INSERT OR IGNORE INTO Tag (name) VALUES (?)";
@@ -258,6 +288,13 @@ public class JsonToDatabaseImporter {
             }
         }
 
+        // Clear existing abilities before inserting to avoid duplicates on re-import
+        try (PreparedStatement delAbStmt = conn.prepareStatement("DELETE FROM MonsterAbility WHERE monster_id = ?")) {
+            delAbStmt.setLong(1, monsterId);
+            delAbStmt.executeUpdate();
+        }
+
+        // Insert Abilities (Traits, Actions, Reactions, Legendary Actions, Lair Actions)
         if (m.has("abilities") && m.get("abilities").isJsonArray()) {
             JsonArray abilitiesArray = m.getAsJsonArray("abilities");
             String abilityInsertSql = "INSERT INTO MonsterAbility (monster_id, ability_type, display_order, name, description, recharge) VALUES (?, ?, ?, ?, ?, ?)";
