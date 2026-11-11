@@ -6,6 +6,8 @@ import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -31,9 +33,12 @@ public class AddHomebrewMonsterDialog extends JDialog {
 
     private final JSpinner acSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 30, 1));
     private final JSpinner hpAvgSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 2000, 1));
-    private final JTextField hpFormulaField = new JTextField("2d8 + 2", 10);
+    private final JTextField hpFormulaField = new JTextField( 10);
     private final JTextField crField = new JTextField("1", 6);
-    private final JSpinner xpSpinner = new JSpinner(new SpinnerNumberModel(200, 0, 100000, 10));
+
+    private final JRadioButton autoXpRadio = new JRadioButton("Auto (CR)", true);
+    private final JRadioButton manualXpRadio = new JRadioButton("Manual:");
+    private final JSpinner xpSpinner = new JSpinner(new SpinnerNumberModel(200, 0, 1000000, 10));
 
     private final JTextField speedField = new JTextField("walk 30", 12);
     private final JTextField sensesField = new JTextField("passive Perception 10", 12);
@@ -72,11 +77,115 @@ public class AddHomebrewMonsterDialog extends JDialog {
         super(parent, "Create Homebrew Monster", true);
         setupPlaceholdersAndTooltips();
         setupMenu();
+        setupXpListeners();
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(parent);
 
         saveButton.addActionListener(e -> saveMonster());
+    }
+
+    /**
+     * Wires up the Auto (CR) vs. Manual XP radio buttons and live CR document listener.
+     */
+    private void setupXpListeners() {
+        xpSpinner.setEnabled(false);
+        updateAutoXpFromCr();
+
+        autoXpRadio.addActionListener(e -> {
+            xpSpinner.setEnabled(false);
+            updateAutoXpFromCr();
+        });
+
+        manualXpRadio.addActionListener(e -> xpSpinner.setEnabled(true));
+
+        crField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                if (autoXpRadio.isSelected()) updateAutoXpFromCr();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                if (autoXpRadio.isSelected()) updateAutoXpFromCr();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                if (autoXpRadio.isSelected()) updateAutoXpFromCr();
+            }
+        });
+    }
+
+    /**
+     * Updates the XP spinner value automatically based on the current CR text field value.
+     */
+    private void updateAutoXpFromCr() {
+        int calculatedXp = calculateXpByCr(crField.getText());
+        xpSpinner.setValue(calculatedXp);
+    }
+
+    /**
+     * Converts a D&D 5e Challenge Rating string (e.g. "1/8", "0.25", "5", "24")
+     * into its official Monster Manual Experience Points (XP) value.
+     *
+     * @param crText the Challenge Rating string
+     * @return the corresponding XP amount
+     */
+    public static int calculateXpByCr(String crText) {
+        if (crText == null || crText.isBlank()) return 0;
+        String clean = crText.trim();
+
+        return switch (clean) {
+            case "0", "0.0" -> 10;
+            case "1/8", "0.125" -> 25;
+            case "1/4", "0.25" -> 50;
+            case "1/2", "0.5" -> 100;
+            case "1", "1.0" -> 200;
+            case "2", "2.0" -> 450;
+            case "3", "3.0" -> 700;
+            case "4", "4.0" -> 1100;
+            case "5", "5.0" -> 1800;
+            case "6", "6.0" -> 2300;
+            case "7", "7.0" -> 2900;
+            case "8", "8.0" -> 3900;
+            case "9", "9.0" -> 5000;
+            case "10", "10.0" -> 5900;
+            case "11", "11.0" -> 7200;
+            case "12", "12.0" -> 8400;
+            case "13", "13.0" -> 10000;
+            case "14", "14.0" -> 11500;
+            case "15", "15.0" -> 13000;
+            case "16", "16.0" -> 15000;
+            case "17", "17.0" -> 18000;
+            case "18", "18.0" -> 20000;
+            case "19", "19.0" -> 22000;
+            case "20", "20.0" -> 25000;
+            case "21", "21.0" -> 33000;
+            case "22", "22.0" -> 41000;
+            case "23", "23.0" -> 50000;
+            case "24", "24.0" -> 62000;
+            case "25", "25.0" -> 75000;
+            case "26", "26.0" -> 90000;
+            case "27", "27.0" -> 105000;
+            case "28", "28.0" -> 120000;
+            case "29", "29.0" -> 135000;
+            case "30", "30.0" -> 155000;
+            default -> {
+                try {
+                    double val = Double.parseDouble(clean);
+                    if (val <= 0) yield 10;
+                    if (Math.abs(val - 0.125) < 0.01) yield 25;
+                    if (Math.abs(val - 0.25) < 0.01) yield 50;
+                    if (Math.abs(val - 0.5) < 0.01) yield 100;
+                    int rounded = (int) Math.round(val);
+                    if (rounded >= 1 && rounded <= 30) {
+                        yield calculateXpByCr(String.valueOf(rounded));
+                    }
+                } catch (NumberFormatException ignored) {}
+                yield 0;
+            }
+        };
     }
 
     /**
@@ -90,7 +199,7 @@ public class AddHomebrewMonsterDialog extends JDialog {
         setFieldHint(alignmentField, "e.g. Chaotic Evil, Neutral", "Creature alignment.");
 
         setFieldHint(hpFormulaField, "e.g. 5d8 + 10", "Dice formula used when rolling HP.");
-        setFieldHint(crField, "e.g. 0.25, 0.5, 2, 10", "Challenge Rating (use decimals like 0.125, 0.25, 0.5 for fractions).");
+        setFieldHint(crField, "e.g. 1/4, 0.5, 2, 10", "Challenge Rating (supports fractions like 1/8, 1/4, 1/2 or decimals).");
         setFieldHint(speedField, "Type Dist, ... (e.g. walk 30, fly 60, swim 30)", "Comma-separated pairs of '<mode> <feet>'.");
         setFieldHint(sensesField, "Comma-separated (e.g. darkvision 60 ft., passive Perception 12)", "Comma-separated list of senses.");
         setFieldHint(languagesField, "Comma-separated (e.g. Common, Draconic)", "Comma-separated list of spoken/understood languages.");
@@ -212,8 +321,21 @@ public class AddHomebrewMonsterDialog extends JDialog {
         formPanel.add(new JLabel("Challenge (CR):"), "cell 2 4");
         formPanel.add(crField, "cell 3 4");
 
+        // XP Mode Panel (Auto based on CR vs Manual User Input)
+        ButtonGroup xpGroup = new ButtonGroup();
+        xpGroup.add(autoXpRadio);
+        xpGroup.add(manualXpRadio);
+        autoXpRadio.setOpaque(false);
+        manualXpRadio.setOpaque(false);
+
+        JPanel xpPanel = new JPanel(new MigLayout("insets 0, fillx, gap 6 0", "[][][grow, fill]", "[]"));
+        xpPanel.setOpaque(false);
+        xpPanel.add(autoXpRadio, "cell 0 0");
+        xpPanel.add(manualXpRadio, "cell 1 0");
+        xpPanel.add(xpSpinner, "cell 2 0, growx");
+
         formPanel.add(new JLabel("XP:"), "cell 0 5");
-        formPanel.add(xpSpinner, "cell 1 5");
+        formPanel.add(xpPanel, "cell 1 5, growx");
         formPanel.add(new JLabel("Speed (type ft, ...):"), "cell 2 5");
         formPanel.add(speedField, "cell 3 5");
 
@@ -265,27 +387,27 @@ public class AddHomebrewMonsterDialog extends JDialog {
         traitsArea.setLineWrap(true);
         traitsArea.setWrapStyleWord(true);
         JScrollPane traitsScroll = new JScrollPane(traitsArea);
-        traitsScroll.setBorder(BorderFactory.createTitledBorder("Traits (1 per line - Name: Description)"));
+        traitsScroll.setBorder(BorderFactory.createTitledBorder("Traits (1 per line — Name: Description)"));
 
         actionsArea.setLineWrap(true);
         actionsArea.setWrapStyleWord(true);
         JScrollPane actionsScroll = new JScrollPane(actionsArea);
-        actionsScroll.setBorder(BorderFactory.createTitledBorder("Actions (1 per line - Name: Description)"));
+        actionsScroll.setBorder(BorderFactory.createTitledBorder("Actions (1 per line — Name: Description)"));
 
         reactionsArea.setLineWrap(true);
         reactionsArea.setWrapStyleWord(true);
         JScrollPane reactionsScroll = new JScrollPane(reactionsArea);
-        reactionsScroll.setBorder(BorderFactory.createTitledBorder("Reactions (1 per line - Name: Description)"));
+        reactionsScroll.setBorder(BorderFactory.createTitledBorder("Reactions (1 per line — Name: Description)"));
 
         legendaryArea.setLineWrap(true);
         legendaryArea.setWrapStyleWord(true);
         JScrollPane legendaryScroll = new JScrollPane(legendaryArea);
-        legendaryScroll.setBorder(BorderFactory.createTitledBorder("Legendary Actions (1 per line - Name: Description)"));
+        legendaryScroll.setBorder(BorderFactory.createTitledBorder("Legendary Actions (1 per line — Name: Description)"));
 
         lairArea.setLineWrap(true);
         lairArea.setWrapStyleWord(true);
         JScrollPane lairScroll = new JScrollPane(lairArea);
-        lairScroll.setBorder(BorderFactory.createTitledBorder("Lair Actions (1 per line - Name: Description)"));
+        lairScroll.setBorder(BorderFactory.createTitledBorder("Lair Actions (1 per line — Name: Description)"));
 
         actionsPanel.add(traitsScroll, "cell 0 0, grow");
         actionsPanel.add(actionsScroll, "cell 0 1, grow");
@@ -336,7 +458,11 @@ public class AddHomebrewMonsterDialog extends JDialog {
         monster.setAlignment(alignmentField.getText().trim());
         monster.setArmorClass(((Number) acSpinner.getValue()).intValue());
         monster.setChallengeRating(crField.getText().trim());
-        monster.setExperiencePoints(((Number) xpSpinner.getValue()).intValue());
+
+        int finalXp = autoXpRadio.isSelected()
+                ? calculateXpByCr(crField.getText())
+                : ((Number) xpSpinner.getValue()).intValue();
+        monster.setExperiencePoints(finalXp);
 
         BestiaryDTO.Monster.HitPoints hp = new BestiaryDTO.Monster.HitPoints();
         hp.setAverage(((Number) hpAvgSpinner.getValue()).intValue());
