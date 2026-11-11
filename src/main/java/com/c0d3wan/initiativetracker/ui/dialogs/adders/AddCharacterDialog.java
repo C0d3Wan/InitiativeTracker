@@ -12,6 +12,7 @@ import com.c0d3wan.initiativetracker.characters.Character;
 import com.c0d3wan.initiativetracker.characters.*;
 import com.c0d3wan.initiativetracker.characters.data.CharacterType;
 import com.c0d3wan.initiativetracker.characters.data.DeathStatus;
+import com.c0d3wan.initiativetracker.ui.util.UIUtils;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -120,7 +121,7 @@ public class AddCharacterDialog extends JDialog {
 
         setContentPane(addCharacterPane);
 
-        characterName.setToolTipText("hello");
+        UIUtils.setFieldHint(characterName, "e.g. Death (Required)", "Required: The unique name of the character");
 
         final JLabel characterNameLabel = new JLabel("Character Name:");
         final JLabel initiativeLabel = new JLabel("Initiative:");

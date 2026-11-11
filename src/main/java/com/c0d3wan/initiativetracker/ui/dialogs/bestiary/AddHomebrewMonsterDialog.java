@@ -3,7 +3,7 @@ package com.c0d3wan.initiativetracker.ui.dialogs.bestiary;
 import com.c0d3wan.initiativetracker.filemanagement.FileManager;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiaryDatabase;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.data.BestiaryDTO;
-import com.formdev.flatlaf.FlatClientProperties;
+import com.c0d3wan.initiativetracker.ui.util.UIUtils;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.c0d3wan.initiativetracker.ui.util.UIUtils.*;
 
 /**
  * Modal {@link JDialog} interface allowing users to create, configure,
@@ -192,23 +194,23 @@ public class AddHomebrewMonsterDialog extends JDialog {
     }
 
     private void setupPlaceholdersAndTooltips() {
-        setFieldHint(nameField, "e.g. Dire Goblin (Required)", "Required: The unique name of the monster.");
-        setFieldHint(groupField, "e.g. Goblinoids (blank = Homebrew)", "Main category folder in the Bestiary tree.");
-        setFieldHint(subgroupField, "Comma-separated: e.g. Forest, Elite", "Optional tags/subfolders separated by commas.");
-        setFieldHint(typeField, "e.g. Humanoid, Fiend, Undead", "Creature type (Aberration, Beast, Dragon, Fiend, etc.).");
-        setFieldHint(alignmentField, "e.g. Chaotic Evil, Neutral", "Creature alignment.");
+        UIUtils.setFieldHint(nameField, "e.g. Dire Goblin (Required)", "Required: The unique name of the monster.");
+        UIUtils.setFieldHint(groupField, "e.g. Goblinoids (blank = Homebrew)", "Main category folder in the Bestiary tree.");
+        UIUtils.setFieldHint(subgroupField, "Comma-separated: e.g. Forest, Elite", "Optional tags/subfolders separated by commas.");
+        UIUtils.setFieldHint(typeField, "e.g. Humanoid, Fiend, Undead", "Creature type (Aberration, Beast, Dragon, Fiend, etc.).");
+        UIUtils.setFieldHint(alignmentField, "e.g. Chaotic Evil, Neutral", "Creature alignment.");
 
-        setFieldHint(hpFormulaField, "e.g. 5d8 + 10", "Dice formula used when rolling HP.");
-        setFieldHint(crField, "e.g. 1/4, 0.5, 2, 10", "Challenge Rating (supports fractions like 1/8, 1/4, 1/2 or decimals).");
-        setFieldHint(speedField, "Type Dist, ... (e.g. walk 30, fly 60, swim 30)", "Comma-separated pairs of '<mode> <feet>'.");
-        setFieldHint(sensesField, "Comma-separated (e.g. darkvision 60 ft., passive Perception 12)", "Comma-separated list of senses.");
-        setFieldHint(languagesField, "Comma-separated (e.g. Common, Draconic)", "Comma-separated list of spoken/understood languages.");
+        UIUtils.setFieldHint(hpFormulaField, "e.g. 5d8 + 10", "Dice formula used when rolling HP.");
+        UIUtils.setFieldHint(crField, "e.g. 1/4, 0.5, 2, 10", "Challenge Rating (supports fractions like 1/8, 1/4, 1/2 or decimals).");
+        UIUtils.setFieldHint(speedField, "Type Dist, ... (e.g. walk 30, fly 60, swim 30)", "Comma-separated pairs of '<mode> <feet>'.");
+        UIUtils.setFieldHint(sensesField, "Comma-separated (e.g. darkvision 60 ft., passive Perception 12)", "Comma-separated list of senses.");
+        UIUtils.setFieldHint(languagesField, "Comma-separated (e.g. Common, Draconic)", "Comma-separated list of spoken/understood languages.");
 
-        setFieldHint(skillsField, "Name +Mod, ... (e.g. Perception +5, Stealth +4)", "Comma-separated pairs of '<SkillName> <+Bonus>'.");
-        setFieldHint(savesField, "Stat +Mod, ... (e.g. Dex +4, Wis +2)", "Comma-separated pairs of '<Stat> <+Bonus>'.");
-        setFieldHint(resistancesField, "Comma-separated (e.g. cold, fire, nonmagical slashing)", "Comma-separated list of damage resistances.");
-        setFieldHint(immunitiesField, "Comma-separated (e.g. poison, psychic)", "Comma-separated list of damage immunities.");
-        setFieldHint(conditionImmunitiesField, "Comma-separated (e.g. charmed, frightened, poisoned)", "Comma-separated list of condition immunities.");
+        UIUtils.setFieldHint(skillsField, "Name +Mod, ... (e.g. Perception +5, Stealth +4)", "Comma-separated pairs of '<SkillName> <+Bonus>'.");
+        UIUtils.setFieldHint(savesField, "Stat +Mod, ... (e.g. Dex +4, Wis +2)", "Comma-separated pairs of '<Stat> <+Bonus>'.");
+        UIUtils.setFieldHint(resistancesField, "Comma-separated (e.g. cold, fire, nonmagical slashing)", "Comma-separated list of damage resistances.");
+        UIUtils.setFieldHint(immunitiesField, "Comma-separated (e.g. poison, psychic)", "Comma-separated list of damage immunities.");
+        UIUtils.setFieldHint(conditionImmunitiesField, "Comma-separated (e.g. charmed, frightened, poisoned)", "Comma-separated list of condition immunities.");
 
         String featureTooltip = "Enter one ability per line using 'Name: Description'. Press Enter for a new ability.";
 
@@ -217,11 +219,6 @@ public class AddHomebrewMonsterDialog extends JDialog {
         setTextAreaPlaceholder(reactionsArea, "Format: Name: Description (1 per line)\nExample:\nParry: Adds 2 to AC against one melee attack.", featureTooltip);
         setTextAreaPlaceholder(legendaryArea, "Format: Name: Description (1 per line)\nExample:\nDetect: Makes a Wisdom (Perception) check.", featureTooltip);
         setTextAreaPlaceholder(lairArea, "Format: Name: Description (1 per line)\nExample:\nTremor: Ground shakes within a 60-ft. radius...", featureTooltip);
-    }
-
-    private void setFieldHint(JTextField field, String placeholder, String tooltip) {
-        field.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, placeholder);
-        field.setToolTipText(tooltip);
     }
 
     private void setTextAreaPlaceholder(JTextArea area, String placeholder, String tooltip) {
