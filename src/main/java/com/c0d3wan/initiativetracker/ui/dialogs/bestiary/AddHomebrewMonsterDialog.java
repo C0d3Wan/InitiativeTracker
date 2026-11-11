@@ -33,7 +33,7 @@ public class AddHomebrewMonsterDialog extends JDialog {
 
     private final JSpinner acSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 30, 1));
     private final JSpinner hpAvgSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 2000, 1));
-    private final JTextField hpFormulaField = new JTextField( 10);
+    private final JTextField hpFormulaField = new JTextField(10);
     private final JTextField crField = new JTextField("1", 6);
 
     private final JRadioButton autoXpRadio = new JRadioButton("Auto (CR)", true);
@@ -57,11 +57,12 @@ public class AddHomebrewMonsterDialog extends JDialog {
     private final JSpinner wisSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 30, 1));
     private final JSpinner chaSpinner = new JSpinner(new SpinnerNumberModel(10, 1, 30, 1));
 
-    private final JTextArea traitsArea = new JTextArea(6, 28);
-    private final JTextArea actionsArea = new JTextArea(6, 28);
-    private final JTextArea reactionsArea = new JTextArea(6, 28);
-    private final JTextArea legendaryArea = new JTextArea(6, 28);
-    private final JTextArea lairArea = new JTextArea(6, 28);
+    private final JTextArea traitsArea = new JTextArea(8, 28);
+    private final JTextArea actionsArea = new JTextArea(8, 28);
+
+    private final JTextArea reactionsArea = new JTextArea(4, 20);
+    private final JTextArea legendaryArea = new JTextArea(4, 20);
+    private final JTextArea lairArea = new JTextArea(4, 20);
 
     private static final String PLACEHOLDER_KEY = "isPlaceholderActive";
 
@@ -221,15 +222,15 @@ public class AddHomebrewMonsterDialog extends JDialog {
                 featureTooltip);
 
         setTextAreaPlaceholder(reactionsArea,
-                "Format: Name: Description (one reaction per line)\nExample:\nParry: Adds 2 to its AC against one melee attack that would hit it.",
+                "Format: Name: Description (1 per line)\nExample:\nParry: Adds 2 to AC against one melee attack.",
                 featureTooltip);
 
         setTextAreaPlaceholder(legendaryArea,
-                "Format: Name: Description (one legendary action per line)\nExample:\nDetect: Makes a Wisdom (Perception) check.\nWing Attack (Costs 2 Actions): Beats its wings...",
+                "Format: Name: Description (1 per line)\nExample:\nDetect: Makes a Wisdom (Perception) check.",
                 featureTooltip);
 
         setTextAreaPlaceholder(lairArea,
-                "Format: Name: Description (one lair action per line)\nExample:\nTremor: On initiative count 20, the ground shakes within a 60-ft. radius...\nVolcanic Gas: A cloud of toxic smoke fills a 20-ft. sphere...",
+                "Format: Name: Description (1 per line)\nExample:\nTremor: Ground shakes within a 60-ft. radius...",
                 featureTooltip);
     }
 
@@ -321,7 +322,6 @@ public class AddHomebrewMonsterDialog extends JDialog {
         formPanel.add(new JLabel("Challenge (CR):"), "cell 2 4");
         formPanel.add(crField, "cell 3 4");
 
-        // XP Mode Panel (Auto based on CR vs Manual User Input)
         ButtonGroup xpGroup = new ButtonGroup();
         xpGroup.add(autoXpRadio);
         xpGroup.add(manualXpRadio);
@@ -379,8 +379,8 @@ public class AddHomebrewMonsterDialog extends JDialog {
 
         JPanel actionsPanel = new JPanel(new MigLayout(
                 "insets 2, fill, gap 8 8",
-                "[grow, fill][grow, fill]",
-                "[120lp::, grow][120lp::, grow][120lp::, grow]"
+                "[grow, fill][grow, fill][grow, fill][grow, fill][grow, fill][grow, fill]",
+                "[180lp::, grow 60][115lp::, grow 40]"
         ));
         actionsPanel.setOpaque(false);
 
@@ -397,23 +397,24 @@ public class AddHomebrewMonsterDialog extends JDialog {
         reactionsArea.setLineWrap(true);
         reactionsArea.setWrapStyleWord(true);
         JScrollPane reactionsScroll = new JScrollPane(reactionsArea);
-        reactionsScroll.setBorder(BorderFactory.createTitledBorder("Reactions (1 per line — Name: Description)"));
+        reactionsScroll.setBorder(BorderFactory.createTitledBorder("Reactions (Name: Description)"));
 
         legendaryArea.setLineWrap(true);
         legendaryArea.setWrapStyleWord(true);
         JScrollPane legendaryScroll = new JScrollPane(legendaryArea);
-        legendaryScroll.setBorder(BorderFactory.createTitledBorder("Legendary Actions (1 per line — Name: Description)"));
+        legendaryScroll.setBorder(BorderFactory.createTitledBorder("Legendary Actions (Name: Description)"));
 
         lairArea.setLineWrap(true);
         lairArea.setWrapStyleWord(true);
         JScrollPane lairScroll = new JScrollPane(lairArea);
-        lairScroll.setBorder(BorderFactory.createTitledBorder("Lair Actions (1 per line — Name: Description)"));
+        lairScroll.setBorder(BorderFactory.createTitledBorder("Lair Actions (Name: Description)"));
 
-        actionsPanel.add(traitsScroll, "cell 0 0, grow");
-        actionsPanel.add(actionsScroll, "cell 0 1, grow");
-        actionsPanel.add(reactionsScroll, "cell 0 2, grow");
-        actionsPanel.add(legendaryScroll, "cell 1 0, grow");
-        actionsPanel.add(lairScroll, "cell 1 1 1 2, grow");
+        actionsPanel.add(traitsScroll, "cell 0 0 3 1, grow");
+        actionsPanel.add(actionsScroll, "cell 3 0 3 1, grow");
+
+        actionsPanel.add(reactionsScroll, "cell 0 1 2 1, grow");
+        actionsPanel.add(legendaryScroll, "cell 2 1 2 1, grow");
+        actionsPanel.add(lairScroll, "cell 4 1 2 1, grow");
 
         container.add(formPanel, "cell 0 0, growx");
         container.add(statsPanel, "cell 0 1, growx");
