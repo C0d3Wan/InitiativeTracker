@@ -8,7 +8,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 public final class UIUtils {
-    private static final String PLACEHOLDER_KEY = "isPlaceholderActive";
     private UIUtils() {
         throw new IllegalStateException("Utility Class");
     }
@@ -18,7 +17,7 @@ public final class UIUtils {
         field.setToolTipText(tooltip);
     }
 
-    public static void setPlaceholderTooltip(JTextArea area, String placeholder, String tooltip) {
+    public static void setPlaceholderTooltip(String PLACEHOLDER_KEY, JTextArea area, String placeholder, String tooltip) {
         area.setToolTipText(tooltip);
         Color normalFg = UIManager.getColor("TextArea.foreground") != null ? UIManager.getColor("TextArea.foreground") : Color.LIGHT_GRAY;
         Color hintFg = UIManager.getColor("Component.placeholderForeground") != null ? UIManager.getColor("Component.placeholderForeground") : Color.GRAY;

@@ -210,11 +210,11 @@ public class AddHomebrewMonsterDialog extends JDialog {
 
         String featureTooltip = "Enter one ability per line using 'Name: Description'. Press Enter for a new ability.";
 
-        UIUtils.setPlaceholderTooltip(traitsArea, "Format: Name: Description (one trait per line)\nExample:\nPack Tactics: Advantage on attack rolls if an ally is within 5 ft.", featureTooltip);
-        UIUtils.setPlaceholderTooltip(actionsArea, "Format: Name: Description (one action per line)\nExample:\nMultiattack: Makes two scimitar attacks.", featureTooltip);
-        UIUtils.setPlaceholderTooltip(reactionsArea, "Format: Name: Description (1 per line)\nExample:\nParry: Adds 2 to AC against one melee attack.", featureTooltip);
-        UIUtils.setPlaceholderTooltip(legendaryArea, "Format: Name: Description (1 per line)\nExample:\nDetect: Makes a Wisdom (Perception) check.", featureTooltip);
-        UIUtils.setPlaceholderTooltip(lairArea, "Format: Name: Description (1 per line)\nExample:\nTremor: Ground shakes within a 60-ft. radius...", featureTooltip);
+        UIUtils.setPlaceholderTooltip(PLACEHOLDER_KEY, traitsArea, "Format: Name: Description (one trait per line)\nExample:\nPack Tactics: Advantage on attack rolls if an ally is within 5 ft.", featureTooltip);
+        UIUtils.setPlaceholderTooltip(PLACEHOLDER_KEY, actionsArea, "Format: Name: Description (one action per line)\nExample:\nMultiattack: Makes two scimitar attacks.", featureTooltip);
+        UIUtils.setPlaceholderTooltip(PLACEHOLDER_KEY, reactionsArea, "Format: Name: Description (1 per line)\nExample:\nParry: Adds 2 to AC against one melee attack.", featureTooltip);
+        UIUtils.setPlaceholderTooltip(PLACEHOLDER_KEY, legendaryArea, "Format: Name: Description (1 per line)\nExample:\nDetect: Makes a Wisdom (Perception) check.", featureTooltip);
+        UIUtils.setPlaceholderTooltip(PLACEHOLDER_KEY, lairArea, "Format: Name: Description (1 per line)\nExample:\nTremor: Ground shakes within a 60-ft. radius...", featureTooltip);
     }
 
 
