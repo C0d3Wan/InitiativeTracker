@@ -121,7 +121,7 @@ public class AddCharacterDialog extends JDialog {
 
         setContentPane(addCharacterPane);
 
-        UIUtils.setFieldHint(characterName, "e.g. Death (Required)", "Required: The unique name of the character");
+        UIUtils.setPlaceholderTooltip(characterName, "e.g. Death (Required)", "Required: The unique name of the character");
 
         final JLabel characterNameLabel = new JLabel("Character Name:");
         final JLabel initiativeLabel = new JLabel("Initiative:");

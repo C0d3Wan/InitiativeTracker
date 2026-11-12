@@ -10,16 +10,12 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.c0d3wan.initiativetracker.ui.util.UIUtils.*;
 
 /**
  * Modal {@link JDialog} interface allowing users to create, configure,
@@ -194,67 +190,34 @@ public class AddHomebrewMonsterDialog extends JDialog {
     }
 
     private void setupPlaceholdersAndTooltips() {
-        UIUtils.setFieldHint(nameField, "e.g. Dire Goblin (Required)", "Required: The unique name of the monster.");
-        UIUtils.setFieldHint(groupField, "e.g. Goblinoids (blank = Homebrew)", "Main category folder in the Bestiary tree.");
-        UIUtils.setFieldHint(subgroupField, "Comma-separated: e.g. Forest, Elite", "Optional tags/subfolders separated by commas.");
-        UIUtils.setFieldHint(typeField, "e.g. Humanoid, Fiend, Undead", "Creature type (Aberration, Beast, Dragon, Fiend, etc.).");
-        UIUtils.setFieldHint(alignmentField, "e.g. Chaotic Evil, Neutral", "Creature alignment.");
+        UIUtils.setPlaceholderTooltip(nameField, "e.g. Dire Goblin (Required)", "Required: The unique name of the monster.");
+        UIUtils.setPlaceholderTooltip(groupField, "e.g. Goblinoids (blank = Homebrew)", "Main category folder in the Bestiary tree.");
+        UIUtils.setPlaceholderTooltip(subgroupField, "Comma-separated: e.g. Forest, Elite", "Optional tags/subfolders separated by commas.");
+        UIUtils.setPlaceholderTooltip(typeField, "e.g. Humanoid, Fiend, Undead", "Creature type (Aberration, Beast, Dragon, Fiend, etc.).");
+        UIUtils.setPlaceholderTooltip(alignmentField, "e.g. Chaotic Evil, Neutral", "Creature alignment.");
 
-        UIUtils.setFieldHint(hpFormulaField, "e.g. 5d8 + 10", "Dice formula used when rolling HP.");
-        UIUtils.setFieldHint(crField, "e.g. 1/4, 0.5, 2, 10", "Challenge Rating (supports fractions like 1/8, 1/4, 1/2 or decimals).");
-        UIUtils.setFieldHint(speedField, "Type Dist, ... (e.g. walk 30, fly 60, swim 30)", "Comma-separated pairs of '<mode> <feet>'.");
-        UIUtils.setFieldHint(sensesField, "Comma-separated (e.g. darkvision 60 ft., passive Perception 12)", "Comma-separated list of senses.");
-        UIUtils.setFieldHint(languagesField, "Comma-separated (e.g. Common, Draconic)", "Comma-separated list of spoken/understood languages.");
+        UIUtils.setPlaceholderTooltip(hpFormulaField, "e.g. 5d8 + 10", "Dice formula used when rolling HP.");
+        UIUtils.setPlaceholderTooltip(crField, "e.g. 1/4, 0.5, 2, 10", "Challenge Rating (supports fractions like 1/8, 1/4, 1/2 or decimals).");
+        UIUtils.setPlaceholderTooltip(speedField, "Type Dist, ... (e.g. walk 30, fly 60, swim 30)", "Comma-separated pairs of '<mode> <feet>'.");
+        UIUtils.setPlaceholderTooltip(sensesField, "Comma-separated (e.g. darkvision 60 ft., passive Perception 12)", "Comma-separated list of senses.");
+        UIUtils.setPlaceholderTooltip(languagesField, "Comma-separated (e.g. Common, Draconic)", "Comma-separated list of spoken/understood languages.");
 
-        UIUtils.setFieldHint(skillsField, "Name +Mod, ... (e.g. Perception +5, Stealth +4)", "Comma-separated pairs of '<SkillName> <+Bonus>'.");
-        UIUtils.setFieldHint(savesField, "Stat +Mod, ... (e.g. Dex +4, Wis +2)", "Comma-separated pairs of '<Stat> <+Bonus>'.");
-        UIUtils.setFieldHint(resistancesField, "Comma-separated (e.g. cold, fire, nonmagical slashing)", "Comma-separated list of damage resistances.");
-        UIUtils.setFieldHint(immunitiesField, "Comma-separated (e.g. poison, psychic)", "Comma-separated list of damage immunities.");
-        UIUtils.setFieldHint(conditionImmunitiesField, "Comma-separated (e.g. charmed, frightened, poisoned)", "Comma-separated list of condition immunities.");
+        UIUtils.setPlaceholderTooltip(skillsField, "Name +Mod, ... (e.g. Perception +5, Stealth +4)", "Comma-separated pairs of '<SkillName> <+Bonus>'.");
+        UIUtils.setPlaceholderTooltip(savesField, "Stat +Mod, ... (e.g. Dex +4, Wis +2)", "Comma-separated pairs of '<Stat> <+Bonus>'.");
+        UIUtils.setPlaceholderTooltip(resistancesField, "Comma-separated (e.g. cold, fire, nonmagical slashing)", "Comma-separated list of damage resistances.");
+        UIUtils.setPlaceholderTooltip(immunitiesField, "Comma-separated (e.g. poison, psychic)", "Comma-separated list of damage immunities.");
+        UIUtils.setPlaceholderTooltip(conditionImmunitiesField, "Comma-separated (e.g. charmed, frightened, poisoned)", "Comma-separated list of condition immunities.");
 
         String featureTooltip = "Enter one ability per line using 'Name: Description'. Press Enter for a new ability.";
 
-        setTextAreaPlaceholder(traitsArea, "Format: Name: Description (one trait per line)\nExample:\nPack Tactics: Advantage on attack rolls if an ally is within 5 ft.", featureTooltip);
-        setTextAreaPlaceholder(actionsArea, "Format: Name: Description (one action per line)\nExample:\nMultiattack: Makes two scimitar attacks.", featureTooltip);
-        setTextAreaPlaceholder(reactionsArea, "Format: Name: Description (1 per line)\nExample:\nParry: Adds 2 to AC against one melee attack.", featureTooltip);
-        setTextAreaPlaceholder(legendaryArea, "Format: Name: Description (1 per line)\nExample:\nDetect: Makes a Wisdom (Perception) check.", featureTooltip);
-        setTextAreaPlaceholder(lairArea, "Format: Name: Description (1 per line)\nExample:\nTremor: Ground shakes within a 60-ft. radius...", featureTooltip);
+        UIUtils.setPlaceholderTooltip(traitsArea, "Format: Name: Description (one trait per line)\nExample:\nPack Tactics: Advantage on attack rolls if an ally is within 5 ft.", featureTooltip);
+        UIUtils.setPlaceholderTooltip(actionsArea, "Format: Name: Description (one action per line)\nExample:\nMultiattack: Makes two scimitar attacks.", featureTooltip);
+        UIUtils.setPlaceholderTooltip(reactionsArea, "Format: Name: Description (1 per line)\nExample:\nParry: Adds 2 to AC against one melee attack.", featureTooltip);
+        UIUtils.setPlaceholderTooltip(legendaryArea, "Format: Name: Description (1 per line)\nExample:\nDetect: Makes a Wisdom (Perception) check.", featureTooltip);
+        UIUtils.setPlaceholderTooltip(lairArea, "Format: Name: Description (1 per line)\nExample:\nTremor: Ground shakes within a 60-ft. radius...", featureTooltip);
     }
 
-    private void setTextAreaPlaceholder(JTextArea area, String placeholder, String tooltip) {
-        area.setToolTipText(tooltip);
-        Color normalFg = UIManager.getColor("TextArea.foreground") != null ? UIManager.getColor("TextArea.foreground") : Color.LIGHT_GRAY;
-        Color hintFg = UIManager.getColor("Component.placeholderForeground") != null ? UIManager.getColor("Component.placeholderForeground") : Color.GRAY;
-        Font normalFont = area.getFont();
-        Font italicFont = normalFont.deriveFont(Font.ITALIC);
 
-        area.setText(placeholder);
-        area.setForeground(hintFg);
-        area.setFont(italicFont);
-        area.putClientProperty(PLACEHOLDER_KEY, Boolean.TRUE);
-
-        area.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (Boolean.TRUE.equals(area.getClientProperty(PLACEHOLDER_KEY))) {
-                    area.setText("");
-                    area.setForeground(normalFg);
-                    area.setFont(normalFont);
-                    area.putClientProperty(PLACEHOLDER_KEY, Boolean.FALSE);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (area.getText().trim().isEmpty()) {
-                    area.setText(placeholder);
-                    area.setForeground(hintFg);
-                    area.setFont(italicFont);
-                    area.putClientProperty(PLACEHOLDER_KEY, Boolean.TRUE);
-                }
-            }
-        });
-    }
 
     private String getCleanAreaText(JTextArea area) {
         if (Boolean.TRUE.equals(area.getClientProperty(PLACEHOLDER_KEY))) {
