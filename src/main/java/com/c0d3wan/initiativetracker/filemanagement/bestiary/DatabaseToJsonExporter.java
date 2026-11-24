@@ -58,8 +58,13 @@ public class DatabaseToJsonExporter {
                     monsterObj.addProperty("isOfficial", rs.getInt("is_official") == 1);
 
                     monsterObj.add("stats", fetchStats(conn, monsterId));
+                    monsterObj.add("savingThrows", fetchSavingThrows(conn, monsterId));
+                    monsterObj.add("skills", fetchSkills(conn, monsterId));
                     monsterObj.add("speeds", fetchSpeeds(conn, monsterId));
                     monsterObj.add("senses", fetchSenses(conn, monsterId));
+                    monsterObj.add("damageModifiers", fetchDamageModifiers(conn, monsterId));
+                    monsterObj.add("conditionImmunities", fetchConditionImmunities(conn, monsterId));
+                    monsterObj.add("languages", fetchLanguages(conn, monsterId));
                     monsterObj.add("abilities", fetchAbilities(conn, monsterId));
                     monsterObj.add("tags", fetchTags(conn, monsterId));
 
@@ -72,7 +77,7 @@ public class DatabaseToJsonExporter {
             File outputFile = new File("src/main/resources/bestiary_export.json");
             outputFile.getParentFile().mkdirs();
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
             try (FileWriter writer = new FileWriter(outputFile)) {
                 gson.toJson(rootJson, writer);
                 System.out.println("Export completed successfully! Saved to '" + outputFile.getPath() + "'.");
@@ -106,6 +111,42 @@ public class DatabaseToJsonExporter {
         return stats;
     }
 
+    private static JsonArray fetchSavingThrows(Connection conn, long monsterId) {
+        JsonArray saves = new JsonArray();
+        String query = "SELECT ability_name, bonus FROM MonsterSavingThrow WHERE monster_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, monsterId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    JsonObject saveObj = new JsonObject();
+                    saveObj.addProperty("ability", rs.getString("ability_name"));
+                    saveObj.addProperty("bonus", rs.getInt("bonus"));
+                    saves.add(saveObj);
+                }
+            }
+        } catch (SQLException ignored) {
+        }
+        return saves;
+    }
+
+    private static JsonArray fetchSkills(Connection conn, long monsterId) {
+        JsonArray skills = new JsonArray();
+        String query = "SELECT s.name AS skill_name, ms.bonus FROM MonsterSkill ms JOIN Skill s ON ms.skill_id = s.id WHERE ms.monster_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, monsterId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    JsonObject skillObj = new JsonObject();
+                    skillObj.addProperty("skill", rs.getString("skill_name"));
+                    skillObj.addProperty("bonus", rs.getInt("bonus"));
+                    skills.add(skillObj);
+                }
+            }
+        } catch (SQLException ignored) {
+        }
+        return skills;
+    }
+
     private static JsonArray fetchSpeeds(Connection conn, long monsterId) throws SQLException {
         JsonArray speeds = new JsonArray();
         String query = "SELECT st.name AS type, ms.speed_ft FROM MonsterSpeed ms JOIN SpeedType st ON ms.speed_type_id = st.id WHERE ms.monster_id = ?";
@@ -137,6 +178,61 @@ public class DatabaseToJsonExporter {
             }
         }
         return senses;
+    }
+
+    private static JsonArray fetchDamageModifiers(Connection conn, long monsterId) {
+        JsonArray modifiers = new JsonArray();
+        String query = "SELECT mdm.modifier_type, dt.name AS damage_type " +
+                "FROM MonsterDamageModifier mdm " +
+                "JOIN DamageType dt ON mdm.damage_type_id = dt.id " +
+                "WHERE mdm.monster_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, monsterId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    JsonObject modObj = new JsonObject();
+                    modObj.addProperty("modifier", rs.getString("modifier_type"));
+                    modObj.addProperty("damageType", rs.getString("damage_type"));
+                    modifiers.add(modObj);
+                }
+            }
+        } catch (SQLException ignored) {
+        }
+        return modifiers;
+    }
+
+    private static JsonArray fetchConditionImmunities(Connection conn, long monsterId) {
+        JsonArray immunities = new JsonArray();
+        String query = "SELECT c.name FROM MonsterConditionImmunity mci " +
+                "JOIN Condition c ON mci.condition_id = c.id " +
+                "WHERE mci.monster_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, monsterId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    immunities.add(rs.getString("name"));
+                }
+            }
+        } catch (SQLException ignored) {
+        }
+        return immunities;
+    }
+
+    private static JsonArray fetchLanguages(Connection conn, long monsterId) {
+        JsonArray languages = new JsonArray();
+        String query = "SELECT l.name FROM MonsterLanguage ml " +
+                "JOIN Language l ON ml.language_id = l.id " +
+                "WHERE ml.monster_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, monsterId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    languages.add(rs.getString("name"));
+                }
+            }
+        } catch (SQLException ignored) {
+        }
+        return languages;
     }
 
     private static JsonArray fetchAbilities(Connection conn, long monsterId) throws SQLException {

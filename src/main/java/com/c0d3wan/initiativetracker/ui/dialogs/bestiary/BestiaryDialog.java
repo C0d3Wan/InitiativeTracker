@@ -1,6 +1,7 @@
 package com.c0d3wan.initiativetracker.ui.dialogs.bestiary;
 
 import com.c0d3wan.initiativetracker.characters.CharacterManager;
+import com.c0d3wan.initiativetracker.filemanagement.FileManager;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiaryDatabase;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.BestiaryTrackerIntegration;
 import com.c0d3wan.initiativetracker.filemanagement.bestiary.data.BestiaryDTO;
@@ -12,9 +13,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.io.File;
+import java.sql.*;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -62,12 +64,24 @@ public class BestiaryDialog extends JDialog {
     private List<BestiaryDTO.Monster> allMonsters;
     private String selectedMonsterName = null;
 
-    /**
-     * Constructs a new BestiaryMenu dialogue.
-     *
-     * @param parent           the parent frame window
-     * @param characterManager the active character manager to receive added combatants
-     */
+    private record DbAbility(String category, String name, String description, String recharge) {}
+
+    private static class ExtendedDbDetails {
+        int passivePerception = 10;
+        int proficiencyBonus = 2;
+        String description = "";
+        Map<String, Integer> savingThrows = new LinkedHashMap<>();
+        Map<String, Integer> skills = new LinkedHashMap<>();
+        List<String> vulnerabilities = new ArrayList<>();
+        List<String> resistances = new ArrayList<>();
+        List<String> immunities = new ArrayList<>();
+        List<String> conditionImmunities = new ArrayList<>();
+        List<String> languages = new ArrayList<>();
+        List<String> senses = new ArrayList<>();
+        Map<String, Integer> speeds = new LinkedHashMap<>();
+        List<DbAbility> abilities = new ArrayList<>();
+    }
+
     public BestiaryDialog(Frame parent, CharacterManager characterManager) {
         super(parent, "Bestiary Database", true);
         this.characterManager = characterManager;
@@ -145,14 +159,11 @@ public class BestiaryDialog extends JDialog {
         addToTrackerButton.addActionListener(e -> addCurrentMonsterToTracker());
     }
 
-    /**
-     * Initialises and lays out all UI components within the dialogue pane.
-     */
     private void setupMenu() {
         pane.setLayout(new MigLayout("insets 6, fill", "[320px::320px, fill][grow, fill]", "[][grow]"));
         setContentPane(pane);
-        setMinimumSize(new Dimension(1050, 780));
-        setSize(1050, 780);
+        setMinimumSize(new Dimension(1080, 800));
+        setSize(1080, 800);
 
         JPanel leftPanel = new JPanel(new MigLayout("insets 0, fill", "[grow]", "[][grow][][]"));
         leftPanel.setOpaque(false);
@@ -191,7 +202,7 @@ public class BestiaryDialog extends JDialog {
         abilitiesArea.setWrapStyleWord(true);
 
         JScrollPane abilitiesScroll = new JScrollPane(abilitiesArea);
-        abilitiesScroll.setBorder(BorderFactory.createTitledBorder("Traits & Actions"));
+        abilitiesScroll.setBorder(BorderFactory.createTitledBorder("Traits, Actions & Abilities"));
 
         rightPanel.add(nameLabel, "cell 0 0, wrap");
         rightPanel.add(typeSizeAlignmentLabel, "cell 0 1, wrap");
@@ -203,9 +214,9 @@ public class BestiaryDialog extends JDialog {
         statsRow.add(crLabel);
         rightPanel.add(statsRow, "cell 0 2, wrap");
 
-        rightPanel.add(speedLabel, "cell 0 3, wrap");
-        rightPanel.add(sensesLanguagesLabel, "cell 0 4, wrap");
-        rightPanel.add(defenseLabel, "cell 0 5, wrap");
+        rightPanel.add(speedLabel, "cell 0 3, growx, wrap");
+        rightPanel.add(sensesLanguagesLabel, "cell 0 4, growx, wrap");
+        rightPanel.add(defenseLabel, "cell 0 5, growx, wrap");
         rightPanel.add(statsArea, "cell 0 6, wrap, growx");
         rightPanel.add(abilitiesScroll, "cell 0 7, grow, wrap");
 
@@ -283,11 +294,12 @@ public class BestiaryDialog extends JDialog {
             List<BestiaryDTO.Monster> filteredList = allMonsters.stream()
                     .filter(m -> {
                         if (filter.isEmpty()) return true;
-                        boolean matchesName = m.getName().toLowerCase().contains(filter);
+                        boolean matchesName = m.getName() != null && m.getName().toLowerCase().contains(filter);
                         boolean matchesGroup = m.getGroupName() != null && m.getGroupName().toLowerCase().contains(filter);
+                        boolean matchesType = m.getType() != null && m.getType().toLowerCase().contains(filter);
                         boolean matchesTag = m.getTags() != null && m.getTags().stream()
                                 .anyMatch(tag -> tag.toLowerCase().contains(filter));
-                        return matchesName || matchesGroup || matchesTag;
+                        return matchesName || matchesGroup || matchesType || matchesTag;
                     })
                     .toList();
 
@@ -303,15 +315,18 @@ public class BestiaryDialog extends JDialog {
                         boolean isDragonGroup = mainGroupName.equalsIgnoreCase("Dragon");
 
                         Map<String, List<BestiaryDTO.Monster>> groupedByFirstTag = new TreeMap<>();
-                        List<BestiaryDTO.Monster> untaggedMonsters = new java.util.ArrayList<>();
+                        List<BestiaryDTO.Monster> untaggedMonsters = new ArrayList<>();
 
                         for (BestiaryDTO.Monster m : mainEntry.getValue()) {
                             List<String> tags = m.getTags();
+                            if ((tags == null || tags.isEmpty()) && m.getSubgroups() != null && !m.getSubgroups().isEmpty()) {
+                                tags = m.getSubgroups();
+                            }
                             if (tags == null || tags.isEmpty()) {
                                 untaggedMonsters.add(m);
                             } else {
                                 String firstTag = tags.getFirst();
-                                groupedByFirstTag.computeIfAbsent(firstTag, k -> new java.util.ArrayList<>()).add(m);
+                                groupedByFirstTag.computeIfAbsent(firstTag, k -> new ArrayList<>()).add(m);
                             }
                         }
 
@@ -320,13 +335,13 @@ public class BestiaryDialog extends JDialog {
 
                             if (isDragonGroup) {
                                 Map<String, List<BestiaryDTO.Monster>> groupedBySecondTag = new TreeMap<>();
-                                List<BestiaryDTO.Monster> unnestedInFirst = new java.util.ArrayList<>();
+                                List<BestiaryDTO.Monster> unnestedInFirst = new ArrayList<>();
 
                                 for (BestiaryDTO.Monster m : firstTagList) {
                                     List<String> tags = m.getTags();
                                     if (tags != null && tags.size() >= 2) {
                                         String secondTag = tags.get(1);
-                                        groupedBySecondTag.computeIfAbsent(secondTag, k -> new java.util.ArrayList<>()).add(m);
+                                        groupedBySecondTag.computeIfAbsent(secondTag, k -> new ArrayList<>()).add(m);
                                     } else {
                                         unnestedInFirst.add(m);
                                     }
@@ -375,9 +390,131 @@ public class BestiaryDialog extends JDialog {
         }
     }
 
+    /**
+     * Queries the new SQLite tables in bestiary.db for extended monster details
+     * (savingThrows, skills, damageModifiers, conditionImmunities, languages,
+     * senses, speeds, and abilities including Bonus Actions and recharge tags).
+     */
+    private ExtendedDbDetails loadExtendedDetailsFromDb(String monsterName) {
+        ExtendedDbDetails details = new ExtendedDbDetails();
+        File dbFile = new File(FileManager.getDirectory(), "bestiary.db");
+        if (!dbFile.exists()) return details;
+
+        String dbUrl = "jdbc:sqlite:" + dbFile.getAbsolutePath();
+        try (Connection conn = DriverManager.getConnection(dbUrl)) {
+            long monsterId = -1;
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT id, passive_perception, proficiency_bonus, description FROM Monster WHERE name = ?")) {
+                ps.setString(1, monsterName);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        monsterId = rs.getLong("id");
+                        details.passivePerception = rs.getInt("passive_perception");
+                        details.proficiencyBonus = rs.getInt("proficiency_bonus");
+                        details.description = rs.getString("description") != null ? rs.getString("description") : "";
+                    }
+                }
+            }
+            if (monsterId == -1) return details;
+
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT ability_name, bonus FROM MonsterSavingThrow WHERE monster_id = ?")) {
+                ps.setLong(1, monsterId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        details.savingThrows.put(rs.getString("ability_name"), rs.getInt("bonus"));
+                    }
+                }
+            } catch (SQLException ignored) {}
+
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT s.name, ms.bonus FROM MonsterSkill ms JOIN Skill s ON ms.skill_id = s.id WHERE ms.monster_id = ?")) {
+                ps.setLong(1, monsterId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        details.skills.put(rs.getString("name"), rs.getInt("bonus"));
+                    }
+                }
+            } catch (SQLException ignored) {}
+
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT mdm.modifier_type, dt.name FROM MonsterDamageModifier mdm JOIN DamageType dt ON mdm.damage_type_id = dt.id WHERE mdm.monster_id = ?")) {
+                ps.setLong(1, monsterId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        String mod = rs.getString("modifier_type");
+                        String dt = rs.getString("name");
+                        if ("Vulnerability".equalsIgnoreCase(mod)) details.vulnerabilities.add(dt);
+                        else if ("Resistance".equalsIgnoreCase(mod)) details.resistances.add(dt);
+                        else if ("Immunity".equalsIgnoreCase(mod)) details.immunities.add(dt);
+                    }
+                }
+            } catch (SQLException ignored) {}
+
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT c.name FROM MonsterConditionImmunity mci JOIN Condition c ON mci.condition_id = c.id WHERE mci.monster_id = ?")) {
+                ps.setLong(1, monsterId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        details.conditionImmunities.add(rs.getString("name"));
+                    }
+                }
+            } catch (SQLException ignored) {}
+
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT l.name FROM MonsterLanguage ml JOIN Language l ON ml.language_id = l.id WHERE ml.monster_id = ?")) {
+                ps.setLong(1, monsterId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        details.languages.add(rs.getString("name"));
+                    }
+                }
+            } catch (SQLException ignored) {}
+
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT st.name, ms.range_ft FROM MonsterSense ms JOIN SenseType st ON ms.sense_type_id = st.id WHERE ms.monster_id = ?")) {
+                ps.setLong(1, monsterId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        details.senses.add(rs.getString("name") + " " + rs.getInt("range_ft") + " ft.");
+                    }
+                }
+            } catch (SQLException ignored) {}
+
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT st.name, ms.speed_ft FROM MonsterSpeed ms JOIN SpeedType st ON ms.speed_type_id = st.id WHERE ms.monster_id = ?")) {
+                ps.setLong(1, monsterId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        details.speeds.put(rs.getString("name"), rs.getInt("speed_ft"));
+                    }
+                }
+            } catch (SQLException ignored) {}
+
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT ability_type, name, description, recharge FROM MonsterAbility WHERE monster_id = ? ORDER BY display_order")) {
+                ps.setLong(1, monsterId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        details.abilities.add(new DbAbility(
+                                rs.getString("ability_type"),
+                                rs.getString("name"),
+                                rs.getString("description"),
+                                rs.getString("recharge")
+                        ));
+                    }
+                }
+            } catch (SQLException ignored) {}
+
+        } catch (SQLException ignored) {}
+        return details;
+    }
+
     private void displaySelectedMonsterDetails(String selectedName) {
         successLabel.setVisible(false);
         BestiaryDatabase.findMonsterByName(selectedName).ifPresent(m -> {
+            ExtendedDbDetails db = loadExtendedDetailsFromDb(selectedName);
+
             nameLabel.setText(m.getName());
             typeSizeAlignmentLabel.setText(String.format("%s %s, %s",
                     m.getSize() != null ? m.getSize() : "",
@@ -393,11 +530,15 @@ public class BestiaryDialog extends JDialog {
                 hpLabel.setText("❤️ HP: N/A");
             }
 
-            crLabel.setText("⭐ CR: " + (m.getChallengeRating() != null ? m.getChallengeRating() : "0")
-                    + " (" + m.getExperiencePoints() + " XP)");
+            crLabel.setText(String.format("⭐ CR: %s (%d XP) | PB: +%d",
+                    m.getChallengeRating() != null ? m.getChallengeRating() : "0",
+                    m.getExperiencePoints(),
+                    db.proficiencyBonus
+            ));
 
-            if (m.getSpeed() != null && !m.getSpeed().isEmpty()) {
-                String speedStr = m.getSpeed().entrySet().stream()
+            Map<String, Integer> speeds = !db.speeds.isEmpty() ? db.speeds : m.getSpeed();
+            if (speeds != null && !speeds.isEmpty()) {
+                String speedStr = speeds.entrySet().stream()
                         .map(e -> e.getKey() + " " + e.getValue() + " ft.")
                         .collect(Collectors.joining(", "));
                 speedLabel.setText("🏃 Speed: " + speedStr);
@@ -405,39 +546,77 @@ public class BestiaryDialog extends JDialog {
                 speedLabel.setText("🏃 Speed: N/A");
             }
 
-            StringBuilder sensesLangs = new StringBuilder();
-            if (m.getSenses() != null && !m.getSenses().isEmpty()) {
-                sensesLangs.append("👁 Senses: ").append(String.join(", ", m.getSenses()));
+            List<String> sensesList = new ArrayList<>(!db.senses.isEmpty()
+                    ? db.senses
+                    : (m.getSenses() != null ? m.getSenses() : List.of()));
+            boolean hasPassive = sensesList.stream().anyMatch(s -> s.toLowerCase().contains("passive perception"));
+            if (!hasPassive && db.passivePerception > 0) {
+                sensesList.add("passive Perception " + db.passivePerception);
             }
-            if (m.getLanguages() != null && !m.getLanguages().isEmpty()) {
-                if (sensesLangs.length() > 0) sensesLangs.append(" | ");
-                sensesLangs.append("🗣 Languages: ").append(String.join(", ", m.getLanguages()));
-            }
-            sensesLanguagesLabel.setText(sensesLangs.toString());
 
-            StringBuilder defBuilder = new StringBuilder();
-            if (m.getSkills() != null && !m.getSkills().isEmpty()) {
-                String sk = m.getSkills().entrySet().stream()
+            List<String> langsList = !db.languages.isEmpty()
+                    ? db.languages
+                    : (m.getLanguages() != null ? m.getLanguages() : List.of());
+
+            StringBuilder sensesLangsHtml = new StringBuilder("<html><body style='width: 620px;'>");
+            if (!sensesList.isEmpty()) {
+                sensesLangsHtml.append("<b>👁 Senses:</b> ").append(String.join(", ", sensesList));
+            }
+            if (!langsList.isEmpty()) {
+                if (!sensesList.isEmpty()) sensesLangsHtml.append(" &nbsp;|&nbsp; ");
+                sensesLangsHtml.append("<b>🗣 Languages:</b> ").append(String.join(", ", langsList));
+            }
+            sensesLangsHtml.append("</body></html>");
+            sensesLanguagesLabel.setText(sensesLangsHtml.toString());
+
+            Map<String, Integer> savesMap = !db.savingThrows.isEmpty()
+                    ? db.savingThrows
+                    : (m.getSavingThrows() != null ? m.getSavingThrows() : Map.of());
+            Map<String, Integer> skillsMap = !db.skills.isEmpty()
+                    ? db.skills
+                    : (m.getSkills() != null ? m.getSkills() : Map.of());
+            List<String> vulnsList = db.vulnerabilities;
+            List<String> resistsList = !db.resistances.isEmpty()
+                    ? db.resistances
+                    : (m.getDamageResistances() != null ? m.getDamageResistances() : List.of());
+            List<String> immunesList = !db.immunities.isEmpty()
+                    ? db.immunities
+                    : (m.getDamageImmunities() != null ? m.getDamageImmunities() : List.of());
+            List<String> condImmList = !db.conditionImmunities.isEmpty()
+                    ? db.conditionImmunities
+                    : (m.getConditionImmunities() != null ? m.getConditionImmunities() : List.of());
+
+            List<String> defParts = new ArrayList<>();
+            if (!savesMap.isEmpty()) {
+                String sv = savesMap.entrySet().stream()
                         .map(e -> e.getKey() + " " + (e.getValue() >= 0 ? "+" + e.getValue() : e.getValue()))
                         .collect(Collectors.joining(", "));
-                defBuilder.append("🎯 Skills: ").append(sk);
+                defParts.add("<b>🛡️ Saves:</b> " + sv);
             }
-            if (m.getSavingThrows() != null && !m.getSavingThrows().isEmpty()) {
-                if (defBuilder.length() > 0) defBuilder.append(" | ");
-                String sv = m.getSavingThrows().entrySet().stream()
+            if (!skillsMap.isEmpty()) {
+                String sk = skillsMap.entrySet().stream()
                         .map(e -> e.getKey() + " " + (e.getValue() >= 0 ? "+" + e.getValue() : e.getValue()))
                         .collect(Collectors.joining(", "));
-                defBuilder.append("🛡️ Saves: ").append(sv);
+                defParts.add("<b>🎯 Skills:</b> " + sk);
             }
-            if (m.getDamageResistances() != null && !m.getDamageResistances().isEmpty()) {
-                if (defBuilder.length() > 0) defBuilder.append(" | ");
-                defBuilder.append("⚡ Resistances: ").append(String.join(", ", m.getDamageResistances()));
+            if (!vulnsList.isEmpty()) {
+                defParts.add("<b>💥 Vulnerabilities:</b> " + String.join(", ", vulnsList));
             }
-            if (m.getDamageImmunities() != null && !m.getDamageImmunities().isEmpty()) {
-                if (defBuilder.length() > 0) defBuilder.append(" | ");
-                defBuilder.append("🛡 Immunities: ").append(String.join(", ", m.getDamageImmunities()));
+            if (!resistsList.isEmpty()) {
+                defParts.add("<b>⚡ Resistances:</b> " + String.join(", ", resistsList));
             }
-            defenseLabel.setText(defBuilder.toString());
+            if (!immunesList.isEmpty()) {
+                defParts.add("<b>🛡 Damage Immunities:</b> " + String.join(", ", immunesList));
+            }
+            if (!condImmList.isEmpty()) {
+                defParts.add("<b>🚫 Condition Immunities:</b> " + String.join(", ", condImmList));
+            }
+
+            if (!defParts.isEmpty()) {
+                defenseLabel.setText("<html><body style='width: 620px;'>" + String.join(" &nbsp;|&nbsp; ", defParts) + "</body></html>");
+            } else {
+                defenseLabel.setText("");
+            }
 
             if (m.getStats() != null) {
                 StringBuilder sb = new StringBuilder();
@@ -446,8 +625,8 @@ public class BestiaryDialog extends JDialog {
                     Number valNum = m.getStats().get(key);
                     if (valNum != null) {
                         int val = valNum.intValue();
-                        int mod = (val - 10) / 2;
-                        sb.append(String.format(" %3.3s: %d (%+d) |", key.toUpperCase(), val, mod));
+                        int mod = Math.floorDiv(val - 10, 2);
+                        sb.append(String.format(" %3.3s: %2d (%+d) |", key.toUpperCase(), val, mod));
                     }
                 }
                 statsArea.setText(sb.toString());
@@ -456,40 +635,74 @@ public class BestiaryDialog extends JDialog {
             }
 
             StringBuilder abilities = new StringBuilder();
-            if (m.getTraits() != null && !m.getTraits().isEmpty()) {
-                abilities.append("--- TRAITS ---\n");
-                for (BestiaryDTO.Monster.Feature t : m.getTraits()) {
-                    abilities.append("• ").append(t.getName()).append(": ").append(t.getDescription()).append("\n\n");
-                }
+            if (db.description != null && !db.description.isBlank()) {
+                abilities.append(db.description).append("\n\n");
             }
-            if (m.getReactions() != null && !m.getReactions().isEmpty()) {
-                abilities.append("--- REACTIONS ---\n");
-                for (BestiaryDTO.Monster.Feature r : m.getReactions()) {
-                    abilities.append("• ").append(r.getName()).append(": ").append(r.getDescription()).append("\n\n");
+
+            if (!db.abilities.isEmpty()) {
+                appendCategorySection(abilities, "TRAITS", db.abilities, "Trait");
+                appendCategorySection(abilities, "ACTIONS", db.abilities, "Action");
+                appendCategorySection(abilities, "BONUS ACTIONS", db.abilities, "Bonus Action");
+                appendCategorySection(abilities, "REACTIONS", db.abilities, "Reaction");
+                appendCategorySection(abilities, "LEGENDARY ACTIONS", db.abilities, "Legendary Action");
+                appendCategorySection(abilities, "LAIR ACTIONS", db.abilities, "Lair Action");
+            } else {
+                if (m.getTraits() != null && !m.getTraits().isEmpty()) {
+                    abilities.append("--- TRAITS ---\n");
+                    for (BestiaryDTO.Monster.Feature t : m.getTraits()) {
+                        abilities.append("• ").append(t.getName()).append(": ").append(t.getDescription()).append("\n\n");
+                    }
                 }
-            }
-            if (m.getActions() != null && !m.getActions().isEmpty()) {
-                abilities.append("--- ACTIONS ---\n");
-                for (BestiaryDTO.Monster.Feature a : m.getActions()) {
-                    abilities.append("• ").append(a.getName()).append(": ").append(a.getDescription()).append("\n\n");
+                if (m.getActions() != null && !m.getActions().isEmpty()) {
+                    abilities.append("--- ACTIONS ---\n");
+                    for (BestiaryDTO.Monster.Feature a : m.getActions()) {
+                        abilities.append("• ").append(a.getName()).append(": ").append(a.getDescription()).append("\n\n");
+                    }
                 }
-            }
-            if (m.getLegendaryActions() != null && m.getLegendaryActions().getActions() != null) {
-                abilities.append("--- LEGENDARY ACTIONS ---\n");
-                for (BestiaryDTO.Monster.Feature la : m.getLegendaryActions().getActions()) {
-                    abilities.append("• ").append(la.getName()).append(": ").append(la.getDescription()).append("\n\n");
+                if (m.getReactions() != null && !m.getReactions().isEmpty()) {
+                    abilities.append("--- REACTIONS ---\n");
+                    for (BestiaryDTO.Monster.Feature r : m.getReactions()) {
+                        abilities.append("• ").append(r.getName()).append(": ").append(r.getDescription()).append("\n\n");
+                    }
                 }
-            }
-            if (m.getLairActions() != null && m.getLairActions().getActions() != null) {
-                abilities.append("--- LAIR ACTIONS ---\n");
-                for (BestiaryDTO.Monster.Feature lra : m.getLairActions().getActions()) {
-                    abilities.append("• ").append(lra.getName()).append(": ").append(lra.getDescription()).append("\n\n");
+                if (m.getLegendaryActions() != null && m.getLegendaryActions().getActions() != null) {
+                    abilities.append("--- LEGENDARY ACTIONS ---\n");
+                    for (BestiaryDTO.Monster.Feature la : m.getLegendaryActions().getActions()) {
+                        abilities.append("• ").append(la.getName()).append(": ").append(la.getDescription()).append("\n\n");
+                    }
+                }
+                if (m.getLairActions() != null && m.getLairActions().getActions() != null) {
+                    abilities.append("--- LAIR ACTIONS ---\n");
+                    for (BestiaryDTO.Monster.Feature lra : m.getLairActions().getActions()) {
+                        abilities.append("• ").append(lra.getName()).append(": ").append(lra.getDescription()).append("\n\n");
+                    }
                 }
             }
 
             abilitiesArea.setText(abilities.toString());
             abilitiesArea.setCaretPosition(0);
         });
+    }
+
+    private void appendCategorySection(StringBuilder sb, String header, List<DbAbility> allAbilities, String categoryFilter) {
+        List<DbAbility> matching = allAbilities.stream()
+                .filter(a -> categoryFilter.equalsIgnoreCase(a.category()))
+                .toList();
+        if (matching.isEmpty()) return;
+
+        sb.append("--- ").append(header).append(" ---\n");
+        for (DbAbility ab : matching) {
+            sb.append("• ").append(ab.name());
+            if (ab.recharge() != null && !ab.recharge().isBlank() && !ab.name().contains("(")) {
+                String r = ab.recharge().trim();
+                if (r.matches("^\\d+(-\\d+)?$")) {
+                    sb.append(" (Recharge ").append(r).append(")");
+                } else {
+                    sb.append(" (").append(r).append(")");
+                }
+            }
+            sb.append(": ").append(ab.description()).append("\n\n");
+        }
     }
 
     private void clearMonsterDetails() {

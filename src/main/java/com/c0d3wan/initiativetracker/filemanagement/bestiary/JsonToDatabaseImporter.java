@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.util.Map;
 
 public class JsonToDatabaseImporter {
 
@@ -76,6 +77,9 @@ public class JsonToDatabaseImporter {
             stmt.execute("CREATE TABLE IF NOT EXISTS Alignment (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE);");
             stmt.execute("CREATE TABLE IF NOT EXISTS SpeedType (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE);");
             stmt.execute("CREATE TABLE IF NOT EXISTS SenseType (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE);");
+            stmt.execute("CREATE TABLE IF NOT EXISTS Skill (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE);");
+            stmt.execute("CREATE TABLE IF NOT EXISTS DamageType (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE);");
+            stmt.execute("CREATE TABLE IF NOT EXISTS Condition (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE);");
             stmt.execute("CREATE TABLE IF NOT EXISTS Language (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE);");
             stmt.execute("CREATE TABLE IF NOT EXISTS Tag (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE);");
 
@@ -106,6 +110,17 @@ public class JsonToDatabaseImporter {
                     "intelligence INTEGER, wisdom INTEGER, charisma INTEGER, " +
                     "FOREIGN KEY (monster_id) REFERENCES Monster(id) ON DELETE CASCADE);");
 
+            stmt.execute("CREATE TABLE IF NOT EXISTS MonsterSavingThrow (" +
+                    "monster_id INTEGER, ability_name TEXT, bonus INTEGER, " +
+                    "PRIMARY KEY (monster_id, ability_name), " +
+                    "FOREIGN KEY (monster_id) REFERENCES Monster(id) ON DELETE CASCADE);");
+
+            stmt.execute("CREATE TABLE IF NOT EXISTS MonsterSkill (" +
+                    "monster_id INTEGER, skill_id INTEGER, bonus INTEGER, " +
+                    "PRIMARY KEY (monster_id, skill_id), " +
+                    "FOREIGN KEY (monster_id) REFERENCES Monster(id) ON DELETE CASCADE, " +
+                    "FOREIGN KEY (skill_id) REFERENCES Skill(id));");
+
             stmt.execute("CREATE TABLE IF NOT EXISTS MonsterSpeed (" +
                     "monster_id INTEGER, speed_type_id INTEGER, speed_ft INTEGER, " +
                     "PRIMARY KEY (monster_id, speed_type_id), " +
@@ -117,6 +132,18 @@ public class JsonToDatabaseImporter {
                     "PRIMARY KEY (monster_id, sense_type_id), " +
                     "FOREIGN KEY (monster_id) REFERENCES Monster(id) ON DELETE CASCADE, " +
                     "FOREIGN KEY (sense_type_id) REFERENCES SenseType(id));");
+
+            stmt.execute("CREATE TABLE IF NOT EXISTS MonsterDamageModifier (" +
+                    "monster_id INTEGER, damage_type_id INTEGER, modifier_type TEXT, " +
+                    "PRIMARY KEY (monster_id, damage_type_id), " +
+                    "FOREIGN KEY (monster_id) REFERENCES Monster(id) ON DELETE CASCADE, " +
+                    "FOREIGN KEY (damage_type_id) REFERENCES DamageType(id));");
+
+            stmt.execute("CREATE TABLE IF NOT EXISTS MonsterConditionImmunity (" +
+                    "monster_id INTEGER, condition_id INTEGER, " +
+                    "PRIMARY KEY (monster_id, condition_id), " +
+                    "FOREIGN KEY (monster_id) REFERENCES Monster(id) ON DELETE CASCADE, " +
+                    "FOREIGN KEY (condition_id) REFERENCES Condition(id));");
 
             stmt.execute("CREATE TABLE IF NOT EXISTS MonsterLanguage (" +
                     "monster_id INTEGER, language_id INTEGER, " +
@@ -143,7 +170,6 @@ public class JsonToDatabaseImporter {
         String name = m.get("name").getAsString();
         boolean isOfficial = !m.has("isOfficial") || m.get("isOfficial").getAsBoolean();
 
-        // Check if monster already exists and whether it is user homebrew (is_official = 0)
         long existingId = -1;
         String checkSql = "SELECT id, is_official FROM Monster WHERE name = ?";
         try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
@@ -151,7 +177,7 @@ public class JsonToDatabaseImporter {
             try (ResultSet rs = checkStmt.executeQuery()) {
                 if (rs.next()) {
                     if (rs.getInt("is_official") == 0) {
-                        return; // Skip overwriting user homebrew records
+                        return;
                     }
                     existingId = rs.getLong("id");
                 }
@@ -170,7 +196,6 @@ public class JsonToDatabaseImporter {
 
         long monsterId;
         if (existingId != -1) {
-            // Update existing official monster without changing its stable primary key ID
             String updateSql = "UPDATE Monster SET group_id = ?, type_id = ?, size_id = ?, alignment_id = ?, " +
                     "challenge_rating = ?, armor_class = ?, hp_average = ?, hp_formula = ?, experience_points = ?, " +
                     "passive_perception = ?, proficiency_bonus = ?, description = ?, is_official = ? WHERE id = ?";
@@ -193,7 +218,6 @@ public class JsonToDatabaseImporter {
             }
             monsterId = existingId;
         } else {
-            // Insert new official monster record
             String insertMonsterSql = "INSERT INTO Monster (" +
                     "name, group_id, type_id, size_id, alignment_id, challenge_rating, " +
                     "armor_class, hp_average, hp_formula, experience_points, " +
@@ -226,7 +250,6 @@ public class JsonToDatabaseImporter {
             }
         }
 
-        // Insert Stats
         if (m.has("stats") && !m.get("stats").isJsonNull()) {
             JsonObject stats = m.getAsJsonObject("stats");
             String statsSql = "INSERT OR REPLACE INTO MonsterStats (monster_id, strength, dexterity, constitution, intelligence, wisdom, charisma) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -242,10 +265,70 @@ public class JsonToDatabaseImporter {
             }
         }
 
-        // Insert Speeds
+        if (m.has("savingThrows") && m.get("savingThrows").isJsonArray()) {
+            JsonArray savesArray = m.getAsJsonArray("savingThrows");
+            String saveSql = "INSERT OR REPLACE INTO MonsterSavingThrow (monster_id, ability_name, bonus) VALUES (?, ?, ?)";
+            for (JsonElement saveEl : savesArray) {
+                if (saveEl.isJsonObject()) {
+                    JsonObject saveObj = saveEl.getAsJsonObject();
+                    if (saveObj.has("ability") && saveObj.has("bonus")) {
+                        try (PreparedStatement pstmt = conn.prepareStatement(saveSql)) {
+                            pstmt.setLong(1, monsterId);
+                            pstmt.setString(2, saveObj.get("ability").getAsString());
+                            pstmt.setInt(3, saveObj.get("bonus").getAsInt());
+                            pstmt.executeUpdate();
+                        }
+                    } else {
+                        for (Map.Entry<String, JsonElement> entry : saveObj.entrySet()) {
+                            try (PreparedStatement pstmt = conn.prepareStatement(saveSql)) {
+                                pstmt.setLong(1, monsterId);
+                                pstmt.setString(2, entry.getKey());
+                                pstmt.setInt(3, entry.getValue().getAsInt());
+                                pstmt.executeUpdate();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (m.has("skills") && m.get("skills").isJsonArray()) {
+            JsonArray skillsArray = m.getAsJsonArray("skills");
+            String skillLinkSql = "INSERT OR REPLACE INTO MonsterSkill (monster_id, skill_id, bonus) VALUES (?, (SELECT id FROM Skill WHERE name = ?), ?)";
+            for (JsonElement skillEl : skillsArray) {
+                if (skillEl.isJsonObject()) {
+                    JsonObject skillObj = skillEl.getAsJsonObject();
+                    if (skillObj.has("skill") && skillObj.has("bonus")) {
+                        String skillName = skillObj.get("skill").getAsString();
+                        int bonus = skillObj.get("bonus").getAsInt();
+                        if (ensureAndResolveId(conn, "Skill", skillName) != null) {
+                            try (PreparedStatement pstmt = conn.prepareStatement(skillLinkSql)) {
+                                pstmt.setLong(1, monsterId);
+                                pstmt.setString(2, skillName);
+                                pstmt.setInt(3, bonus);
+                                pstmt.executeUpdate();
+                            }
+                        }
+                    } else {
+                        for (Map.Entry<String, JsonElement> entry : skillObj.entrySet()) {
+                            String skillName = entry.getKey();
+                            int bonus = entry.getValue().getAsInt();
+                            if (ensureAndResolveId(conn, "Skill", skillName) != null) {
+                                try (PreparedStatement pstmt = conn.prepareStatement(skillLinkSql)) {
+                                    pstmt.setLong(1, monsterId);
+                                    pstmt.setString(2, skillName);
+                                    pstmt.setInt(3, bonus);
+                                    pstmt.executeUpdate();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         if (m.has("speeds") && m.get("speeds").isJsonArray()) {
             JsonArray speedsArray = m.getAsJsonArray("speeds");
-            String speedTypeInsertSql = "INSERT OR IGNORE INTO SpeedType (name) VALUES (?)";
             String speedLinkSql = "INSERT OR REPLACE INTO MonsterSpeed (monster_id, speed_type_id, speed_ft) VALUES (?, (SELECT id FROM SpeedType WHERE name = ?), ?)";
 
             for (JsonElement speedElement : speedsArray) {
@@ -253,25 +336,22 @@ public class JsonToDatabaseImporter {
                     JsonObject speedObj = speedElement.getAsJsonObject();
                     for (String speedType : speedObj.keySet()) {
                         int speedFt = speedObj.get(speedType).getAsInt();
-                        try (PreparedStatement typeStmt = conn.prepareStatement(speedTypeInsertSql);
-                             PreparedStatement linkStmt = conn.prepareStatement(speedLinkSql)) {
-                            typeStmt.setString(1, speedType);
-                            typeStmt.executeUpdate();
-
-                            linkStmt.setLong(1, monsterId);
-                            linkStmt.setString(2, speedType);
-                            linkStmt.setInt(3, speedFt);
-                            linkStmt.executeUpdate();
+                        Long speedTypeId = ensureAndResolveId(conn, "SpeedType", speedType);
+                        if (speedTypeId != null) {
+                            try (PreparedStatement linkStmt = conn.prepareStatement(speedLinkSql)) {
+                                linkStmt.setLong(1, monsterId);
+                                linkStmt.setString(2, speedType);
+                                linkStmt.setInt(3, speedFt);
+                                linkStmt.executeUpdate();
+                            }
                         }
                     }
                 }
             }
         }
 
-        // Insert Senses
         if (m.has("senses") && m.get("senses").isJsonArray()) {
             JsonArray sensesArray = m.getAsJsonArray("senses");
-            String senseTypeInsertSql = "INSERT OR IGNORE INTO SenseType (name) VALUES (?)";
             String senseLinkSql = "INSERT OR REPLACE INTO MonsterSense (monster_id, sense_type_id, range_ft) VALUES (?, (SELECT id FROM SenseType WHERE name = ?), ?)";
 
             for (JsonElement senseElement : sensesArray) {
@@ -280,14 +360,58 @@ public class JsonToDatabaseImporter {
                     if (senseObj.has("sense") && senseObj.has("rangeFt")) {
                         String senseName = senseObj.get("sense").getAsString();
                         int rangeFt = senseObj.get("rangeFt").getAsInt();
-                        try (PreparedStatement typeStmt = conn.prepareStatement(senseTypeInsertSql);
-                             PreparedStatement linkStmt = conn.prepareStatement(senseLinkSql)) {
-                            typeStmt.setString(1, senseName);
-                            typeStmt.executeUpdate();
+                        Long senseTypeId = ensureAndResolveId(conn, "SenseType", senseName);
+                        if (senseTypeId != null) {
+                            try (PreparedStatement linkStmt = conn.prepareStatement(senseLinkSql)) {
+                                linkStmt.setLong(1, monsterId);
+                                linkStmt.setString(2, senseName);
+                                linkStmt.setInt(3, rangeFt);
+                                linkStmt.executeUpdate();
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
+        if (m.has("damageModifiers") && m.get("damageModifiers").isJsonArray()) {
+            JsonArray modsArray = m.getAsJsonArray("damageModifiers");
+            String modLinkSql = "INSERT OR REPLACE INTO MonsterDamageModifier (monster_id, damage_type_id, modifier_type) " +
+                    "VALUES (?, (SELECT id FROM DamageType WHERE name = ?), ?)";
+
+            for (JsonElement modElement : modsArray) {
+                if (modElement.isJsonObject()) {
+                    JsonObject modObj = modElement.getAsJsonObject();
+                    if (modObj.has("modifier") && modObj.has("damageType")) {
+                        String modifierType = modObj.get("modifier").getAsString();
+                        String damageTypeName = modObj.get("damageType").getAsString();
+                        Long damageTypeId = ensureAndResolveId(conn, "DamageType", damageTypeName);
+                        if (damageTypeId != null) {
+                            try (PreparedStatement linkStmt = conn.prepareStatement(modLinkSql)) {
+                                linkStmt.setLong(1, monsterId);
+                                linkStmt.setString(2, damageTypeName);
+                                linkStmt.setString(3, modifierType);
+                                linkStmt.executeUpdate();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (m.has("conditionImmunities") && m.get("conditionImmunities").isJsonArray()) {
+            JsonArray condArray = m.getAsJsonArray("conditionImmunities");
+            String condLinkSql = "INSERT OR IGNORE INTO MonsterConditionImmunity (monster_id, condition_id) " +
+                    "VALUES (?, (SELECT id FROM Condition WHERE name = ?))";
+
+            for (JsonElement condElement : condArray) {
+                String condName = condElement.getAsString();
+                if (!condName.isBlank()) {
+                    Long condId = ensureAndResolveId(conn, "Condition", condName);
+                    if (condId != null) {
+                        try (PreparedStatement linkStmt = conn.prepareStatement(condLinkSql)) {
                             linkStmt.setLong(1, monsterId);
-                            linkStmt.setString(2, senseName);
-                            linkStmt.setInt(3, rangeFt);
+                            linkStmt.setString(2, condName);
                             linkStmt.executeUpdate();
                         }
                     }
@@ -295,34 +419,49 @@ public class JsonToDatabaseImporter {
             }
         }
 
-        // Insert Tags
-        if (m.has("tags") && m.get("tags").isJsonArray()) {
-            JsonArray tagsArray = m.getAsJsonArray("tags");
-            String tagInsertSql = "INSERT OR IGNORE INTO Tag (name) VALUES (?)";
-            String linkInsertSql = "INSERT OR IGNORE INTO MonsterTag (monster_id, tag_id) VALUES (?, (SELECT id FROM Tag WHERE name = ?))";
+        if (m.has("languages") && m.get("languages").isJsonArray()) {
+            JsonArray langArray = m.getAsJsonArray("languages");
+            String langLinkSql = "INSERT OR IGNORE INTO MonsterLanguage (monster_id, language_id) " +
+                    "VALUES (?, (SELECT id FROM Language WHERE name = ?))";
 
-            for (JsonElement tagElement : tagsArray) {
-                String tagName = tagElement.getAsString();
-                if (!tagName.isBlank()) {
-                    try (PreparedStatement tagStmt = conn.prepareStatement(tagInsertSql);
-                         PreparedStatement linkStmt = conn.prepareStatement(linkInsertSql)) {
-                        tagStmt.setString(1, tagName);
-                        tagStmt.executeUpdate();
-
-                        linkStmt.setLong(1, monsterId);
-                        linkStmt.setString(2, tagName);
-                        linkStmt.executeUpdate();
+            for (JsonElement langElement : langArray) {
+                String langName = langElement.getAsString();
+                if (!langName.isBlank()) {
+                    Long langId = ensureAndResolveId(conn, "Language", langName);
+                    if (langId != null) {
+                        try (PreparedStatement linkStmt = conn.prepareStatement(langLinkSql)) {
+                            linkStmt.setLong(1, monsterId);
+                            linkStmt.setString(2, langName);
+                            linkStmt.executeUpdate();
+                        }
                     }
                 }
             }
         }
 
-        // Insert Abilities using INSERT OR REPLACE to keep stable IDs and stop auto-increment bloat
+        if (m.has("tags") && m.get("tags").isJsonArray()) {
+            JsonArray tagsArray = m.getAsJsonArray("tags");
+            String linkInsertSql = "INSERT OR IGNORE INTO MonsterTag (monster_id, tag_id) VALUES (?, (SELECT id FROM Tag WHERE name = ?))";
+
+            for (JsonElement tagElement : tagsArray) {
+                String tagName = tagElement.getAsString();
+                if (!tagName.isBlank()) {
+                    Long tagId = ensureAndResolveId(conn, "Tag", tagName);
+                    if (tagId != null) {
+                        try (PreparedStatement linkStmt = conn.prepareStatement(linkInsertSql)) {
+                            linkStmt.setLong(1, monsterId);
+                            linkStmt.setString(2, tagName);
+                            linkStmt.executeUpdate();
+                        }
+                    }
+                }
+            }
+        }
+
         if (m.has("abilities") && m.get("abilities").isJsonArray()) {
             JsonArray abilitiesArray = m.getAsJsonArray("abilities");
-            String abilityInsertSql = "INSERT OR REPLACE INTO MonsterAbility (monster_id, ability_type, display_order, name, description, recharge) VALUES (?, ?, ?, ?, ?, ?)";
+            int displayOrder = 1;
 
-            int order = 0;
             for (JsonElement abElement : abilitiesArray) {
                 JsonObject abObj = abElement.getAsJsonObject();
                 String category = abObj.has("category") ? abObj.get("category").getAsString() : "Trait";
@@ -330,18 +469,39 @@ public class JsonToDatabaseImporter {
                 String desc = abObj.has("description") ? abObj.get("description").getAsString() : "";
                 String recharge = abObj.has("recharge") && !abObj.get("recharge").isJsonNull() ? abObj.get("recharge").getAsString() : null;
 
-                try (PreparedStatement abStmt = conn.prepareStatement(abilityInsertSql)) {
-                    abStmt.setLong(1, monsterId);
-                    abStmt.setString(2, category);
-                    abStmt.setInt(3, order++);
-                    abStmt.setString(4, abName);
-                    abStmt.setString(5, desc);
-                    if (recharge != null) {
-                        abStmt.setString(6, recharge);
-                    } else {
-                        abStmt.setNull(6, Types.VARCHAR);
+                long existingAbId = -1;
+                String checkAbSql = "SELECT id FROM MonsterAbility WHERE monster_id = ? AND ability_type = ? AND name = ?";
+                try (PreparedStatement checkAb = conn.prepareStatement(checkAbSql)) {
+                    checkAb.setLong(1, monsterId);
+                    checkAb.setString(2, category);
+                    checkAb.setString(3, abName);
+                    try (ResultSet rs = checkAb.executeQuery()) {
+                        if (rs.next()) {
+                            existingAbId = rs.getLong("id");
+                        }
                     }
-                    abStmt.executeUpdate();
+                }
+
+                if (existingAbId != -1) {
+                    String updateAbSql = "UPDATE MonsterAbility SET display_order = ?, description = ?, recharge = ? WHERE id = ?";
+                    try (PreparedStatement updateAb = conn.prepareStatement(updateAbSql)) {
+                        updateAb.setInt(1, displayOrder++);
+                        updateAb.setString(2, desc);
+                        if (recharge != null) updateAb.setString(3, recharge); else updateAb.setNull(3, Types.VARCHAR);
+                        updateAb.setLong(4, existingAbId);
+                        updateAb.executeUpdate();
+                    }
+                } else {
+                    String insertAbSql = "INSERT INTO MonsterAbility (monster_id, ability_type, display_order, name, description, recharge) VALUES (?, ?, ?, ?, ?, ?)";
+                    try (PreparedStatement insertAb = conn.prepareStatement(insertAbSql)) {
+                        insertAb.setLong(1, monsterId);
+                        insertAb.setString(2, category);
+                        insertAb.setInt(3, displayOrder++);
+                        insertAb.setString(4, abName);
+                        insertAb.setString(5, desc);
+                        if (recharge != null) insertAb.setString(6, recharge); else insertAb.setNull(6, Types.VARCHAR);
+                        insertAb.executeUpdate();
+                    }
                 }
             }
         }
@@ -354,13 +514,23 @@ public class JsonToDatabaseImporter {
     private static Long ensureAndResolveId(Connection conn, String tableName, String nameValue) throws SQLException {
         if (nameValue == null || nameValue.isBlank()) return null;
 
-        String insertSql = "INSERT OR IGNORE INTO " + tableName + " (name) VALUES (?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+        String query = "SELECT id FROM " + tableName + " WHERE name = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, nameValue);
-            pstmt.executeUpdate();
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) return rs.getLong("id");
+            }
         }
 
-        String query = "SELECT id FROM " + tableName + " WHERE name = ?";
+        String insertSql = "INSERT INTO " + tableName + " (name) VALUES (?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, nameValue);
+            pstmt.executeUpdate();
+            try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                if (rs.next()) return rs.getLong(1);
+            }
+        }
+
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, nameValue);
             try (ResultSet rs = pstmt.executeQuery()) {

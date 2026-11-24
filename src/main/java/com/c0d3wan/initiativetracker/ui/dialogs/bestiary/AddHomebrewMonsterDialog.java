@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.c0d3wan.initiativetracker.ui.util.UIUtils.*;
+
 /**
  * Modal {@link JDialog} interface allowing users to create, configure,
  * and save custom homebrew monster records into the bestiary database,
@@ -217,8 +219,6 @@ public class AddHomebrewMonsterDialog extends JDialog {
         UIUtils.setPlaceholderTooltip(PLACEHOLDER_KEY, lairArea, "Format: Name: Description (1 per line)\nExample:\nTremor: Ground shakes within a 60-ft. radius...", featureTooltip);
     }
 
-
-
     private String getCleanAreaText(JTextArea area) {
         if (Boolean.TRUE.equals(area.getClientProperty(PLACEHOLDER_KEY))) {
             return "";
@@ -387,7 +387,7 @@ public class AddHomebrewMonsterDialog extends JDialog {
             pstmt.setString(1, name);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("is_official"); // 1 = Official, 0 = Homebrew
+                    return rs.getInt("is_official");
                 }
             }
         } catch (SQLException ignored) {}
@@ -404,7 +404,6 @@ public class AddHomebrewMonsterDialog extends JDialog {
             return;
         }
 
-        // Check for duplicate name conflicts in the database
         Integer existingStatus = checkExistingMonsterType(name);
         if (existingStatus != null) {
             String originType = (existingStatus == 1) ? "an Official Monster Manual" : "an existing Homebrew";
